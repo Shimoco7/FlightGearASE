@@ -10,7 +10,6 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 	
 	
 	  HashMap<String, Float> map = new HashMap<>();
-	  Float max;
 	
 
     public ZscoreAnomalyDetector() {
@@ -21,6 +20,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     public void learnNormal(TimeSeries ts) { 
 		float avg =0;
 		double s = 0;
+		float max =0;
         ArrayList<String> ft=ts.getFeatures();
         
         for(String string: ft) {
@@ -55,7 +55,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
     public List<AnomalyReport> detect(TimeSeries ts) {
-		
+		float max=0;
 		  ArrayList<AnomalyReport> ar=new ArrayList<>();
 		  ArrayList<String> ft=ts.getFeatures();
 	        for(String string : ft) {
