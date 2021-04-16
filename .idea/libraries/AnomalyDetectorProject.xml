@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="AnomalyDetectorProject">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../AnomalyDetectorProject" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../AnomalyDetectorProject/src" />
+    </SOURCES>
+  </library>
+</component>
