@@ -45,7 +45,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
             ArrayList<Float> featDataX = ts.getFeatureData(featuresNames.get(i));
             for(int j=0;j<ts.getRowSize();j++){
                 float currZscore = zScore(featDataX.get(j),zArr.get(i).avg,zArr.get(i).standardDeviation);
-                if(currZscore>zArr.get(i).maxTh){
+                if(currZscore>=zArr.get(i).maxTh){
                    detections.add(new AnomalyReport(featuresNames.get(i),j+1));
                 }
             }
