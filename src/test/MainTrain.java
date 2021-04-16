@@ -102,10 +102,13 @@ public class MainTrain {
 
         ArrayList<AnomalyReport> arr = new ArrayList<>();
         ZscoreAnomalyDetector z = new ZscoreAnomalyDetector();
+        SimpleAnomalyDetector s = new SimpleAnomalyDetector();
         TimeSeries train = new TimeSeries("./reg_flight.csv");
         TimeSeries test = new TimeSeries("./anomaly_flight.csv");
         z.learnNormal(train);
         arr = (ArrayList<AnomalyReport>) z.detect(test);
+       // s.learnNormal(train);
+        //arr = (ArrayList<AnomalyReport>) s.detect(test);
 
         for(AnomalyReport a : arr){
             System.out.println(a.description +" "+  a.timeStep);
