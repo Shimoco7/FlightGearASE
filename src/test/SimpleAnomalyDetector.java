@@ -19,7 +19,7 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
         ArrayList<String> ft=ts.getFeatures();
         int len=ts.getRowSize();
 
-        float vals[][]=new float[ft.size()][len];
+        float[][] vals =new float[ft.size()][len];
         for(int i=0;i<ft.size();i++){
             for(int j=0;j<ts.getRowSize();j++){
                 vals[i][j]=ts.getFeatureData(ft.get(i)).get(j);
