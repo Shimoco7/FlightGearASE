@@ -2,6 +2,7 @@ package test;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainTrain {
@@ -87,17 +88,28 @@ public class MainTrain {
     }
 
     public static void main(String[] args) {
-        Random r=new Random();
-        int port=6000+r.nextInt(1000);
-        Server server=new Server();
-        server.start(port, new AnomalyDetectionHandler());
-        testClient(port);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {}
-        server.stop();
-        check("output.txt", "expectedOutput.txt");
-        System.out.println("done");
+//        Random r=new Random();
+//        int port=6000+r.nextInt(1000);
+//        Server server=new Server();
+//        server.start(port, new AnomalyDetectionHandler());
+//        testClient(port);
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {}
+//        server.stop();
+//        check("output.txt", "expectedOutput.txt");
+//        System.out.println("done");
+
+        ArrayList<AnomalyReport> arr = new ArrayList<>();
+        ZscoreAnomalyDetector z = new ZscoreAnomalyDetector();
+        TimeSeries train = new TimeSeries("./reg_flight.csv");
+        TimeSeries test = new TimeSeries("./anomaly_flight.csv");
+        z.learnNormal(train);
+        arr = (ArrayList<AnomalyReport>) z.detect(test);
+
+        for(AnomalyReport a : arr){
+            System.out.println(a.description +" "+  a.timeStep);
+        }
     }
 
 }

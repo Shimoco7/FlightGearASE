@@ -1,73 +1,71 @@
 package test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import sun.security.timestamp.TSRequest;
-
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
-	
-	
-	  HashMap<String, Float> map = new HashMap<>();
-	
+
+    ArrayList<zScoreParameters> zArr;
 
     public ZscoreAnomalyDetector() {
-		super();
-	}
-
-	@Override
-    public void learnNormal(TimeSeries ts) { 
-		float avg =0;
-		double s = 0;
-		float max =0;
-        ArrayList<String> ft=ts.getFeatures();
-        
-        for(String string: ft) {
-        	float arrFloat[]=toFloat(ts.getFeatureData(string));
-        	for(int i=0; i<arrFloat.length; i++)
-             	max = (float) Math.max(max, zscore(arrFloat[i], arrFloat)) ;
-        	map.put(string, max );
-        } 
-        
-          
+        zArr = new ArrayList<>();
     }
 
-    public static float zscore(float f,float[] arrFloat){
-    	
-    	Float max=(float) 0;
-    	float avg = StatLib.avg(arrFloat);
-        double s =  Math.sqrt(StatLib.var(arrFloat));
-        
-        return (float) ( Math.abs(f-avg)/s) ;
+    @Override
+    public void learnNormal(TimeSeries ts) {
+        ArrayList<String> featuresNames = ts.getFeatures();
+
+        for(int i=0;i<featuresNames.size();i++){
+            ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
+            float maxTh=0;
+            float avgX, standardDev;
+
+            float[] arr = new float[ftCol.size()];
+            int index = 0;
+            for ( Float value: ftCol)
+                arr[index++] = value;
+
+            avgX = StatLib.avg(arr);
+            standardDev = (float) Math.sqrt(StatLib.var(arr));
+
+            for(int j=0;j<ts.getRowSize();j++){
+                float temp = zScore(arr[j],avgX,standardDev);
+                maxTh = (temp > maxTh) ? temp : maxTh;
+            }
+            zArr.add(new zScoreParameters(avgX,standardDev,maxTh));
+        }
 
     }
-    
-    
-    public static float[] toFloat(ArrayList<Float> arr){
-    	
-    	  float arrFloat[]=new float[arr.size()];
-          for(int i=0; i<arr.size(); i++)
-          	arrFloat[i]= arr.get(i).floatValue();
-        
-        return arrFloat;
-    }
 
-	@Override
+    @Override
     public List<AnomalyReport> detect(TimeSeries ts) {
-		float max=0;
-		  ArrayList<AnomalyReport> ar=new ArrayList<>();
-		  ArrayList<String> ft=ts.getFeatures();
-	        for(String string : ft) {
-	            float arrFloat[]=toFloat(ts.getFeatureData(string));
-	            for(int i=0; i<arrFloat.length; i++)
-	            {
-	            	max = zscore(arrFloat[i], arrFloat);
-	            	if(max>map.get(string).floatValue()){
-	                    ar.add(new AnomalyReport(string,(i+1)));
-	                }
-	            }
-	        }
-	        return ar;
+        ArrayList<AnomalyReport> detections = new ArrayList<>();
+        ArrayList<String> featuresNames = ts.getFeatures();
+        for(int i=0;i<ts.getFeatures().size();i++){
+            ArrayList<Float> featDataX = ts.getFeatureData(featuresNames.get(i));
+            for(int j=0;j<ts.getRowSize();j++){
+                float currZscore = zScore(featDataX.get(j),zArr.get(i).avg,zArr.get(i).standardDeviation);
+                if(currZscore>zArr.get(i).maxTh){
+                   detections.add(new AnomalyReport(featuresNames.get(i),j+1));
+                }
+            }
+        }
+
+        return detections;
+    }
+
+    public float zScore(float val,float avg, float stdev){
+        return (Math.abs(val-avg) / stdev);
+    }
+
+    private class zScoreParameters{
+        float avg,standardDeviation,maxTh;
+
+        public zScoreParameters(float avg, float standardDeviation, float maxTh) {
+            this.avg = avg;
+            this.standardDeviation = standardDeviation;
+            this.maxTh = maxTh;
+        }
     }
 }
