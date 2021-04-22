@@ -28,7 +28,7 @@ class WelzlMEC implements MinimumEnclosingCircle {
 	
 	public Circle welzl(ArrayList<Point> pArr)
 	{
-		ArrayList<Point> pCopy = (ArrayList<Point>) pArr.clone();
+		ArrayList<Point> pCopy = new ArrayList<>(pArr);
 		Collections.shuffle(pCopy);
 		
 		return welzlHelper(pCopy, new ArrayList<>(), pCopy.size());
