@@ -14,4 +14,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
     public List<AnomalyReport> detect(TimeSeries ts) {
         return null;
     }
+
+
+
 }
