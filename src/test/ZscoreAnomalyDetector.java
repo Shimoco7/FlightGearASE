@@ -17,7 +17,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
-            float maxTh=0,currAvg=0,currStd=0,currZscore=0;
+            float maxTh=0,currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
                 float[] arr = new float[j];
@@ -28,8 +28,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 currAvg = StatLib.avg(arr);
                 currStd = (float) Math.sqrt(StatLib.var(arr));
                 currZscore = zScore(ftCol.get(j),currAvg,currStd);
-                maxTh = (currZscore > maxTh) ? currZscore : maxTh;
-
+                maxTh = Math.max(currZscore, maxTh);
             }
 
             zArr.add(maxTh);
@@ -44,7 +43,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
-            float maxTh=0,currAvg=0,currStd=0,currZscore=0;
+            float maxTh=0,currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
                 float[] arr = new float[j];
