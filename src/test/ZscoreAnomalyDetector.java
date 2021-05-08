@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
-    ArrayList<zScoreParameters> zArr;
+    ArrayList<Float> zArr;
 
     public ZscoreAnomalyDetector() {
         zArr = new ArrayList<>();
@@ -17,22 +17,22 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
-            float maxTh=0;
-            float avgX, standardDev;
+            float maxTh=0,currAvg=0,currStd=0,currZscore=0;
 
-            float[] arr = new float[ftCol.size()];
-            int index = 0;
-            for ( Float value: ftCol)
-                arr[index++] = value;
+            for(int j=1;j<ftCol.size();j++){
+                float[] arr = new float[j];
 
-            avgX = StatLib.avg(arr);
-            standardDev = (float) Math.sqrt(StatLib.var(arr));
+                for(int k=0;k<j;k++){
+                    arr[k] = ftCol.get(k);
+                }
+                currAvg = StatLib.avg(arr);
+                currStd = (float) Math.sqrt(StatLib.var(arr));
+                currZscore = zScore(ftCol.get(j),currAvg,currStd);
+                maxTh = (currZscore > maxTh) ? currZscore : maxTh;
 
-            for(int j=0;j<ts.getRowSize();j++){
-                float temp = zScore(arr[j],avgX,standardDev);
-                maxTh = (temp > maxTh) ? temp : maxTh;
             }
-            zArr.add(new zScoreParameters(avgX,standardDev,maxTh));
+
+            zArr.add(maxTh);
         }
 
     }
@@ -41,30 +41,30 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     public List<AnomalyReport> detect(TimeSeries ts) {
         ArrayList<AnomalyReport> detections = new ArrayList<>();
         ArrayList<String> featuresNames = ts.getFeatures();
-        for(int i=0;i<ts.getFeatures().size();i++){
-            ArrayList<Float> featDataX = ts.getFeatureData(featuresNames.get(i));
-            for(int j=0;j<ts.getRowSize();j++){
-                float currZscore = zScore(featDataX.get(j),zArr.get(i).avg,zArr.get(i).standardDeviation);
-                if(currZscore>=zArr.get(i).maxTh){
-                   detections.add(new AnomalyReport(featuresNames.get(i),j+1));
+
+        for(int i=0;i<featuresNames.size();i++){
+            ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
+            float maxTh=0,currAvg=0,currStd=0,currZscore=0;
+
+            for(int j=1;j<ftCol.size();j++){
+                float[] arr = new float[j];
+
+                for(int k=0;k<j;k++){
+                    arr[k] = ftCol.get(k);
+                }
+                currAvg = StatLib.avg(arr);
+                currStd = (float) Math.sqrt(StatLib.var(arr));
+                currZscore = zScore(ftCol.get(j),currAvg,currStd);
+                if(currZscore>zArr.get(i)){
+                    detections.add(new AnomalyReport(featuresNames.get(i),j+1));
                 }
             }
         }
-
         return detections;
     }
 
     public float zScore(float val,float avg, float stdev){
+        if(stdev==0) return 0;
         return (Math.abs(val-avg) / stdev);
-    }
-
-    private class zScoreParameters{
-        float avg,standardDeviation,maxTh;
-
-        public zScoreParameters(float avg, float standardDeviation, float maxTh) {
-            this.avg = avg;
-            this.standardDeviation = standardDeviation;
-            this.maxTh = maxTh;
-        }
     }
 }
