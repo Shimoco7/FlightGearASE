@@ -1,8 +1,8 @@
-package test;
+package Model;
 
 
-import test.Commands.DefaultIO;
-import test.Server.ClientHandler;
+import Model.Commands.DefaultIO;
+import Model.Server.ClientHandler;
 
 import java.io.InputStream;
 import java.io.OutputStream;

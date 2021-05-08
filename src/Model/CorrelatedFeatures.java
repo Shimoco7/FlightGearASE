@@ -1,4 +1,4 @@
-package test;
+package Model;
 
 public class CorrelatedFeatures {
     public final String feature1,feature2;

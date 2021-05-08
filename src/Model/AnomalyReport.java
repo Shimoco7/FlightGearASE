@@ -1,4 +1,4 @@
-package test;
+package Model;
 
 public class AnomalyReport {
     public final String description;

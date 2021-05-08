@@ -1,8 +1,8 @@
-package test;
+package Model;
 
-import test.Commands.Command;
-import test.Commands.DefaultIO;
-import test.Commands.exitCommand;
+import Model.Commands.Command;
+import Model.Commands.DefaultIO;
+import Model.Commands.exitCommand;
 
 import java.util.ArrayList;
 

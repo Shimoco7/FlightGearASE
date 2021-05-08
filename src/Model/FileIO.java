@@ -1,6 +1,6 @@
-package test;
+package Model;
 
-import test.Commands.DefaultIO;
+import Model.Commands.DefaultIO;
 
 import java.io.*;
 import java.util.Scanner;

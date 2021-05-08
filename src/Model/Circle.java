@@ -1,4 +1,4 @@
-package test;
+package Model;
 
 public class Circle {
     public final float radius;

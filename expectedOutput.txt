@@ -8,7 +8,7 @@ Please choose an option:
 6. exit
 Please upload your local train CSV file.
 Upload complete.
-Please upload your local test CSV file.
+Please upload your local Model CSV file.
 Upload complete.
 Welcome to the Anomaly Detection Server.
 Please choose an option:

@@ -1,4 +1,4 @@
-package test;
+package Model;
 
 public class Line {
     public final float a,b;
