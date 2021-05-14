@@ -1,4 +1,4 @@
-package Other;
+package other;
 
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;

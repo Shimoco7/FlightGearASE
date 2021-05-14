@@ -1,4 +1,4 @@
-package Model;
+package ptm1;
 
 public class Line {
     public final float a,b;

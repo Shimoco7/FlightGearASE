@@ -1,6 +1,6 @@
-package Model;
+package ptm1;
 
-import Model.Commands.DefaultIO;
+import ptm1.Commands.DefaultIO;
 
 import java.io.*;
 import java.util.Scanner;

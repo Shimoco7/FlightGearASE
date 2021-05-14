@@ -1,4 +1,4 @@
-package Model;
+package ptm1;
 
 public class CorrelatedFeatures {
     public final String feature1,feature2;

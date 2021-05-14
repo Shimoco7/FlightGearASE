@@ -1,8 +1,8 @@
-package Model;
+package ptm1;
 
-import Model.Commands.Command;
-import Model.Commands.DefaultIO;
-import Model.Commands.exitCommand;
+import ptm1.Commands.Command;
+import ptm1.Commands.DefaultIO;
+import ptm1.Commands.exitCommand;
 
 import java.util.ArrayList;
 

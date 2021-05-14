@@ -1,6 +1,6 @@
-package Model;
+package ptm1;
 
-import Other.Properties;
+import other.Properties;
 
 import java.beans.XMLDecoder;
 import java.io.*;

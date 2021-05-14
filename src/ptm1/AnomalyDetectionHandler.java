@@ -1,8 +1,8 @@
-package Model;
+package ptm1;
 
 
-import Model.Commands.DefaultIO;
-import Model.Server.ClientHandler;
+import ptm1.Commands.DefaultIO;
+import ptm1.Server.ClientHandler;
 
 import java.io.InputStream;
 import java.io.OutputStream;
