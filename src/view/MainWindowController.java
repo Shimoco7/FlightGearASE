@@ -3,11 +3,14 @@ package view;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import viewmodel.ViewModel;
 
 import java.io.File;
 
 public class MainWindowController {
-    public Stage stage;
+
+    ViewModel vm;
+    Stage stage;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -16,7 +19,12 @@ public class MainWindowController {
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
                 "XML Files (*.xml)", "*.xml");
         fc.getExtensionFilters().add(extensionFilter);
-        fc.showOpenDialog(stage);
+        File chosenFile = fc.showOpenDialog(stage);
+
+        //CONTINUE HERE
+        if(chosenFile==null){
+
+        }
 
     }
 
