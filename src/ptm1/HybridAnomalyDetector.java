@@ -9,14 +9,12 @@ import java.util.List;
 public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	ArrayList<CorrelatedFeatures> corFeatures;
-	ArrayList<Float> maxCorArray;
 	LinkedHashMap<String, Float> zMap;
 	LinkedHashMap<String, Circle> wMap;
 	float[][] vals;
 
 	public HybridAnomalyDetector() {
 		corFeatures = new ArrayList<CorrelatedFeatures>();
-		maxCorArray = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
 	}
