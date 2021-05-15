@@ -13,14 +13,12 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	LinkedHashMap<String, Float> zMap;
 	LinkedHashMap<String, Circle> wMap;
 	float[][] vals;
-	int tempIndexSaver;
 
 	public HybridAnomalyDetector() {
 		corFeatures = new ArrayList<CorrelatedFeatures>();
 		maxCorArray = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
-		tempIndexSaver=0;
 	}
 
 	@Override
@@ -28,7 +26,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	public void learnNormal(TimeSeries ts) {
 		ArrayList<String> ft = ts.getFeatures(); // variables
 		int len = ts.getRowSize();
-		int col2 = 0, col1 = 0;
+		int col2 = 0, col1 = 0, tempIndexSaver = 0;
 		float correlation = 0;
 
 		vals = new float[ft.size()][len]; // creating matrix from ts
@@ -40,12 +38,12 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 		for (col1 = 0; col1 < ft.size(); col1++) {
 			for (col2 = col1 + 1; col2 < ft.size(); col2++) {
-				if(Math.abs(StatLib.pearson(vals[col1], vals[col2]))> correlation) {
+				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
 					correlation = Math.abs(StatLib.pearson(vals[col1], vals[col2]));
-					tempIndexSaver =col2;
+					tempIndexSaver = col2;
 				}
 			}
-			col2 =tempIndexSaver;
+			col2 = tempIndexSaver;
 			if (correlation >= 0.95) { // The correlation is higher or equal to 0.95
 				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
 				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
