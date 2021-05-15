@@ -44,7 +44,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 						threshold);
 
 				corFeatures.add(c);
-			} else if (Math.abs(correlation) < 0.5) { // The correlation is less then 0.5
+			} else if (Math.abs(correlation) < 0.05) { // The correlation is less then 0.5
 				float maxTh = 0, currAvg, currStd, currZscore;
 				for (int i = 1; i < vals[col1].length; i++) {
 					float[] arr = new float[i];
@@ -60,7 +60,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 				zMap.put(ft.get(col1), maxTh);
 
-			} else { // The correlation is between 0.5 to 0.5
+			} else { // The correlation is between 0.05 to 0.95
 
 			}
 
