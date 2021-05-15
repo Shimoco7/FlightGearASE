@@ -13,7 +13,7 @@ class WelzlMEC implements MinimumEnclosingCircle {
 			return minCircleTrivial(pArr2);
 		
 		Random r = new Random();
-		int index = r.nextInt()% n;		
+		int index = r.nextInt(n);		
 		Point p = pArr1.get(index);
 		Collections.swap(pArr1, index, n-1);
 		Circle d = welzlHelper(pArr1, pArr2, n-1);
@@ -31,7 +31,7 @@ class WelzlMEC implements MinimumEnclosingCircle {
 		ArrayList<Point> pCopy = new ArrayList<>(pArr);
 		Collections.shuffle(pCopy);
 		
-		return welzlHelper(pCopy, new ArrayList<>(), pCopy.size());
+		return welzlHelper(pCopy, new ArrayList<Point>(), pCopy.size());
 		
 	}
 	
