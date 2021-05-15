@@ -129,7 +129,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 				Circle wCircle = wMEC.welzl(ps);
-				if (wMap.get(s).isCircleInside(wCircle))
+				if (!wMap.get(s).isCircleInside(wCircle))
 					ar.add(new AnomalyReport(features[0], i + 1)); // ??
 			}
 		}
