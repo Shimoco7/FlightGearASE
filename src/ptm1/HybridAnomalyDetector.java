@@ -26,6 +26,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		int len = ts.getRowSize();
 		int col2 = 0, col1 = 0, tempIndexSaver = 0;
 		float correlation = 0;
+		int counter= 0;
 
 		vals = new float[ft.size()][len]; // creating matrix from ts
 		for (int i = 0; i < ft.size(); i++) {
@@ -35,6 +36,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		}
 
 		for (col1 = 0; col1 < ft.size(); col1++) {
+			correlation=0;
 			for (col2 = col1 + 1; col2 < ft.size(); col2++) {
 				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
 					correlation = Math.abs(StatLib.pearson(vals[col1], vals[col2]));
@@ -42,6 +44,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 			}
 			col2 = tempIndexSaver;
+			counter++;
+			System.out.println(correlation + "," + counter);
 			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95
 				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
 				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
@@ -64,10 +68,11 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 				zMap.put(ft.get(col1), maxTh);
 			} else { // The correlation is between 0.5 to 0.95
-				WelzlMEC wMEC = new WelzlMEC();
+				//WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(ts.getFeatureData(ft.get(col1)),
 						ts.getFeatureData(ft.get(col2)));
-				Circle wCircle = wMEC.welzl(ps);
+				//Circle wCircle = wMEC.welzl(ps);
+				Circle wCircle = SCE.makeCircle(ps);
 				wMap.put(ft.get(col1) + "," + ft.get(col2), wCircle);
 
 			}
@@ -122,9 +127,10 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			ArrayList<Float> col2Arr = ts.getFeatureData(features[1]);
 
 			for (int i = 0; i < wMap.size(); i++) {
-				WelzlMEC wMEC = new WelzlMEC();
+				//WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
-				Circle wCircle = wMEC.welzl(ps);
+				//Circle wCircle = wMEC.welzl(ps);
+				Circle wCircle = SCE.makeCircle(ps);
 				if (!wMap.get(s).isCircleInside(wCircle))
 					ar.add(new AnomalyReport(features[0], i + 1)); // ??
 			}
