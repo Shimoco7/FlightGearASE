@@ -14,7 +14,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	float[][] vals;
 
 	public HybridAnomalyDetector() {
-		corFeatures = new ArrayList<CorrelatedFeatures>();
+		corFeatures = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
 	}
