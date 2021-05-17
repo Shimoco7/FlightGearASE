@@ -1,10 +1,12 @@
 package ptm1;
 
+import java.util.Collection;
+
 public class Circle {
 
 	public final float radius;
 	public Point p;
-
+	private static final double MULTIPLICATIVE_EPSILON = 1 + 1e-14;
 	public Circle(Point p, float radius) {
 		this.p = p;
 		this.radius = radius;
@@ -33,5 +35,19 @@ public class Circle {
 	public String toString() {
 		return "Circle [radius=" + radius + ", p=" + p + "]";
 	}
+	
+	
+    public boolean contains(Point p) {
+        return p.distance(p) <= radius * MULTIPLICATIVE_EPSILON;
+    }
+
+
+    public boolean contains(Collection<Point> ps) {
+        for (Point p : ps) {
+            if (!contains(p))
+                return false;
+        }
+        return true;
+    }
 
 }
