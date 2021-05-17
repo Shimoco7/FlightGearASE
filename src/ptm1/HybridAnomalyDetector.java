@@ -42,14 +42,14 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 			}
 			col2 = tempIndexSaver;
-			if (correlation >= 0.95) { // The correlation is higher or equal to 0.95
+			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95
 				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
 				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
 				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around
 				CorrelatedFeatures c = new CorrelatedFeatures(ft.get(col1), ft.get(col2), correlation, lin_reg,
 						threshold);
 				corFeatures.add(c);
-			} else if (correlation < 0.5) { // The correlation is less then 0.5
+			} else if (correlation < (float) 0.5) { // The correlation is less then 0.5
 				float maxTh = 0, currAvg, currStd, currZscore;
 				for (int i = 1; i < vals[col1].length; i++) {
 					float[] arr = new float[i];
@@ -110,7 +110,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currAvg = StatLib.avg(arr);
 				currStd = (float) Math.sqrt(StatLib.var(arr));
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
-				if (currZscore > zMap.get(i)) {
+				if (currZscore > zMap.get(zFeaturesNames.get(i))) {
 					ar.add(new AnomalyReport(zFeaturesNames.get(i), j + 1)); // ??
 				}
 			}
