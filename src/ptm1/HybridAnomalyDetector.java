@@ -8,9 +8,9 @@ import java.util.List;
 
 public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
-	ArrayList<CorrelatedFeatures> corFeatures;
-	LinkedHashMap<String, Float> zMap;
-	LinkedHashMap<String, Circle> wMap;
+	ArrayList<CorrelatedFeatures> corFeatures; //for Linear Regression 
+	LinkedHashMap<String, Float> zMap;	   //for Zscore 
+	LinkedHashMap<String, Circle> wMap;	   //for Welzl 
 	float[][] vals;
 
 	public HybridAnomalyDetector() {
@@ -22,20 +22,20 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	@Override
 	// learning offline normal features and data
 	public void learnNormal(TimeSeries ts) {
-		ArrayList<String> ft = ts.getFeatures(); // variables
+		ArrayList<String> ft = ts.getFeatures(); //learnNormal variables
 		int len = ts.getRowSize();
 		int col2 = 0, col1 = 0, tempIndexSaver = 0;
 		float correlation = 0;
 		int counter= 0;
 
-		vals = new float[ft.size()][len]; // creating matrix from ts
+		vals = new float[ft.size()][len]; // creating matrix from the time series ts
 		for (int i = 0; i < ft.size(); i++) {
 			for (int j = 0; j < ts.getRowSize(); j++) {
 				vals[i][j] = ts.getFeatureData(ft.get(i)).get(j);
 			}
 		}
 
-		for (col1 = 0; col1 < ft.size(); col1++) {
+		for (col1 = 0; col1 < ft.size(); col1++) { //using different algorithm by different correlation
 			correlation=0;
 			for (col2 = col1 + 1; col2 < ft.size(); col2++) {
 				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
@@ -46,14 +46,14 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			col2 = tempIndexSaver;
 			counter++;
 			System.out.println(correlation + "," + counter);
-			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95
+			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm learn
 				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
-				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
+				Line lin_reg = StatLib.linear_reg(ps); // Linear Regression of the Correlated-Features
 				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around
 				CorrelatedFeatures c = new CorrelatedFeatures(ft.get(col1), ft.get(col2), correlation, lin_reg,
 						threshold);
 				corFeatures.add(c);
-			} else if (correlation < (float) 0.5) { // The correlation is less then 0.5
+			} else if (correlation < (float) 0.5) { // The correlation is less then 0.5 -> Zscore Algorithm learn
 				float maxTh = 0, currAvg, currStd, currZscore;
 				for (int i = 1; i < vals[col1].length; i++) {
 					float[] arr = new float[i];
@@ -67,7 +67,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 					maxTh = Math.max(currZscore, maxTh);
 				}
 				zMap.put(ft.get(col1), maxTh);
-			} else { // The correlation is between 0.5 to 0.95
+			} else { // The correlation is between 0.5 to 0.95 -> Welzl Algorithm learn
 				//WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(ts.getFeatureData(ft.get(col1)),
 						ts.getFeatureData(ft.get(col2)));
@@ -85,7 +85,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	public List<AnomalyReport> detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
 		ArrayList<AnomalyReport> ar = new ArrayList<>();
 
-		for (CorrelatedFeatures c : corFeatures) { // linear reg detect
+		for (CorrelatedFeatures c : corFeatures) { //  Linear Regression Algorithm detect
 			ArrayList<Float> x = ts.getFeatureData(c.feature1);
 			ArrayList<Float> y = ts.getFeatureData(c.feature2);
 			for (int i = 0; i < x.size(); i++) {
@@ -100,7 +100,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			}
 		}
 
-		ArrayList<String> zFeaturesNames = new ArrayList<String>(zMap.keySet()); // Zscore detect
+		ArrayList<String> zFeaturesNames = new ArrayList<String>(zMap.keySet()); // Zscore Algorithm detect
 
 		for (int i = 0; i < zMap.size(); i++) {
 			ArrayList<Float> ftCol = ts.getFeatureData(zFeaturesNames.get(i));
@@ -115,13 +115,13 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currAvg = StatLib.avg(arr);
 				currStd = (float) Math.sqrt(StatLib.var(arr));
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
-				if (currZscore > zMap.get(zFeaturesNames.get(i))) {
+				if (currZscore > zMap.get(zFeaturesNames.get(i))) { // if the current Zscore is higher then Zscore from the learnNormal
 					ar.add(new AnomalyReport(zFeaturesNames.get(i), j + 1)); // ??
 				}
 			}
 		}
 
-		for (String s : wMap.keySet()) { // welzl detect
+		for (String s : wMap.keySet()) { // Welzl Algorithm detect
 			String[] features = s.split(",");
 			ArrayList<Float> col1Arr = ts.getFeatureData(features[0]);
 			ArrayList<Float> col2Arr = ts.getFeatureData(features[1]);
@@ -131,7 +131,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 				//Circle wCircle = wMEC.welzl(ps);
 				Circle wCircle = SCE.makeCircle(ps);
-				if (!wMap.get(s).isCircleInside(wCircle))
+				if (!wMap.get(s).isCircleInside(wCircle)) // if the new circle is not contained in the one from learnNormal
 					ar.add(new AnomalyReport(features[0], i + 1)); // ??
 			}
 		}
@@ -139,14 +139,14 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return ar;
 	}
 
-	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) {
+	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) { // The function returns an array of points by getting 2 ArrayLists of Floats
 		Point[] ps = new Point[x.size()];
 		for (int i = 0; i < ps.length; i++)
 			ps[i] = new Point(x.get(i), y.get(i));
 		return ps;
 	}
 
-	private ArrayList<Point> toPointsArrayList(ArrayList<Float> x, ArrayList<Float> y) {
+	private ArrayList<Point> toPointsArrayList(ArrayList<Float> x, ArrayList<Float> y) { // The function returns an ArrayList of points by getting 2 arrayList of Floats
 		ArrayList<Point> ps = new ArrayList<>();
 		for (int i = 0; i < x.size(); i++)
 			ps.add(new Point(x.get(i), y.get(i)));
@@ -164,13 +164,13 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return max;
 	}
 
-	public float zScore(float val, float avg, float stdev) {
+	public float zScore(float val, float avg, float stdev) { //ZScore calculation
 		if (stdev == 0)
 			return 0;
 		return (Math.abs(val - avg) / stdev);
 	}
 
-	public List<CorrelatedFeatures> getNormalModel() {
+	public List<CorrelatedFeatures> getNormalModel() { //returns an ArrayList of CorrelatedFeatures
 		return corFeatures;
 	}
 
