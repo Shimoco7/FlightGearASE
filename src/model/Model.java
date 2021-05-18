@@ -7,6 +7,7 @@ public interface Model {
 
     void start();
     void setTimeSeries(TimeSeries ts);
+    void setProperties(String path);
     void setAnomalyDetector(TimeSeriesAnomalyDetector ad);
     void play(int start, int rate);
     void pause();

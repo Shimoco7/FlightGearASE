@@ -22,7 +22,7 @@ public class Properties implements Serializable {
         try {
             e = new XMLEncoder(
                     new BufferedOutputStream(
-                            new FileOutputStream("properties.xml")));
+                            new FileOutputStream("./resources/properties.xml")));
             e.writeObject(this);
 
         } catch (FileNotFoundException fileNotFoundException) {
@@ -74,13 +74,11 @@ public class Properties implements Serializable {
         map.put("Altitude", new Properties.FeatureProperties("altimeter_indicated-altitude-ft", Float.MIN_VALUE,Float.MAX_VALUE));
 
         map.put("Airspeed", new Properties.FeatureProperties("airspeed-indicator_indicated-speed-kt", Float.valueOf(0),Float.MAX_VALUE));
-        //Yaw and Heading are the same?
         map.put("Heading", new Properties.FeatureProperties("indicated-heading-deg", Float.valueOf(0),Float.valueOf(359)));
         map.put("Roll", new Properties.FeatureProperties("attitude-indicator_indicated-roll-deg", Float.valueOf(-90),Float.valueOf(90)));
         map.put("Pitch", new Properties.FeatureProperties("attitude-indicator_internal-pitch-deg", Float.valueOf(-90),Float.valueOf(90)));
         map.put("Yaw", new Properties.FeatureProperties("side-slip-deg", Float.valueOf(-90),Float.valueOf(90)));
 
-        //2 throttles in Playback-xml
         map.put("Throttle", new Properties.FeatureProperties("throttle", Float.valueOf(0),Float.valueOf(1)));
 
         map.put("Aileron", new Properties.FeatureProperties("aileron", Float.valueOf(-1),Float.valueOf(1)));

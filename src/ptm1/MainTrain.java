@@ -122,7 +122,7 @@ public class MainTrain {
         try {
             d = new XMLDecoder(
                     new BufferedInputStream(
-                            new FileInputStream("/resources/properties.xml")));
+                            new FileInputStream("./resources/properties.xml")));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
