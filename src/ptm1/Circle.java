@@ -13,7 +13,7 @@ public class Circle {
 	}
 
 	public boolean isCircleInside(Circle second) { //Checks if Circle second is contained in this circle
-		double distSq = Math.sqrt(Math.pow(this.getPoint().x - second.getPoint().x, 2)
+		float distSq = (float) Math.sqrt(Math.pow(this.getPoint().x - second.getPoint().x, 2)
 				* Math.pow(this.getPoint().y - second.getPoint().y, 2));
 		if (distSq + second.getRadius() == this.getRadius())
 			return true;
