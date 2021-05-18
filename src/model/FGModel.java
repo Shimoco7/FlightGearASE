@@ -35,12 +35,20 @@ public class FGModel extends Observable implements Model{
                     new BufferedInputStream(
                             new FileInputStream(path)));
         } catch (FileNotFoundException e) {
+           e.printStackTrace();
+            setChanged();
+            notifyObservers("FileNotFound");
+        }
+        try {
+            appProperties = (Properties) d.readObject();
+        }
+        catch(Exception e){
             e.printStackTrace();
             setChanged();
             notifyObservers("FileNotFound");
         }
-        appProperties = (Properties) d.readObject();
         d.close();
+
         setChanged();
         notifyObservers("LoadedSuccessfully");
 

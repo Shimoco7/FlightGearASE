@@ -86,6 +86,10 @@ public class Properties implements Serializable {
         map.put("Rudder", new Properties.FeatureProperties("rudder",  Float.valueOf(-1),Float.valueOf(1)));
     }
 
+    public boolean isValidProperties(){
+        return false;
+    }
+
     public static class FeatureProperties implements Serializable{
         String colName;
         Float minVal, maxVal;
