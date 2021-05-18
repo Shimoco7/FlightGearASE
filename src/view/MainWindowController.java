@@ -3,6 +3,7 @@ package view;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -13,10 +14,13 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainWindowController implements Observer {
 
     ViewModel vm;
+    ExecutorService executorService;
     Stage stage;
     @FXML
     Label appStatus;
@@ -44,17 +48,19 @@ public class MainWindowController implements Observer {
     }
 
     public void cleanStatusBox(){
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(()->vm.appStat.setValue(""));
+        executorService.execute(()->{
+            try {
+                Thread.sleep(5000l);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        },5000l);
+            Platform.runLater(()->vm.appStat.setValue(""));
+        });
     }
 
     public void setViewModel(ViewModel vm) {
         this.vm = vm;
+        executorService = Executors.newSingleThreadExecutor();
         appStatus.textProperty().bind(vm.appStat);
     }
 

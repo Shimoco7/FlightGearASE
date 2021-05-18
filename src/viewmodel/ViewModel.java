@@ -43,10 +43,16 @@ public class ViewModel extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         if(o.getClass().equals(FGModel.class)){
             if(arg.toString().equals("FileNotFound")){
-                appStat.setValue("Failed to load resource");
+                appStat.setValue("File not found");
+            }
+            else if(arg.toString().equals("IllegalValues")){
+                appStat.setValue("Data is missing or invalid");
+            }
+            else if(arg.toString().equals("XMLFormatDamaged")){
+                appStat.setValue("XML Format is damaged");
             }
             else if(arg.toString().equals("LoadedSuccessfully")){
-                appStat.setValue("Resources loaded successfully");
+                appStat.setValue("Resource has been loaded successfully");
             }
         }
     }

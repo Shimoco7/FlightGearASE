@@ -40,17 +40,23 @@ public class FGModel extends Observable implements Model{
             notifyObservers("FileNotFound");
         }
         try {
-            appProperties = (Properties) d.readObject();
+            Properties tempProperties =(Properties) d.readObject();
+            if(!tempProperties.isValidProperties()){
+                setChanged();
+                notifyObservers("IllegalValues");
+            }
+            else{
+                appProperties = tempProperties;
+                setChanged();
+                notifyObservers("LoadedSuccessfully");
+            }
         }
         catch(Exception e){
             e.printStackTrace();
             setChanged();
-            notifyObservers("FileNotFound");
+            notifyObservers("XMLFormatDamaged");
         }
         d.close();
-
-        setChanged();
-        notifyObservers("LoadedSuccessfully");
 
         XMLEncoder e = null;
         try {
