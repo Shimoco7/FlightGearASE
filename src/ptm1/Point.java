@@ -12,13 +12,13 @@ public class Point {
 	}
 
 
-	public double distance(Point p) {
-		return Math.hypot(x - p.x, y - p.y);
+	public float distance(Point p) {
+		return (float) Math.hypot(x - p.x, y - p.y);
 	}
 
 
 	// Signed area / determinant thing
-	public double cross(Point p) {
+	public float cross(Point p) {
 		return x * p.y - y * p.x;
 	}
 
