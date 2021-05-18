@@ -92,8 +92,8 @@ public class SCE {
 		float y = (float) (((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx)
 				+ (cx * cx + cy * cy) * (bx - ax)) / d);
 		Point p = new Point(ox + x, oy + y);
-		double r = Math.max(Math.max(p.distance(a), p.distance(b)), p.distance(c));
-		return new Circle(p, (float) r);
+		float r = Math.max(Math.max(p.distance(a), p.distance(b)), p.distance(c));
+		return new Circle(p, r);
 	}
 
 }
