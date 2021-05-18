@@ -26,7 +26,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		int len = ts.getRowSize();
 		int col2 = 0, col1 = 0, tempIndexSaver = 0;
 		float correlation = 0;
-		int counter= 0;
 
 		vals = new float[ft.size()][len]; // creating matrix from the time series ts
 		for (int i = 0; i < ft.size(); i++) {
@@ -44,8 +43,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 			}
 			col2 = tempIndexSaver;
-			counter++;
-			System.out.println(correlation + "," + counter);
 			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm learn
 				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
 				Line lin_reg = StatLib.linear_reg(ps); // Linear Regression of the Correlated-Features
