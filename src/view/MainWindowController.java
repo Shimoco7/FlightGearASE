@@ -7,13 +7,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import model.FGModel;
 import viewmodel.ViewModel;
 
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +37,7 @@ public class MainWindowController implements Observer {
 
         //CONTINUE HERE
         if(chosenFile==null){
+            appStatus.setTextFill(Color.RED);
             vm.appStat.setValue("Failed to load resource");
         }
         else{
@@ -74,6 +74,14 @@ public class MainWindowController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
+        if(o.getClass().equals(ViewModel.class)){
+            if(arg.toString().equals("Red"))
+                appStatus.setTextFill(Color.RED);
+            else if(arg.toString().equals("Green"))
+                appStatus.setTextFill(Color.GREEN);
+            else
+                appStatus.setTextFill(Color.BLACK);
+        }
     }
+
 }
