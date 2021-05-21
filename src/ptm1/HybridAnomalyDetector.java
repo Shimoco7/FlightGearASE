@@ -36,7 +36,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 		for (col1 = 0; col1 < ft.size(); col1++) { //using different algorithm by different correlation
 			correlation=0;
-			for (col2 = col1 + 1; col2 < ft.size(); col2++) {
+			for (col2 = 0; col1!=col2 && col2 < ft.size(); col2++) {
 				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
 					correlation = Math.abs(StatLib.pearson(vals[col1], vals[col2]));
 					tempIndexSaver = col2;
