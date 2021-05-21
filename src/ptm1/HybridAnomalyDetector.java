@@ -36,7 +36,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 		for (col1 = 0; col1 < ft.size(); col1++) { //using different algorithm by different correlation
 			correlation=0;
-			for (col2 = col1 + 1; col2 < ft.size(); col2++) {
+			for (col2 = 0; col1!=col2 && col2 < ft.size(); col2++) {
 				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
 					correlation = Math.abs(StatLib.pearson(vals[col1], vals[col2]));
 					tempIndexSaver = col2;
@@ -127,9 +127,12 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				//WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 				//Circle wCircle = wMEC.welzl(ps);
-				Circle wCircle = SCE.makeCircle(ps);
-				if (!wMap.get(s).isCircleInside(wCircle)) // if the new circle is not contained in the one from learnNormal
-					ar.add(new AnomalyReport(features[0], i + 1)); // ??
+				for(int j=0; j<ps.size();j++)
+				{
+					if (!wMap.get(s).contains(ps.get(j))) //Checks if the point is contained in the Circle from the learnNormal
+						ar.add(new AnomalyReport(features[0], j + 1)); // ??
+				}
+				
 			}
 		}
 
