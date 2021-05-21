@@ -12,9 +12,11 @@ import java.util.Observable;
 public class FGModel extends Observable implements Model{
 
     Properties appProperties;
+    FGPlayer fgp;
 
     public FGModel() {
         setProperties("./resources/properties.xml");
+        fgp = new FGPlayer(appProperties);
     }
 
     @Override

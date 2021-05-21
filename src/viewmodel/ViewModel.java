@@ -14,11 +14,9 @@ public class ViewModel extends Observable implements Observer {
     Model m;
     public FloatProperty aileron,elevators,rudder, throttle,
         airspeed,heading,roll,pitch,yaw,altitude,longitude,latitude;
-    public StringProperty appStat;
 
     public ViewModel(Model m) {
         this.m = m;
-        appStat = new SimpleStringProperty();
 
         aileron = new SimpleFloatProperty();
         elevators = new SimpleFloatProperty();
@@ -45,23 +43,19 @@ public class ViewModel extends Observable implements Observer {
 
             if(arg.toString().equals("FileNotFound")){
                 setChanged();
-                notifyObservers("Red");
-                appStat.setValue("File not found");
+                notifyObservers("FileNotFound");
             }
             else if(arg.toString().equals("IllegalValues")){
                 setChanged();
-                notifyObservers("Red");
-                appStat.setValue("Data is missing or invalid");
+                notifyObservers("IllegalValues");
             }
             else if(arg.toString().equals("XMLFormatDamaged")){
                 setChanged();
-                notifyObservers("Red");
-                appStat.setValue("XML Format is damaged");
+                notifyObservers("XMLFormatDamaged");
             }
             else if(arg.toString().equals("LoadedSuccessfully")){
                 setChanged();
-                notifyObservers("Green");
-                appStat.setValue("Resource has been loaded successfully");
+                notifyObservers("LoadedSuccessfully");
             }
         }
     }

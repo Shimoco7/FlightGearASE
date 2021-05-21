@@ -1,30 +1,26 @@
 package view;
 
-import javafx.application.Platform;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import model.FGModel;
+import javafx.util.Duration;
 import viewmodel.ViewModel;
 
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainWindowController implements Observer {
 
     ViewModel vm;
-    ExecutorService executorService;
+    PauseTransition pause;
     Stage stage;
     @FXML
     Label appStatus;
-
-
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -38,30 +34,21 @@ public class MainWindowController implements Observer {
         //CONTINUE HERE
         if(chosenFile==null){
             appStatus.setTextFill(Color.RED);
-            vm.appStat.setValue("Failed to load resource");
+            appStatus.setText("Failed to load resource");;
         }
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        cleanStatusBox();
+        pause.playFromStart();
 
-    }
-
-    public void cleanStatusBox(){
-        executorService.execute(()->{
-            try {
-                Thread.sleep(5000l);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Platform.runLater(()->vm.appStat.setValue(""));
-        });
     }
 
     public void setViewModel(ViewModel vm) {
         this.vm = vm;
-        executorService = Executors.newSingleThreadExecutor();
-        appStatus.textProperty().bind(vm.appStat);
+        pause = new PauseTransition(Duration.seconds(15));
+        pause.setOnFinished(event->{
+            appStatus.setText("");;
+        });
     }
 
     public Stage getStage() {
@@ -75,12 +62,22 @@ public class MainWindowController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if(o.getClass().equals(ViewModel.class)){
-            if(arg.toString().equals("Red"))
+            if(arg.toString().equals("FileNotFound")){
                 appStatus.setTextFill(Color.RED);
-            else if(arg.toString().equals("Green"))
+                appStatus.setText("File not found");
+            }
+            else if(arg.toString().equals("IllegalValues")){
+                appStatus.setTextFill(Color.RED);
+                appStatus.setText("Data is missing or invalid");
+            }
+            else if(arg.toString().equals("XMLFormatDamaged")){
+                appStatus.setTextFill(Color.RED);
+                appStatus.setText("XML Format is damaged");
+            }
+            else if(arg.toString().equals("LoadedSuccessfully")){
                 appStatus.setTextFill(Color.GREEN);
-            else
-                appStatus.setTextFill(Color.BLACK);
+                appStatus.setText("Resource has been loaded successfully");
+            }
         }
     }
 

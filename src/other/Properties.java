@@ -64,6 +64,7 @@ public class Properties implements Serializable {
         this.map = map;
     }
 
+
     public void setDefaultProperties(){
         ip="127.0.0.1";
         port=5400;
