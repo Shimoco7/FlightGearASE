@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import view.Main;
 
 import java.io.File;
 
@@ -17,6 +18,7 @@ public class PlayerController {
     Stage stage;
 
     public PlayerController() {
+        stage = Main.getGuiStage();
     }
 
     public void openCSV(){

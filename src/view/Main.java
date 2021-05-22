@@ -6,12 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.FGModel;
+import view.player.PlayerController;
 import viewmodel.ViewModel;
 
 public class Main extends Application {
 
+    private static Stage guiStage;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
+        guiStage = primaryStage;
         FGModel model = new FGModel();
         ViewModel vm = new ViewModel(model);
         model.addObserver(vm);
@@ -37,7 +41,11 @@ public class Main extends Application {
         launch(args);
     }
 
-    public void setWindowSize(Stage stage,int maxW,int minW, int maxH,int minH){
+    public static Stage getGuiStage() {
+        return guiStage;
+    }
+
+    public void setWindowSize(Stage stage, int maxW, int minW, int maxH, int minH){
         stage.widthProperty().addListener((o, oldValue, newValue)->{
             if(newValue.intValue() < minW) {
                 stage.setResizable(false);
@@ -64,5 +72,7 @@ public class Main extends Application {
                 stage.setResizable(true);
             }
         });
+
+
     }
 }

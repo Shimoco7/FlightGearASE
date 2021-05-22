@@ -1,7 +1,11 @@
 package view.player;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import view.Main;
+
 import java.io.IOException;
 
 public class Player extends AnchorPane {
