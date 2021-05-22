@@ -21,7 +21,7 @@ public class Main extends Application {
         MainWindowController myController = loader.getController();
         myController.setStage(primaryStage);
         primaryStage.setTitle("Flight-Gear Projector");
-        primaryStage.setScene(new Scene(root, 700, 557));
+        primaryStage.setScene(new Scene(root, 700, 617));
         primaryStage.show();
 
         MainWindowController mwc = loader.getController();

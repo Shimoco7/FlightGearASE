@@ -19,7 +19,7 @@ public class PlayerController {
     public PlayerController() {
     }
 
-    void openCSV(){
+    public void openCSV(){
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Flight CSV File");
         fc.setInitialDirectory(new File("./resources"));

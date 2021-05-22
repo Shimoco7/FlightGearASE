@@ -20,13 +20,13 @@ public class FGPlayer {
         ip=p.getIp();
         port=p.getPort();
         hertzRate=p.getHertzRate();
-        try {
-            fg=new Socket(ip,port);
+        //try {
+            //fg=new Socket(ip,port);
             //in= new BufferedReader(new FileReader();
-            out = new PrintWriter(fg.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            //out = new PrintWriter(fg.getOutputStream());
+       // } catch (IOException e) {
+           // e.printStackTrace();
+       // }
         start();
 
     }

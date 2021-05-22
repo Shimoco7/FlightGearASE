@@ -8,6 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javafx.util.Duration;
+import view.player.Player;
 import viewmodel.ViewModel;
 
 import java.io.File;
@@ -20,9 +21,11 @@ public class MainWindowController implements Observer {
     PauseTransition pause;
     Stage stage;
     @FXML
+    Player myPlayer;
+    @FXML
     Label appStatus;
 
-    void loadProperties(){
+    public void loadProperties(){
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Project Properties");
         fc.setInitialDirectory(new File("./resources"));
