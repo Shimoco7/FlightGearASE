@@ -8,67 +8,67 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="50.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.player.PlayerController">
+<AnchorPane prefHeight="50.0" prefWidth="587.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.player.PlayerController">
    <children>
-      <Button layoutX="22.0" layoutY="13.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Open" />
-      <Button layoutX="182.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;" textFill="WHITE">
+      <Button id="ipad-grey" layoutX="14.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openCSV" prefHeight="30.0" prefWidth="74.0" stylesheets="@player.css" text="Open" textAlignment="CENTER" />
+      <Button layoutX="182.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css" textFill="WHITE">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/play.png" />
+                  <Image url="@../../Symbols/play.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="220.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="220.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/pause.png" />
+                  <Image url="@../../Symbols/pause.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="144.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="144.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/back.png" />
+                  <Image url="@../../Symbols/back.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="102.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="102.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/back2.png" />
+                  <Image url="@../../Symbols/back2.png" />
                </image>
             </ImageView>
          </graphic></Button>
-      <Button layoutX="258.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="258.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/stop.png" />
+                  <Image url="@../../Symbols/stop.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="296.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="296.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/for.png" />
+                  <Image url="@../../Symbols/for.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="334.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transperant;">
+      <Button layoutX="334.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/Symbols/for2.png" />
+                  <Image url="@../../Symbols/for2.png" />
                </image>
             </ImageView>
          </graphic>

@@ -12,50 +12,42 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import view.player.Player?>
-<GridPane alignment="center" hgap="10" prefHeight="617.0" prefWidth="700.0" vgap="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
+
+<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <children>
-      <HBox prefHeight="47.0" prefWidth="700.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+      <HBox prefHeight="47.0" prefWidth="600.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
          <children>
-            <Label text="Status">
+            <Label id="label" style="-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-font-weight: bold;" text="Status">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin></Label>
-            <Label fx:id="appStatus" prefHeight="18.0" prefWidth="301.0">
+            <Label fx:id="appStatus" prefHeight="18.0" prefWidth="400.0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </Label>
          </children>
       </HBox>
-      <Canvas height="500.0" width="700.0" />
+      <Canvas height="600.0" width="600.0" />
       <MenuBar GridPane.hgrow="ALWAYS" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#loadProperties" text="Load Properties" />
-              <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+          <Menu mnemonicParsing="false" text="Edit" />
+          <Menu mnemonicParsing="false" text="Help" />
         </menus>
       </MenuBar>
-       <Player fx:id="myPlayer" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+       <Player fx:id="myPlayer" prefHeight="600.0" prefWidth="600.0" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS" GridPane.fillWidth="600.0"/>
    </children>
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="513.2000122070312" minHeight="492.40002441406244" prefHeight="492.40002441406244" />
-      <RowConstraints maxHeight="55.99997558593748" minHeight="10.0" prefHeight="55.99997558593748" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints maxHeight="55.99997558593748" minHeight="10.0" prefHeight="55.99997558593748" valignment="CENTER" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
    </rowConstraints>
 </GridPane>
