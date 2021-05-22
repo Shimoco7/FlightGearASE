@@ -11,76 +11,76 @@
 <AnchorPane prefHeight="50.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.player.Player">
    <children>
       <Button layoutX="22.0" layoutY="13.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Open" />
-      <Button layoutX="182.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="182.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;" textFill="WHITE">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/playBtn.jpeg" />
+                  <Image url="@../../../resources/Symbols/play.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="220.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="220.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/pauseBtnjpeg.jpeg" />
+                  <Image url="@../../../resources/Symbols/pause.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="144.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="144.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/fbx2.jpeg" />
+                  <Image url="@../../../resources/Symbols/back.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="106.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="106.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/moveToStartBtn.jpeg" />
+                  <Image url="@../../../resources/Symbols/back2.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="258.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="258.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/stopBtn.jpeg" />
+                  <Image url="@../../../resources/Symbols/stop.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="296.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="296.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparentransparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/ffx2.jpeg" />
+                  <Image url="@../../../resources/Symbols/for.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="334.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: #FFFFFF;">
+      <Button layoutX="334.0" layoutY="13.0" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../resources/moveToEndBtn.jpeg" />
+                  <Image url="@../../../resources/Symbols/for2.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <TextField layoutX="461.0" layoutY="12.0" prefHeight="30.0" prefWidth="46.0" />
+      <TextField fx:id="playSpeed" layoutX="461.0" layoutY="12.0" prefHeight="30.0" prefWidth="46.0" />
       <Label layoutX="380.0" layoutY="16.0" text="Play Speed" textAlignment="CENTER">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="522.0" layoutY="17.0" text="00:00:00" textAlignment="CENTER">
+      <Label fx:id="flightTime" layoutX="522.0" layoutY="17.0" text="00:00:00" textAlignment="CENTER">
          <font>
             <Font size="15.0" />
          </font>

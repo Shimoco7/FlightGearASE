@@ -22,7 +22,7 @@ public class MainWindowController implements Observer {
     @FXML
     Label appStatus;
 
-    public void loadProperties(){
+    void loadProperties(){
         FileChooser fc = new FileChooser();
         fc.setTitle("Load Project Properties");
         fc.setInitialDirectory(new File("./resources"));
@@ -31,7 +31,6 @@ public class MainWindowController implements Observer {
         fc.getExtensionFilters().add(extensionFilter);
         File chosenFile = fc.showOpenDialog(stage);
 
-        //CONTINUE HERE
         if(chosenFile==null){
             appStatus.setTextFill(Color.RED);
             appStatus.setText("Failed to load resource");;
