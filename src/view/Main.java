@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.FGModel;
-import view.player.PlayerController;
 import viewmodel.ViewModel;
 
 public class Main extends Application {
@@ -30,7 +29,7 @@ public class Main extends Application {
         setWindowSize(primaryStage,800,600,600,600);
 
         MainWindowController mwc = loader.getController();
-        mwc.setViewModel(vm);
+        mwc.initialize(vm);
         vm.addObserver(mwc);
 
 

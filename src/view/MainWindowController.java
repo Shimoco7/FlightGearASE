@@ -15,10 +15,10 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+
 public class MainWindowController implements Observer {
 
     ViewModel vm;
-    PauseTransition pause;
     Stage stage;
     @FXML
     Player myPlayer;
@@ -41,16 +41,15 @@ public class MainWindowController implements Observer {
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        pause.playFromStart();
+        applicationStatus.pausePlayFromStart();
 
     }
 
-    public void setViewModel(ViewModel vm) {
+    public void initialize(ViewModel vm) {
         this.vm = vm;
-        pause = new PauseTransition(Duration.seconds(15));
-        pause.setOnFinished(event->{
-            appStatus.setText("");;
-        });
+        appStatus.textProperty().bindBidirectional(applicationStatus.getAppStatusProperty());
+        applicationStatus.setPauseDuration(15);
+        applicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
     }
 
     public Stage getStage() {
@@ -82,5 +81,4 @@ public class MainWindowController implements Observer {
             }
         }
     }
-
 }

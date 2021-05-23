@@ -1,6 +1,7 @@
 package view.player;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -8,8 +9,10 @@ import javafx.stage.Stage;
 import view.Main;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class PlayerController {
+public class PlayerController implements Initializable {
 
     @FXML
     TextField playSpeed;
@@ -17,9 +20,12 @@ public class PlayerController {
     Label flightTime;
     Stage stage;
 
-    public PlayerController() {
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         stage = Main.getGuiStage();
     }
+
 
     public void openCSV(){
         FileChooser fc = new FileChooser();
@@ -28,7 +34,7 @@ public class PlayerController {
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
                 "CSV Files (*.csv)", "*.csv");
         fc.getExtensionFilters().add(extensionFilter);
-        File chosenFile = fc.showOpenDialog(stage); //set On Main
+        File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
 
