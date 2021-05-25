@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import view.clocks.Clocks;
 import view.player.Player;
 import viewmodel.ViewModel;
 
@@ -22,6 +23,8 @@ public class MainWindowController implements Observer {
     Player myPlayer;
     @FXML
     Label appStatus;
+    @FXML
+    Clocks myClocks;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -48,6 +51,7 @@ public class MainWindowController implements Observer {
         appStatus.textProperty().bindBidirectional(applicationStatus.getAppStatusProperty());
         applicationStatus.setPauseDuration(15);
         applicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
+        vm.csvPath.bind(myPlayer.timeSeriesPath);
     }
 
     public Stage getStage() {

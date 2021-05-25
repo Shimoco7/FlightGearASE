@@ -26,7 +26,7 @@ public class Main extends Application {
         primaryStage.setTitle("Flight-Gear Projector");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
-        setWindowSize(primaryStage,800,600,600,600);
+       // setWindowSize(primaryStage,800,600,600,600);
 
         MainWindowController mwc = loader.getController();
         mwc.initialize(vm);
@@ -44,34 +44,34 @@ public class Main extends Application {
         return guiStage;
     }
 
-    public void setWindowSize(Stage stage, int maxW, int minW, int maxH, int minH){
-        stage.widthProperty().addListener((o, oldValue, newValue)->{
-            if(newValue.intValue() < minW) {
-                stage.setResizable(false);
-                stage.setWidth(minW);
-                stage.setResizable(true);
-            }
-            if(newValue.intValue() > maxW) {
-                stage.setResizable(false);
-                stage.setWidth(maxW);
-                stage.setResizable(true);
-            }
-        });
-
-        stage.heightProperty().addListener((o,oldValue,newValue)->{
-            if(newValue.intValue()<minH){
-                stage.setResizable(false);
-                stage.setHeight(minH);
-                stage.setResizable(true);
-            }
-
-            if(newValue.intValue() > maxH) {
-                stage.setResizable(false);
-                stage.setHeight(maxH);
-                stage.setResizable(true);
-            }
-        });
-
-
-    }
+//    public void setWindowSize(Stage stage, int maxW, int minW, int maxH, int minH){
+//        stage.widthProperty().addListener((o, oldValue, newValue)->{
+//            if(newValue.intValue() < minW) {
+//                stage.setResizable(false);
+//                stage.setWidth(minW);
+//                stage.setResizable(true);
+//            }
+//            if(newValue.intValue() > maxW) {
+//                stage.setResizable(false);
+//                stage.setWidth(maxW);
+//                stage.setResizable(true);
+//            }
+//        });
+//
+//        stage.heightProperty().addListener((o,oldValue,newValue)->{
+//            if(newValue.intValue()<minH){
+//                stage.setResizable(false);
+//                stage.setHeight(minH);
+//                stage.setResizable(true);
+//            }
+//
+//            if(newValue.intValue() > maxH) {
+//                stage.setResizable(false);
+//                stage.setHeight(maxH);
+//                stage.setResizable(true);
+//            }
+//        });
+//
+//
+//    }
 }

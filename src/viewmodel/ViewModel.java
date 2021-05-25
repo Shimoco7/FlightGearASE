@@ -14,10 +14,11 @@ public class ViewModel extends Observable implements Observer {
     Model m;
     public FloatProperty aileron,elevators,rudder, throttle,
         airspeed,heading,roll,pitch,yaw,altitude,longitude,latitude;
+    public StringProperty csvPath;
 
     public ViewModel(Model m) {
         this.m = m;
-
+        csvPath= new SimpleStringProperty();
         aileron = new SimpleFloatProperty();
         elevators = new SimpleFloatProperty();
         rudder = new SimpleFloatProperty();

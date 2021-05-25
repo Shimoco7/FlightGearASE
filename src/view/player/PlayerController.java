@@ -1,5 +1,7 @@
 package view.player;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -7,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import view.Main;
+import view.applicationStatus;
 
 import java.io.File;
 import java.net.URL;
@@ -19,11 +22,13 @@ public class PlayerController implements Initializable {
     @FXML
     Label flightTime;
     Stage stage;
+    public StringProperty timeSeriesPath;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stage = Main.getGuiStage();
+        timeSeriesPath = new SimpleStringProperty();
     }
 
 
@@ -37,10 +42,11 @@ public class PlayerController implements Initializable {
         File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
-
+           // applicationStatus. SETCOLOR
+            applicationStatus.setAppStatus("Failed to load resource");
         }
         else{
-
+            timeSeriesPath.set(chosenFile.getAbsolutePath());
         }
     }
 
