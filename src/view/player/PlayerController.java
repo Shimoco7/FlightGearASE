@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import view.Main;
@@ -42,8 +43,8 @@ public class PlayerController implements Initializable {
         File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
-           // applicationStatus. SETCOLOR
-            applicationStatus.setAppStatus("Failed to load resource");
+            applicationStatus.setAppColor(Color.RED);
+            applicationStatus.setAppStatusValue("Failed to load resource");
         }
         else{
             timeSeriesPath.set(chosenFile.getAbsolutePath());

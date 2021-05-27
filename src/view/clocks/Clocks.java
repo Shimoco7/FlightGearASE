@@ -2,9 +2,7 @@ package view.clocks;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import view.player.PlayerController;
 
 import java.io.IOException;
 

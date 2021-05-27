@@ -1,9 +1,6 @@
 package viewmodel;
 
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import model.FGModel;
 import model.Model;
 import java.util.Observable;
@@ -12,25 +9,25 @@ import java.util.Observer;
 public class ViewModel extends Observable implements Observer {
 
     Model m;
-    public FloatProperty aileron,elevators,rudder, throttle,
+    public DoubleProperty aileron,elevators,rudder, throttle,
         airspeed,heading,roll,pitch,yaw,altitude,longitude,latitude;
     public StringProperty csvPath;
 
     public ViewModel(Model m) {
         this.m = m;
         csvPath= new SimpleStringProperty();
-        aileron = new SimpleFloatProperty();
-        elevators = new SimpleFloatProperty();
-        rudder = new SimpleFloatProperty();
-        throttle = new SimpleFloatProperty();
-        airspeed = new SimpleFloatProperty();
-        heading = new SimpleFloatProperty();
-        roll = new SimpleFloatProperty();
-        pitch = new SimpleFloatProperty();
-        yaw = new SimpleFloatProperty();
-        altitude = new SimpleFloatProperty();
-        longitude = new SimpleFloatProperty();
-        latitude = new SimpleFloatProperty();
+        aileron = new SimpleDoubleProperty();
+        elevators = new SimpleDoubleProperty();
+        rudder = new SimpleDoubleProperty();
+        throttle = new SimpleDoubleProperty();
+        airspeed = new SimpleDoubleProperty();
+        heading = new SimpleDoubleProperty();
+        roll = new SimpleDoubleProperty();
+        pitch = new SimpleDoubleProperty();
+        yaw = new SimpleDoubleProperty();
+        altitude = new SimpleDoubleProperty();
+        longitude = new SimpleDoubleProperty();
+        latitude = new SimpleDoubleProperty();
 
     }
 

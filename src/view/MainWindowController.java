@@ -36,8 +36,8 @@ public class MainWindowController implements Observer {
         File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
-            appStatus.setTextFill(Color.RED);
-            appStatus.setText("Failed to load resource");;
+            applicationStatus.setAppColor(Color.RED);
+            applicationStatus.setAppStatusValue("Failed to load resource");
         }
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
@@ -48,7 +48,8 @@ public class MainWindowController implements Observer {
 
     public void initialize(ViewModel vm) {
         this.vm = vm;
-        appStatus.textProperty().bindBidirectional(applicationStatus.getAppStatusProperty());
+        appStatus.textProperty().bindBidirectional(applicationStatus.getAppStatusStringProperty());
+        appStatus.textFillProperty().bindBidirectional(applicationStatus.getAppStatus().textFillProperty());
         applicationStatus.setPauseDuration(15);
         applicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
         vm.csvPath.bind(myPlayer.timeSeriesPath);
@@ -66,20 +67,20 @@ public class MainWindowController implements Observer {
     public void update(Observable o, Object arg) {
         if(o.getClass().equals(ViewModel.class)){
             if(arg.toString().equals("FileNotFound")){
-                appStatus.setTextFill(Color.RED);
-                appStatus.setText("File not found");
+                applicationStatus.setAppColor(Color.RED);
+                applicationStatus.setAppStatusValue("File not found");
             }
             else if(arg.toString().equals("IllegalValues")){
-                appStatus.setTextFill(Color.RED);
-                appStatus.setText("Data is missing or invalid");
+                applicationStatus.setAppColor(Color.RED);
+                applicationStatus.setAppStatusValue("Data is missing or invalid");
             }
             else if(arg.toString().equals("XMLFormatDamaged")){
-                appStatus.setTextFill(Color.RED);
-                appStatus.setText("XML Format is damaged");
+                applicationStatus.setAppColor(Color.RED);
+                applicationStatus.setAppStatusValue("XML Format is damaged");
             }
             else if(arg.toString().equals("LoadedSuccessfully")){
-                appStatus.setTextFill(Color.GREEN);
-                appStatus.setText("Resource has been loaded successfully");
+                applicationStatus.setAppColor(Color.GREEN);
+                applicationStatus.setAppStatusValue("Resource has been loaded successfully");
             }
         }
     }
