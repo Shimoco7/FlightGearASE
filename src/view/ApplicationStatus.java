@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 
-public final class applicationStatus {
+public final class ApplicationStatus {
     private static Label appStatus = new Label();
     private static PauseTransition pause = new PauseTransition();
 

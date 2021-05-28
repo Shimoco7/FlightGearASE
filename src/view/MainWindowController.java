@@ -1,5 +1,7 @@
 package view;
 
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -7,6 +9,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import view.clocks.Clocks;
+import view.display.Display;
+import view.joystick.Joystick;
 import view.player.Player;
 import viewmodel.ViewModel;
 
@@ -22,9 +26,13 @@ public class MainWindowController implements Observer {
     @FXML
     Player myPlayer;
     @FXML
+    Joystick myJoystick;
+    @FXML
     Label appStatus;
     @FXML
     Clocks myClocks;
+    @FXML
+    Display myDisplay;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -36,9 +44,9 @@ public class MainWindowController implements Observer {
         File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
-            applicationStatus.setAppColor(Color.RED);
-            applicationStatus.setAppStatusValue("Failed to load resource");
-            applicationStatus.pausePlayFromStart();
+            ApplicationStatus.setAppColor(Color.RED);
+            ApplicationStatus.setAppStatusValue("Failed to load resource");
+            ApplicationStatus.pausePlayFromStart();
         }
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
@@ -48,10 +56,10 @@ public class MainWindowController implements Observer {
 
     public void initialize(ViewModel vm) {
         this.vm = vm;
-        appStatus.textProperty().bindBidirectional(applicationStatus.getAppStatusStringProperty());
-        appStatus.textFillProperty().bindBidirectional(applicationStatus.getAppStatus().textFillProperty());
-        applicationStatus.setPauseDuration(15);
-        applicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
+        appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusStringProperty());
+        appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
+        ApplicationStatus.setPauseDuration(15);
+        ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
         vm.csvPath.bindBidirectional(myPlayer.timeSeriesPath);
 
     }
@@ -69,34 +77,40 @@ public class MainWindowController implements Observer {
         if(o.getClass().equals(ViewModel.class)){
             switch (arg.toString()) {
                 case "FileNotFound" -> {
-                    applicationStatus.setAppColor(Color.RED);
-                    applicationStatus.setAppStatusValue("File not found");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("File not found");
+                    ApplicationStatus.pausePlayFromStart();
                 }
                 case "IllegalValues" -> {
-                    applicationStatus.setAppColor(Color.RED);
-                    applicationStatus.setAppStatusValue("Data is missing or invalid");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("Data is missing or invalid");
+                    ApplicationStatus.pausePlayFromStart();
                 }
                 case "XMLFormatDamaged" -> {
-                    applicationStatus.setAppColor(Color.RED);
-                    applicationStatus.setAppStatusValue("XML Format is damaged");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("XML Format is damaged");
+                    ApplicationStatus.pausePlayFromStart();
                 }
                 case "LoadedSuccessfully" -> {
-                    applicationStatus.setAppColor(Color.GREEN);
-                    applicationStatus.setAppStatusValue("Resource has been loaded successfully");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.GREEN);
+                    ApplicationStatus.setAppStatusValue("Properties resource has been loaded successfully");
+                    ApplicationStatus.pausePlayFromStart();
+                }
+                case "LoadedCSVSuccessfully" ->{
+                    ApplicationStatus.setAppColor(Color.GREEN);
+                    ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
+                    ApplicationStatus.pausePlayFromStart();
+                    myDisplay.propList.setAll(vm.getTimeSeries().getFeatures());
                 }
                 case "missingProperties" -> {
-                    applicationStatus.setAppColor(Color.RED);
-                    applicationStatus.setAppStatusValue("CSV-File is missing properties");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
+                    ApplicationStatus.pausePlayFromStart();
                 }
                 case "incorrectFormat" -> {
-                    applicationStatus.setAppColor(Color.RED);
-                    applicationStatus.setAppStatusValue("Incorrect CSV-File format");
-                    applicationStatus.pausePlayFromStart();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
+                    ApplicationStatus.pausePlayFromStart();
                 }
             }
 

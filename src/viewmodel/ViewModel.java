@@ -35,7 +35,7 @@ public class ViewModel extends Observable implements Observer {
 
         csvPath.addListener((o,ov,nv)->{
             String res = this.m.uploadCsv(nv);
-            if (res.equals("LoadedSuccessfully")) {
+            if (res.equals("LoadedCSVSuccessfully")) {
                 timeSeries = new TimeSeries(nv);
                 this.m.setTimeSeries(timeSeries);
             }
@@ -48,6 +48,9 @@ public class ViewModel extends Observable implements Observer {
         m.setProperties(path);
     }
 
+    public TimeSeries getTimeSeries() {
+        return timeSeries;
+    }
 
     @Override
     public void update(Observable o, Object arg) {

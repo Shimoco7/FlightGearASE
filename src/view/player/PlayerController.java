@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import view.Main;
-import view.applicationStatus;
+import view.ApplicationStatus;
 
 import java.io.File;
 import java.net.URL;
@@ -32,6 +32,7 @@ public class PlayerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 
 
@@ -45,8 +46,8 @@ public class PlayerController implements Initializable {
         File chosenFile = fc.showOpenDialog(stage);
 
         if(chosenFile==null){
-            applicationStatus.setAppColor(Color.RED);
-            applicationStatus.setAppStatusValue("Failed to load resource");
+            ApplicationStatus.setAppColor(Color.RED);
+            ApplicationStatus.setAppStatusValue("Failed to load resource");
         }
         else{
             timeSeriesPath.setValue(chosenFile.getAbsolutePath());

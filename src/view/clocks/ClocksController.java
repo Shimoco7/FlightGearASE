@@ -1,6 +1,7 @@
 package view.clocks;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import view.Main;
@@ -10,6 +11,12 @@ import java.util.ResourceBundle;
 
 public class ClocksController implements Initializable {
     Stage stage;
+    @FXML
+    Altimeter myAltimeter;
+    @FXML
+    AirCompass myAirCompass;
+    @FXML
+    Horizon myHorizon;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

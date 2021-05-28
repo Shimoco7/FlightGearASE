@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane prefHeight="174.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.clocks.ClocksController">
    <children>
-      <HBox layoutY="-4.0" prefHeight="200.0" prefWidth="200.0">
+      <HBox layoutY="-4.0" prefHeight="360.0" prefWidth="360.0" StackPane.alignment="CENTER">
          <children>
-            <Altimeter fx:id="myAltimeter" layoutX="2.0" layoutY="-1.0" prefHeight="120.0" prefWidth="120.0" />
-            <Horizon fx:id="myHorizon" layoutX="2.0" layoutY="-1.0" prefHeight="120.0" prefWidth="120.0" />
-            <AirCompass fx:id="myAirCompass" layoutX="2.0" layoutY="-1.0" prefHeight="120.0" prefWidth="120.0" />
+            <Altimeter fx:id="myAltimeter" layoutX="2.0" layoutY="-1.0" prefHeight="140.0" prefWidth="140.0" />
+            <Horizon fx:id="myHorizon" layoutX="2.0" layoutY="-1.0" prefHeight="140.0" prefWidth="140.0" />
+            <AirCompass fx:id="myAirCompass" layoutX="2.0" layoutY="-1.0" prefHeight="140.0" prefWidth="140.0" />
          </children>
       </HBox>
    </children>

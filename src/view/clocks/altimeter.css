@@ -30,7 +30,6 @@
 }
 .altimeter .background {
     -fx-background-radius: 1024;
-    -fx-background-color : -background-color;
 }
 .altimeter .center-knob {
     -fx-background-radius: 1024;

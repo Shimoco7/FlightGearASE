@@ -1,7 +1,9 @@
 package view;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -22,11 +24,12 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
         Parent root = (Parent)loader.load();
         MainWindowController myController = loader.getController();
+
         myController.setStage(primaryStage);
         primaryStage.setTitle("Flight-Gear Projector");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 1000 , 600));
         primaryStage.show();
-        setWindowSize(primaryStage,800,600,600,600);
+        setWindowSize(primaryStage,1000,1000,600,600);
 
         MainWindowController mwc = loader.getController();
         mwc.initialize(vm);

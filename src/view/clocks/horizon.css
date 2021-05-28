@@ -30,5 +30,4 @@
 }
 .horizon .background {
     -fx-background-radius: 1024;
-    -fx-background-color : -background-color;
 }

@@ -137,6 +137,6 @@ public class FGModel extends Observable implements Model{
         }
         scanner.close();
 
-        return "LoadedSuccessfully";
+        return "LoadedCSVSuccessfully";
     }
 }
