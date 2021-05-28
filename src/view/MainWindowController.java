@@ -38,11 +38,11 @@ public class MainWindowController implements Observer {
         if(chosenFile==null){
             applicationStatus.setAppColor(Color.RED);
             applicationStatus.setAppStatusValue("Failed to load resource");
+            applicationStatus.pausePlayFromStart();
         }
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        applicationStatus.pausePlayFromStart();
 
     }
 
@@ -52,7 +52,8 @@ public class MainWindowController implements Observer {
         appStatus.textFillProperty().bindBidirectional(applicationStatus.getAppStatus().textFillProperty());
         applicationStatus.setPauseDuration(15);
         applicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
-        vm.csvPath.bind(myPlayer.timeSeriesPath);
+        vm.csvPath.bindBidirectional(myPlayer.timeSeriesPath);
+
     }
 
     public Stage getStage() {
@@ -66,22 +67,39 @@ public class MainWindowController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if(o.getClass().equals(ViewModel.class)){
-            if(arg.toString().equals("FileNotFound")){
-                applicationStatus.setAppColor(Color.RED);
-                applicationStatus.setAppStatusValue("File not found");
+            switch (arg.toString()) {
+                case "FileNotFound" -> {
+                    applicationStatus.setAppColor(Color.RED);
+                    applicationStatus.setAppStatusValue("File not found");
+                    applicationStatus.pausePlayFromStart();
+                }
+                case "IllegalValues" -> {
+                    applicationStatus.setAppColor(Color.RED);
+                    applicationStatus.setAppStatusValue("Data is missing or invalid");
+                    applicationStatus.pausePlayFromStart();
+                }
+                case "XMLFormatDamaged" -> {
+                    applicationStatus.setAppColor(Color.RED);
+                    applicationStatus.setAppStatusValue("XML Format is damaged");
+                    applicationStatus.pausePlayFromStart();
+                }
+                case "LoadedSuccessfully" -> {
+                    applicationStatus.setAppColor(Color.GREEN);
+                    applicationStatus.setAppStatusValue("Resource has been loaded successfully");
+                    applicationStatus.pausePlayFromStart();
+                }
+                case "missingProperties" -> {
+                    applicationStatus.setAppColor(Color.RED);
+                    applicationStatus.setAppStatusValue("CSV-File is missing properties");
+                    applicationStatus.pausePlayFromStart();
+                }
+                case "incorrectFormat" -> {
+                    applicationStatus.setAppColor(Color.RED);
+                    applicationStatus.setAppStatusValue("Incorrect CSV-File format");
+                    applicationStatus.pausePlayFromStart();
+                }
             }
-            else if(arg.toString().equals("IllegalValues")){
-                applicationStatus.setAppColor(Color.RED);
-                applicationStatus.setAppStatusValue("Data is missing or invalid");
-            }
-            else if(arg.toString().equals("XMLFormatDamaged")){
-                applicationStatus.setAppColor(Color.RED);
-                applicationStatus.setAppStatusValue("XML Format is damaged");
-            }
-            else if(arg.toString().equals("LoadedSuccessfully")){
-                applicationStatus.setAppColor(Color.GREEN);
-                applicationStatus.setAppStatusValue("Resource has been loaded successfully");
-            }
+
         }
     }
 }

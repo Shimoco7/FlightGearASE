@@ -7,11 +7,15 @@ import ptm1.TimeSeriesAnomalyDetector;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Observable;
+import java.util.Scanner;
 
 public class FGModel extends Observable implements Model{
 
     Properties appProperties;
+    TimeSeries ts;
     FGPlayer fgp;
 
     public FGModel() {
@@ -26,7 +30,7 @@ public class FGModel extends Observable implements Model{
 
     @Override
     public void setTimeSeries(TimeSeries ts) {
-
+        this.ts = ts;
     }
 
     @Override
@@ -91,5 +95,48 @@ public class FGModel extends Observable implements Model{
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public String uploadCsv(String nv) {
+        HashSet<String> set = new HashSet<>();
+        LinkedHashMap<String, Properties.FeatureProperties> map = appProperties.getMap();
+
+        for(Properties.FeatureProperties fp : map.values()){
+            set.add(fp.getColName());
+        }
+
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new BufferedReader(new FileReader(nv)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String line = scanner.nextLine();
+        String[] features= line.split(",");
+        for(String feature: features){
+            if(set.contains(feature)){
+                set.remove(feature);
+            }
+        }
+
+        if(set.size()!=0)
+            return "missingProperties";
+
+        while(scanner.hasNext()){
+            features = scanner.next().split(",");
+            for(String f : features){
+                try{
+                    Double.parseDouble(f);
+                }
+                catch (NumberFormatException e){
+                    return "incorrectFormat";
+                }
+            }
+        }
+        scanner.close();
+
+        return "LoadedSuccessfully";
     }
 }

@@ -25,11 +25,13 @@ public class PlayerController implements Initializable {
     Stage stage;
     public StringProperty timeSeriesPath;
 
+    public PlayerController() {
+        stage = Main.getGuiStage();
+        timeSeriesPath = new SimpleStringProperty();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        stage = Main.getGuiStage();
-        timeSeriesPath = new SimpleStringProperty();
     }
 
 
@@ -47,7 +49,7 @@ public class PlayerController implements Initializable {
             applicationStatus.setAppStatusValue("Failed to load resource");
         }
         else{
-            timeSeriesPath.set(chosenFile.getAbsolutePath());
+            timeSeriesPath.setValue(chosenFile.getAbsolutePath());
         }
     }
 

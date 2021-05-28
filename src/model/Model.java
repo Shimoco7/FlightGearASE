@@ -12,4 +12,5 @@ public interface Model {
     void play(int start, int rate);
     void pause();
     void stop();
+    String uploadCsv(String nv);
 }
