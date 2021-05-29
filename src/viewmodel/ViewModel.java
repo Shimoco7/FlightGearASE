@@ -12,7 +12,7 @@ public class ViewModel extends Observable implements Observer {
 
     Model m;
     TimeSeries timeSeries;
-    public DoubleProperty aileron,elevators,rudder, throttle,
+    public DoubleProperty aileron, elevator,rudder, throttle,
         airspeed,heading,roll,pitch,yaw,altitude,longitude,latitude;
     public StringProperty csvPath;
 
@@ -21,7 +21,7 @@ public class ViewModel extends Observable implements Observer {
         this.m = m;
         csvPath= new SimpleStringProperty();
         aileron = new SimpleDoubleProperty();
-        elevators = new SimpleDoubleProperty();
+        elevator = new SimpleDoubleProperty();
         rudder = new SimpleDoubleProperty();
         throttle = new SimpleDoubleProperty();
         airspeed = new SimpleDoubleProperty();

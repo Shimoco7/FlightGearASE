@@ -1,14 +1,33 @@
 package view.joystick;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 
-public class JoystickController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class JoystickController implements Initializable {
     @FXML
     SpaceXJoystick joystick;
     @FXML
     Slider vertical;
     @FXML
     Slider horizontal;
+
+    public JoystickController() {
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+    }
+
+    public void redraw(){
+
+
+    }
 
 }

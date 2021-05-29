@@ -1,7 +1,5 @@
 package view;
 
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -51,7 +49,10 @@ public class MainWindowController implements Observer {
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-
+        vm.heading.set(135);
+        vm.altitude.set(2000);
+        vm.pitch.set(15);
+        vm.roll.set(30);
     }
 
     public void initialize(ViewModel vm) {
@@ -61,6 +62,18 @@ public class MainWindowController implements Observer {
         ApplicationStatus.setPauseDuration(15);
         ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
         vm.csvPath.bindBidirectional(myPlayer.timeSeriesPath);
+        myJoystick.aileron.bindBidirectional(vm.aileron);
+        myJoystick.elevator.bindBidirectional(vm.elevator);
+        myJoystick.rudder.bind(vm.rudder);
+        myJoystick.throttle.bind(vm.throttle);
+        myClocks.headingDeg.bind(vm.heading);
+        myClocks.pitch.bind(vm.pitch);
+        myClocks.roll.bind(vm.roll);
+        myClocks.altimeter.bind(vm.altitude);
+
+        //TODO: redraw method when x or y changed at spaceXJoystick
+        //TODO: add min/max values to the properties above from Properties file
+
 
     }
 

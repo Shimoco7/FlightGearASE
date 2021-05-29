@@ -34,11 +34,8 @@
    <right>
       <SplitPane dividerPositions="0.5" maxHeight="-Infinity" orientation="VERTICAL" prefHeight="448.0" prefWidth="428.0" BorderPane.alignment="CENTER">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="204.0" prefWidth="249.0">
-               <children>
-                  <Joystick fx:id="myJoystick" prefHeight="214.4" prefWidth="426.4" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                  <!--StackPane prefHeight="214.4" prefWidth="426.4" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" /-->
-               </children></AnchorPane>
+          <Joystick fx:id="myJoystick" minHeight="0.0" minWidth="0.0" prefHeight="204.0" prefWidth="249.0" />
+          <!--AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="204.0" prefWidth="249.0" /-->
           <AnchorPane maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="160.0">
                <children>
                   <Clocks fx:id="myClocks" prefHeight="200.0" prefWidth="200" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
