@@ -11,19 +11,25 @@ import java.io.IOException;
 
 public class Player extends AnchorPane {
 
-    public StringProperty timeSeriesPath;
+    public final PlayerController controller;
 
     public Player() {
         super();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Player.fxml"));
+        AnchorPane player=null;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Player.fxml"));
-            AnchorPane player = loader.load();
-            player.setLayoutX(180);
-            PlayerController playerController = loader.getController();
-            timeSeriesPath = playerController.timeSeriesPath;
-            this.getChildren().add(player);
+            player = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if(player!=null){
+            controller = loader.getController();
+            player.setLayoutX(180);
+            this.getChildren().add(player);
+        }
+        else{
+            controller = null;
         }
     }
 }

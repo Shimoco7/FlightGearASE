@@ -15,8 +15,8 @@
 <?import view.clocks.Clocks?>
 <?import view.player.Player?>
 <?import view.display.Display?>
-<?import view.joystick.Joystick?>
 
+<?import view.joystick.Joystick?>
 <BorderPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <top>
       <MenuBar prefHeight="26.0" prefWidth="762.0" BorderPane.alignment="CENTER">

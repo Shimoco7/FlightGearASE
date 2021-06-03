@@ -142,7 +142,6 @@ public class Altimeter extends Region {
     }
 
     private void initGraphics() {
-        //fontName      = Font.loadFont(Altimeter.class.getResourceAsStream("Verdana.ttf"), 10).getName();
 
         background    = new Region();
         background.getStyleClass().add("background");

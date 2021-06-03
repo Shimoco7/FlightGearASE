@@ -3,8 +3,10 @@ package viewmodel;
 import javafx.beans.property.*;
 import model.FGModel;
 import model.Model;
+import other.Properties;
 import ptm1.TimeSeries;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,26 +14,17 @@ public class ViewModel extends Observable implements Observer {
 
     Model m;
     TimeSeries timeSeries;
-    public DoubleProperty aileron, elevator,rudder, throttle,
-        airspeed,heading,roll,pitch,yaw,altitude,longitude,latitude;
+    Properties appProp;
+    private HashMap<String, DoubleProperty> displayVariables;
     public StringProperty csvPath;
 
 
     public ViewModel(Model m) {
         this.m = m;
+        displayVariables = new HashMap<>();
         csvPath= new SimpleStringProperty();
-        aileron = new SimpleDoubleProperty();
-        elevator = new SimpleDoubleProperty();
-        rudder = new SimpleDoubleProperty();
-        throttle = new SimpleDoubleProperty();
-        airspeed = new SimpleDoubleProperty();
-        heading = new SimpleDoubleProperty();
-        roll = new SimpleDoubleProperty();
-        pitch = new SimpleDoubleProperty();
-        yaw = new SimpleDoubleProperty();
-        altitude = new SimpleDoubleProperty();
-        longitude = new SimpleDoubleProperty();
-        latitude = new SimpleDoubleProperty();
+        appProp = m.getProperties();
+        initDisplayVariables();
 
         csvPath.addListener((o,ov,nv)->{
             String res = this.m.uploadCsv(nv);
@@ -44,6 +37,20 @@ public class ViewModel extends Observable implements Observer {
         });
     }
 
+    public DoubleProperty getProperty(String name){
+        if(displayVariables.containsKey(name))
+            return displayVariables.get(name);
+        else return null;
+    }
+
+    private void initDisplayVariables(){
+        if(displayVariables.keySet().size()!=0){
+            displayVariables.clear();
+        }
+        for(String feature : appProp.getMap().keySet()){
+            displayVariables.put(feature, new SimpleDoubleProperty());
+        }
+    }
     public void setAppProperties(String path){
         m.setProperties(path);
     }
@@ -73,6 +80,11 @@ public class ViewModel extends Observable implements Observer {
                     setChanged();
                     notifyObservers("LoadedSuccessfully");
                 }
+            }
+
+            if(arg.getClass().equals(Properties.class)){
+                appProp = (Properties) arg;
+                initDisplayVariables();
             }
         }
     }

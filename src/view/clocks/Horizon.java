@@ -168,7 +168,6 @@ public class Horizon extends Region {
     }
 
     private void initGraphics() {
-        //fontName      = Font.loadFont(Horizon.class.getResourceAsStream("Verdana.ttf"), 10).getName();
 
         background    = new Region();
         background.getStyleClass().add("background");

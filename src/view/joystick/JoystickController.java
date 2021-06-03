@@ -21,13 +21,10 @@ public class JoystickController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
-    }
-
-    public void redraw(){
-
+        joystick.yProperty().addListener(e-> joystick.paint());
+        joystick.xProperty().addListener(e-> joystick.paint());
 
     }
+
 
 }

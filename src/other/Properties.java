@@ -70,21 +70,21 @@ public class Properties implements Serializable {
         port=5400;
         hertzRate=10;
         //Gps
-        map.put("Latitude", new Properties.FeatureProperties("latitude-deg", Float.valueOf(-90),Float.valueOf(90)));
-        map.put("Longitude", new Properties.FeatureProperties("longitude-deg", Float.valueOf(-180),Float.valueOf(180)));
-        map.put("Altitude", new Properties.FeatureProperties("altimeter_indicated-altitude-ft", Float.MIN_VALUE,Float.MAX_VALUE));
+        map.put("latitude", new Properties.FeatureProperties("latitude-deg", Float.valueOf(-90),Float.valueOf(90)));
+        map.put("longitude", new Properties.FeatureProperties("longitude-deg", Float.valueOf(-180),Float.valueOf(180)));
+        map.put("altitude", new Properties.FeatureProperties("altimeter_indicated-altitude-ft", Float.MIN_VALUE,Float.MAX_VALUE));
 
-        map.put("Airspeed", new Properties.FeatureProperties("airspeed-indicator_indicated-speed-kt", Float.valueOf(0),Float.MAX_VALUE));
-        map.put("Heading", new Properties.FeatureProperties("indicated-heading-deg", Float.valueOf(0),Float.valueOf(359)));
-        map.put("Roll", new Properties.FeatureProperties("attitude-indicator_indicated-roll-deg", Float.valueOf(-90),Float.valueOf(90)));
-        map.put("Pitch", new Properties.FeatureProperties("attitude-indicator_internal-pitch-deg", Float.valueOf(-90),Float.valueOf(90)));
-        map.put("Yaw", new Properties.FeatureProperties("side-slip-deg", Float.valueOf(-90),Float.valueOf(90)));
+        map.put("airspeed", new Properties.FeatureProperties("airspeed-indicator_indicated-speed-kt", Float.valueOf(0),Float.MAX_VALUE));
+        map.put("heading", new Properties.FeatureProperties("indicated-heading-deg", Float.valueOf(0),Float.valueOf(359)));
+        map.put("roll", new Properties.FeatureProperties("attitude-indicator_indicated-roll-deg", Float.valueOf(-90),Float.valueOf(90)));
+        map.put("pitch", new Properties.FeatureProperties("attitude-indicator_internal-pitch-deg", Float.valueOf(-90),Float.valueOf(90)));
+        map.put("yaw", new Properties.FeatureProperties("side-slip-deg", Float.valueOf(-90),Float.valueOf(90)));
 
-        map.put("Throttle", new Properties.FeatureProperties("throttle", Float.valueOf(0),Float.valueOf(1)));
+        map.put("throttle", new Properties.FeatureProperties("throttle", Float.valueOf(0),Float.valueOf(1)));
 
-        map.put("Aileron", new Properties.FeatureProperties("aileron", Float.valueOf(-1),Float.valueOf(1)));
-        map.put("Elevators", new Properties.FeatureProperties("elevator",  Float.valueOf(-1),Float.valueOf(1)));
-        map.put("Rudder", new Properties.FeatureProperties("rudder",  Float.valueOf(-1),Float.valueOf(1)));
+        map.put("aileron", new Properties.FeatureProperties("aileron", Float.valueOf(-1),Float.valueOf(1)));
+        map.put("elevators", new Properties.FeatureProperties("elevator",  Float.valueOf(-1),Float.valueOf(1)));
+        map.put("rudder", new Properties.FeatureProperties("rudder",  Float.valueOf(-1),Float.valueOf(1)));
     }
 
     public boolean isValidProperties(){

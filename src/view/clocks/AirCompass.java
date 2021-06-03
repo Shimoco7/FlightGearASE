@@ -112,7 +112,6 @@ public class AirCompass extends Region {
     }
 
     private void initGraphics() {
-        //fontName      = Font.loadFont(AirCompass.class.getResourceAsStream("Verdana.ttf"), 10).getName();
 
         background    = new Region();
         background.getStyleClass().add("background");

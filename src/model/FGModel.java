@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.IntegerProperty;
 import other.Properties;
 import ptm1.TimeSeries;
 import ptm1.TimeSeriesAnomalyDetector;
@@ -15,6 +16,7 @@ import java.util.Scanner;
 public class FGModel extends Observable implements Model{
 
     Properties appProperties;
+    IntegerProperty timeStep;
     TimeSeries ts;
     FGPlayer fgp;
 
@@ -55,6 +57,7 @@ public class FGModel extends Observable implements Model{
                 appProperties = tempProperties;
                 setChanged();
                 notifyObservers("LoadedSuccessfully");
+                notifyObservers(appProperties);
             }
         }
         catch(Exception e){
@@ -78,12 +81,22 @@ public class FGModel extends Observable implements Model{
     }
 
     @Override
+    public <V> Properties getProperties() {
+        return appProperties;
+    }
+
+    @Override
     public void setAnomalyDetector(TimeSeriesAnomalyDetector ad) {
 
     }
 
     @Override
     public void play(int start, int rate) {
+
+    }
+
+    @Override
+    public void skipToStart() {
 
     }
 
@@ -138,5 +151,9 @@ public class FGModel extends Observable implements Model{
         scanner.close();
 
         return "LoadedCSVSuccessfully";
+    }
+
+    public Properties getAppProperties() {
+        return appProperties;
     }
 }

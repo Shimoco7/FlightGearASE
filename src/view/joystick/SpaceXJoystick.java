@@ -1,5 +1,4 @@
 package view.joystick;
-
 /*
  * Copyright (c) 2020 by Gerrit Grunwald
  *
@@ -19,6 +18,7 @@ package view.joystick;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.DoubleProperty;
@@ -27,12 +27,21 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.LongPropertyBase;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import javafx.util.Duration;
 
 
@@ -42,29 +51,31 @@ import javafx.util.Duration;
  * Time: 08:18
  */
 public class SpaceXJoystick extends Region {
-    public static final double                    PREFERRED_WIDTH  = 500;
-    public static final double                    PREFERRED_HEIGHT = 500;
+    private static final double                    PREFERRED_WIDTH  = 500;
+    private static final double                    PREFERRED_HEIGHT = 500;
     private static final double                    MINIMUM_WIDTH    = 50;
     private static final double                    MINIMUM_HEIGHT   = 50;
     private static final double                    MAXIMUM_WIDTH    = 1024;
     private static final double                    MAXIMUM_HEIGHT   = 1024;
-    public  static final double                     HALF_PI          = Math.PI / 2.0;
+    private static final double                    HALF_PI          = Math.PI / 2.0;
     private static final double                    MAX_STEP_SIZE    = 10;
-    public               double                    size;
-    public               double                    center;
-    public               Canvas                    background;
-    public               GraphicsContext           ctx;
-    public               Circle                    touchIndicator;
-    public               Circle                    touchPoint;
-    public               Arc                       touchN;
-    public               Arc                       touchNW;
-    public               Arc                       touchW;
-    public               Arc                       touchSW;
-    public               Arc                       touchS;
-    public               Arc                       touchSE;
-    public               Arc                       touchE;
-    public               Arc                       touchNE;
-    public               Pane                      pane;
+    public              double                    size;
+    public              double                    center;
+    private              double                    width;
+    private              double                    height;
+    private              Canvas                    background;
+    private              GraphicsContext           ctx;
+    private              Circle                    touchIndicator;
+    private              Circle                    touchPoint;
+    private              Arc                       touchN;
+    private              Arc                       touchNW;
+    private              Arc                       touchW;
+    private              Arc                       touchSW;
+    private              Arc                       touchS;
+    private              Arc                       touchSE;
+    private              Arc                       touchE;
+    private              Arc                       touchNE;
+    private              Pane                      pane;
     private              LockState                 _lockState;
     private              ObjectProperty<LockState> lockState;
     private              boolean                   _stickyMode;
@@ -77,21 +88,24 @@ public class SpaceXJoystick extends Region {
     private              DoubleProperty            stepSize;
     private              boolean                   _stepButtonsVisible;
     private              BooleanProperty           stepButtonsVisible;
-    public               Color                     _inactiveColor;
-    public               ObjectProperty<Color>     inactiveColor;
-    public               Color                     _activeColor;
-    public               ObjectProperty<Color>     activeColor;
-    public               Color                     _lockedColor;
-    public               ObjectProperty<Color>     lockedColor;
-    public               Color                     translucentActiveColor;
+    private              Color                     _inactiveColor;
+    private              ObjectProperty<Color>     inactiveColor;
+    private              Color                     _activeColor;
+    private              ObjectProperty<Color>     activeColor;
+    private              Color                     _lockedColor;
+    private              ObjectProperty<Color>     lockedColor;
+    private              Color                     transclucentActiveColor;
     private              boolean                   _touched;
     private              BooleanProperty           touched;
-    public               DoubleProperty            x;
-    public               DoubleProperty            y;
-    public               DoubleProperty            value;
-    public               DoubleProperty            angle;
-    public               double                    offsetX;
-    public               double                    offsetY;
+    private              DoubleProperty            x;
+    private              DoubleProperty            y;
+    private              DoubleProperty            value;
+    private              DoubleProperty            angle;
+    private              double                    offsetX;
+    private              double                    offsetY;
+    private              Timeline                  timeline;
+    private              EventHandler<MouseEvent>  mouseHandler;
+    private              EventHandler<TouchEvent>  touchHandler;
 
 
     // ******************** Constructors **************************************
@@ -99,14 +113,14 @@ public class SpaceXJoystick extends Region {
         center                  = PREFERRED_WIDTH * 0.5;
         _lockState              = LockState.UNLOCKED;
         _stickyMode             = true;
-        _animated               = false;
+        _animated               = true;
         _durationMillis         = 100;
         _stepSize               = 0.01;
         _stepButtonsVisible     = true;
         _inactiveColor          = Color.web("#506691");
         _activeColor            = Color.web("#CFF9FF");
         _lockedColor            = Color.web("#B36B6B");
-        translucentActiveColor = Color.color(_activeColor.getRed(), _activeColor.getGreen(), _activeColor.getBlue(), 0.25);
+        transclucentActiveColor = Color.color(_activeColor.getRed(), _activeColor.getGreen(), _activeColor.getBlue(), 0.25);
         _touched                = false;
         x                       = new DoublePropertyBase() {
             @Override protected void invalidated() {}
@@ -118,7 +132,7 @@ public class SpaceXJoystick extends Region {
             @Override public Object getBean() { return SpaceXJoystick.this; }
             @Override public String getName() { return "valueY"; }
         };
-        value                   = new DoublePropertyBase(0.0) {
+        value                   = new DoublePropertyBase(0) {
             @Override protected void invalidated() { redraw(); }
             @Override public Object getBean() { return SpaceXJoystick.this; }
             @Override public String getName() { return "value"; }
@@ -131,26 +145,11 @@ public class SpaceXJoystick extends Region {
         };
         offsetX                 = 0;
         offsetY                 = 0;
+
         initGraphics();
         registerListeners();
-
     }
 
-    public double getValue() { return value.get(); }
-    public void setValue(final double value) { this.value.set(value); }
-    public DoubleProperty valueProperty() { return value; }
-
-    public double getAngle() { return angle.get(); }
-    public void setAngle(final double angle) { this.angle.set(angle); }
-    public DoubleProperty angleProperty() { return angle; }
-
-    public double getX() { return x.get(); }
-    public void setX(final double x) { this.x.set(x); }
-    public DoubleProperty xProperty() { return x; }
-
-    public double getY() { return y.get(); }
-    public void setY(final double y) { this.y.set(y); }
-    public DoubleProperty yProperty() { return y; }
 
     // ******************** Initialization ************************************
     private void initGraphics() {
@@ -163,6 +162,7 @@ public class SpaceXJoystick extends Region {
             }
         }
 
+        getStyleClass().add("touch-joystick");
 
         background = new Canvas(0.7 * PREFERRED_WIDTH, 0.7 * PREFERRED_HEIGHT);
         background.setMouseTransparent(true);
@@ -183,7 +183,7 @@ public class SpaceXJoystick extends Region {
         touchIndicator.setMouseTransparent(true);
 
         touchPoint = new Circle();
-        touchPoint.setFill(Color.TRANSPARENT);
+        touchPoint.setFill(getActiveColor());
         touchPoint.setStroke(getActiveColor());
 
         pane = new Pane(background, touchN, touchNW, touchW, touchSW, touchS, touchSE, touchE, touchNE, touchIndicator, touchPoint);
@@ -205,15 +205,158 @@ public class SpaceXJoystick extends Region {
     @Override protected double computeMaxWidth(final double HEIGHT) { return MAXIMUM_WIDTH; }
     @Override protected double computeMaxHeight(final double WIDTH) { return MAXIMUM_HEIGHT; }
 
+    public void paint(){
+        touchPoint.setFill(Color.BLACK);
+        touchPoint.setStroke(getActiveColor());
+        double x   = getX();
+        double y   = getY();
+
+//        double dx  = x - center;
+//        double dy  = -(y - center);
+//        double rad = Math.atan2(dy, dx) + HALF_PI;
+//        double phi = Math.toDegrees(rad - Math.PI);
+//        if (phi < 0) { phi += 360.0; }
+        double maxR = size * 0.35;
+        touchPoint.setCenterX(getX()*maxR+center);
+        touchPoint.setCenterY(-getY()*maxR+center);
+//        setAngle(phi);
+        drawBackground();
+
+    }
 
     public LockState getLockState() { return null == lockState ? _lockState : lockState.get(); }
+    public void setLockState(final LockState lockState) {
+        if (null == this.lockState) {
+            _lockState = lockState;
+            switch(lockState) {
+                case X_LOCKED:
+                    touchN.setDisable(true);
+                    touchNW.setDisable(true);
+                    touchW.setDisable(false);
+                    touchSW.setDisable(true);
+                    touchS.setDisable(true);
+                    touchSE.setDisable(true);
+                    touchE.setDisable(false);
+                    touchNE.setDisable(true);
+                    break;
+                case Y_LOCKED:
+                    touchN.setDisable(false);
+                    touchNW.setDisable(true);
+                    touchW.setDisable(true);
+                    touchSW.setDisable(true);
+                    touchS.setDisable(false);
+                    touchSE.setDisable(true);
+                    touchE.setDisable(true);
+                    touchNE.setDisable(true);
+                    break;
+                case UNLOCKED:
+                default:
+                    touchN.setDisable(false);
+                    touchNW.setDisable(false);
+                    touchW.setDisable(false);
+                    touchSW.setDisable(false);
+                    touchS.setDisable(false);
+                    touchSE.setDisable(false);
+                    touchE.setDisable(false);
+                    touchNE.setDisable(false);
+                    break;
+            }
+            redraw();
+        } else {
+            this.lockState.set(lockState);
+        }
+    }
+    public ObjectProperty<LockState> lockStateProperty() {
+        if (null == lockState) {
+            lockState = new ObjectPropertyBase<>(_lockState) {
+                @Override protected void invalidated() {
+                    switch(get()) {
+                        case X_LOCKED:
+                            touchN.setDisable(false);
+                            touchNW.setDisable(true);
+                            touchW.setDisable(true);
+                            touchSW.setDisable(true);
+                            touchS.setDisable(false);
+                            touchSE.setDisable(true);
+                            touchE.setDisable(true);
+                            touchNE.setDisable(true);
+                            break;
+                        case Y_LOCKED:
+                            touchN.setDisable(false);
+                            touchNW.setDisable(false);
+                            touchW.setDisable(false);
+                            touchSW.setDisable(false);
+                            touchS.setDisable(false);
+                            touchSE.setDisable(false);
+                            touchE.setDisable(false);
+                            touchNE.setDisable(false);
+                            break;
+                        case UNLOCKED:
+                        default:
+                            touchN.setDisable(false);
+                            touchNW.setDisable(false);
+                            touchW.setDisable(false);
+                            touchSW.setDisable(false);
+                            touchS.setDisable(false);
+                            touchSE.setDisable(false);
+                            touchE.setDisable(false);
+                            touchNE.setDisable(false);
+                            break;
+                    }
+                    redraw();
+                }
+                @Override public Object getBean() { return SpaceXJoystick.this; }
+                @Override public String getName() { return "lockState"; }
+            };
+            _lockState = null;
+        }
+        return lockState;
+    }
 
     public boolean isStickyMode() { return null == stickyMode ? _stickyMode : stickyMode.get(); }
+    public void setStickyMode(final boolean stickyMode) {
+        if (null == this.stickyMode) {
+            _stickyMode = stickyMode;
+        } else {
+            this.stickyMode.set(stickyMode);
+        }
+    }
+    public BooleanProperty stickyModeProperty() {
+        if (null == stickyMode) {
+            stickyMode = new BooleanPropertyBase(_stickyMode) {
+                @Override public Object getBean() { return SpaceXJoystick.this; }
+                @Override public String getName() { return "stickyMode"; }
+            };
+        }
+        return stickyMode;
+    }
 
     public boolean isAnimated() { return null == animated ? _animated : animated.get(); }
+    public void setAnimated(final boolean animated) {
+        if (null == this.animated) {
+            _animated = animated;
+        } else {
+            this.animated.set(animated);
+        }
+    }
+    public BooleanProperty animatedProperty() {
+        if (null == animated) {
+            animated = new BooleanPropertyBase(_animated) {
+                @Override public Object getBean() { return SpaceXJoystick.this; }
+                @Override public String getName() { return "animated"; }
+            };
+        }
+        return animated;
+    }
 
     public long getDurationMillis() { return null == durationMillis ? _durationMillis : durationMillis.get(); }
-
+    public void setDurationMillis(final long durationMillis) {
+        if (null == this.durationMillis) {
+            _durationMillis = clamp(10, 1000, durationMillis);
+        } else {
+            this.durationMillis.set(durationMillis);
+        }
+    }
     public LongProperty durationMillisProperty() {
         if (null == durationMillis) {
             durationMillis = new LongPropertyBase(_durationMillis) {
@@ -225,6 +368,14 @@ public class SpaceXJoystick extends Region {
         return durationMillis;
     }
 
+    public double getStepSize() { return null == stepSize ? _stepSize : stepSize.get(); }
+    public void setStepSize(final double stepSize) {
+        if (null == this.stepSize) {
+            _stepSize = clamp(0.001, MAX_STEP_SIZE, stepSize);
+        } else {
+            this.stepSize.set(stepSize);
+        }
+    }
     public DoubleProperty stepSizeProperty() {
         if (null == stepSize) {
             stepSize = new DoublePropertyBase(_stepSize) {
@@ -236,6 +387,7 @@ public class SpaceXJoystick extends Region {
         return stepSize;
     }
 
+    public boolean getStepButtonsVisible() { return null == stepButtonsVisible ? _stepButtonsVisible : stepButtonsVisible.get(); }
     public void setStepButtonsVisible(final boolean stepButtonsVisible) {
         if (null == this.stepButtonsVisible) {
             _stepButtonsVisible = stepButtonsVisible;
@@ -298,7 +450,7 @@ public class SpaceXJoystick extends Region {
     public void setActiveColor(final Color activeColor) {
         if (null == this.activeColor) {
             _activeColor            = activeColor;
-            translucentActiveColor = Color.color(_activeColor.getRed(), _activeColor.getGreen(), _activeColor.getBlue(), 0.25);
+            transclucentActiveColor = Color.color(_activeColor.getRed(), _activeColor.getGreen(), _activeColor.getBlue(), 0.25);
             redraw();
         } else {
             this.activeColor.set(activeColor);
@@ -306,9 +458,9 @@ public class SpaceXJoystick extends Region {
     }
     public ObjectProperty<Color> activeColorProperty() {
         if (null == activeColor) {
-            activeColor = new ObjectPropertyBase<>(_activeColor) {
+            activeColor = new ObjectPropertyBase<Color>(_activeColor) {
                 @Override protected void invalidated() {
-                    translucentActiveColor = Color.color(get().getRed(), get().getGreen(), get().getBlue(), 0.25);
+                    transclucentActiveColor = Color.color(get().getRed(), get().getGreen(), get().getBlue(), 0.25);
                     redraw();
                 }
                 @Override public Object getBean() { return SpaceXJoystick.this; }
@@ -330,21 +482,10 @@ public class SpaceXJoystick extends Region {
     }
     public ObjectProperty<Color> lockedColorProperty() {
         if (null == lockedColor) {
-            lockedColor = new ObjectPropertyBase<>(_lockedColor) {
-                @Override
-                protected void invalidated() {
-                    redraw();
-                }
-
-                @Override
-                public Object getBean() {
-                    return SpaceXJoystick.this;
-                }
-
-                @Override
-                public String getName() {
-                    return "lockedColor";
-                }
+            lockedColor = new ObjectPropertyBase<Color>(_lockedColor) {
+                @Override protected void invalidated() { redraw(); }
+                @Override public Object getBean() { return SpaceXJoystick.this; }
+                @Override public String getName() { return "lockedColor"; }
             };
             _lockedColor = null;
         }
@@ -352,6 +493,40 @@ public class SpaceXJoystick extends Region {
     }
 
     public boolean isTouched() { return null == touched ? _touched : touched.get(); }
+    private void setTouched(final boolean touched) {
+        if (null == this.touched) {
+            _touched = touched;
+            redraw();
+        } else {
+            this.touched.set(touched);
+        }
+    }
+    public ReadOnlyBooleanProperty touchedProperty() {
+        if (null == touched) {
+            touched = new BooleanPropertyBase(_touched) {
+                @Override protected void invalidated() { redraw(); }
+                @Override public Object getBean() { return SpaceXJoystick.this; }
+                @Override public String getName() { return "touched"; }
+            };
+        }
+        return touched;
+    }
+
+    public double getValue() { return value.get(); }
+    private void setValue(final double value) { this.value.set(value); }
+    public DoubleProperty valueProperty() { return value; }
+
+    public double getAngle() { return angle.get(); }
+    private void setAngle(final double angle) { this.angle.set(angle); }
+    public DoubleProperty angleProperty() { return angle; }
+
+    public double getX() { return x.get(); }
+    private void setX(final double x) { this.x.set(x); }
+    public DoubleProperty xProperty() { return x; }
+
+    public double getY() { return y.get(); }
+    private void setY(final double y) { this.y.set(y); }
+    public DoubleProperty yProperty() { return y; }
 
     private void reset() {
         if (!isStickyMode()) {
@@ -364,6 +539,8 @@ public class SpaceXJoystick extends Region {
                 KeyValue kvV1 = new KeyValue(value, 0, Interpolator.EASE_OUT);
                 KeyFrame kf0  = new KeyFrame(Duration.ZERO, kvX0, kvY0, kvV0);
                 KeyFrame kf1  = new KeyFrame(Duration.millis(getDurationMillis()), kvX1, kvY1, kvV1);
+                timeline.getKeyFrames().setAll(kf0, kf1);
+                timeline.play();
             } else {
                 touchPoint.setCenterX(center);
                 touchPoint.setCenterY(center);
@@ -376,28 +553,29 @@ public class SpaceXJoystick extends Region {
 
     private void resetTouchButtons() {
         Color inactiveColor = getInactiveColor();
-        switch (getLockState()) {
-            case X_LOCKED -> {
-                touchN.setStroke(translucentActiveColor);
-                touchNW.setStroke(translucentActiveColor);
+        switch(getLockState()) {
+            case X_LOCKED:
+                touchN.setStroke(transclucentActiveColor);
+                touchNW.setStroke(transclucentActiveColor);
                 touchW.setStroke(inactiveColor);
-                touchSW.setStroke(translucentActiveColor);
-                touchS.setStroke(translucentActiveColor);
-                touchSE.setStroke(translucentActiveColor);
+                touchSW.setStroke(transclucentActiveColor);
+                touchS.setStroke(transclucentActiveColor);
+                touchSE.setStroke(transclucentActiveColor);
                 touchE.setStroke(inactiveColor);
-                touchNE.setStroke(translucentActiveColor);
-            }
-            case Y_LOCKED -> {
+                touchNE.setStroke(transclucentActiveColor);
+                break;
+            case Y_LOCKED:
                 touchN.setStroke(inactiveColor);
-                touchNW.setStroke(translucentActiveColor);
-                touchW.setStroke(translucentActiveColor);
-                touchSW.setStroke(translucentActiveColor);
+                touchNW.setStroke(transclucentActiveColor);
+                touchW.setStroke(transclucentActiveColor);
+                touchSW.setStroke(transclucentActiveColor);
                 touchS.setStroke(inactiveColor);
-                touchSE.setStroke(translucentActiveColor);
-                touchE.setStroke(translucentActiveColor);
-                touchNE.setStroke(translucentActiveColor);
-            }
-            default -> {
+                touchSE.setStroke(transclucentActiveColor);
+                touchE.setStroke(transclucentActiveColor);
+                touchNE.setStroke(transclucentActiveColor);
+                break;
+            case UNLOCKED:
+            default:
                 touchN.setStroke(inactiveColor);
                 touchNW.setStroke(inactiveColor);
                 touchW.setStroke(inactiveColor);
@@ -406,11 +584,11 @@ public class SpaceXJoystick extends Region {
                 touchSE.setStroke(inactiveColor);
                 touchE.setStroke(inactiveColor);
                 touchNE.setStroke(inactiveColor);
-            }
+                break;
         }
     }
 
-    public void setXY(final double newX, final double newY) {
+    private void setXY(final double newX, final double newY, final double newAngle) {
         double x   = clamp(size * 0.15, size * 0.85, newX);
         double y   = clamp(size * 0.15, size * 0.85, newY);
         double dx  = x - center;
@@ -433,7 +611,7 @@ public class SpaceXJoystick extends Region {
         touchPoint.setCenterY(y);
         setValue(r / maxR);
 
-        //redraw();
+        reset();
     }
 
     private Arc createArc(final double startAngle) {
@@ -443,21 +621,23 @@ public class SpaceXJoystick extends Region {
         return arc;
     }
 
-    private double clamp(final double min, final double max, final double value) {
+    public double clamp(final double min, final double max, final double value) {
         if (value < min) { return min; }
-        return Math.min(value, max);
+        if (value > max) { return max; }
+        return value;
     }
     private long clamp(final long min, final long max, final long value) {
         if (value < min) { return min; }
-        return Math.min(value, max);
+        if (value > max) { return max; }
+        return value;
     }
 
 
     // ******************** Resizing ******************************************
     private void resize() {
-        double width = getWidth() - getInsets().getLeft() - getInsets().getRight();
-        double height = getHeight() - getInsets().getTop() - getInsets().getBottom();
-        size   = Math.min(width, height);
+        width  = getWidth() - getInsets().getLeft() - getInsets().getRight();
+        height = getHeight() - getInsets().getTop() - getInsets().getBottom();
+        size   = width < height ? width : height;
         center = size * 0.5;
 
         if (width > 0 && height > 0) {
@@ -498,21 +678,21 @@ public class SpaceXJoystick extends Region {
         arc.setStrokeWidth(0.084 * size);
     }
 
-    public void drawBackground() {
+    private void drawBackground() {
         double w = background.getWidth();
         double h = background.getHeight();
         ctx.clearRect(0, 0, background.getWidth(), background.getHeight());
         ctx.setFill(getInactiveColor());
         ctx.fillOval(0, 0, w, h);
         ctx.setFill(Color.TRANSPARENT);
-        ctx.setStroke(LockState.X_LOCKED == getLockState() || LockState.Y_LOCKED == getLockState() ? getLockedColor() : translucentActiveColor);
+        ctx.setStroke(LockState.X_LOCKED == getLockState() || LockState.Y_LOCKED == getLockState() ? getLockedColor() : transclucentActiveColor);
         ctx.strokeLine(0.15 * w, 0.15 * h, 0.85 * w, 0.85 * h);
         ctx.strokeLine(0.85 * w, 0.15 * h, 0.15 * w, 0.85 * h);
-        ctx.setStroke(translucentActiveColor);
+        ctx.setStroke(transclucentActiveColor);
         ctx.strokeOval(0.42857143 * w, 0.42857143 * h, 0.14285714 * w, 0.14285714 * h);
-        ctx.setStroke(LockState.Y_LOCKED == getLockState() ? getLockedColor() : translucentActiveColor);
+        ctx.setStroke(LockState.Y_LOCKED == getLockState() ? getLockedColor() : transclucentActiveColor);
         ctx.strokeLine(0, 0.5 * h, w, 0.5 *h);
-        ctx.setStroke(LockState.X_LOCKED == getLockState() ? getLockedColor() : translucentActiveColor);
+        ctx.setStroke(LockState.X_LOCKED == getLockState() ? getLockedColor() : transclucentActiveColor);
         ctx.strokeLine(0.5 * w, 0, 0.5 * w, h);
 
         ctx.save();
@@ -538,32 +718,33 @@ public class SpaceXJoystick extends Region {
         ctx.restore();
     }
 
-    public void redraw() {
+    private void redraw() {
         drawBackground();
         Color activeColor   = getActiveColor();
         Color inactiveColor = getInactiveColor();
-        switch (getLockState()) {
-            case X_LOCKED -> {
-                touchN.setStroke(translucentActiveColor);
-                touchNW.setStroke(translucentActiveColor);
+        switch(getLockState()) {
+            case X_LOCKED:
+                touchN.setStroke(transclucentActiveColor);
+                touchNW.setStroke(transclucentActiveColor);
                 touchW.setStroke(touchW.isHover() ? activeColor : inactiveColor);
-                touchSW.setStroke(translucentActiveColor);
-                touchS.setStroke(translucentActiveColor);
-                touchSE.setStroke(translucentActiveColor);
+                touchSW.setStroke(transclucentActiveColor);
+                touchS.setStroke(transclucentActiveColor);
+                touchSE.setStroke(transclucentActiveColor);
                 touchE.setStroke(touchE.isHover() ? activeColor : inactiveColor);
-                touchNE.setStroke(translucentActiveColor);
-            }
-            case Y_LOCKED -> {
+                touchNE.setStroke(transclucentActiveColor);
+                break;
+            case Y_LOCKED:
                 touchN.setStroke(touchN.isHover() ? activeColor : inactiveColor);
-                touchNW.setStroke(translucentActiveColor);
-                touchW.setStroke(translucentActiveColor);
-                touchSW.setStroke(translucentActiveColor);
+                touchNW.setStroke(transclucentActiveColor);
+                touchW.setStroke(transclucentActiveColor);
+                touchSW.setStroke(transclucentActiveColor);
                 touchS.setStroke(touchS.isHover() ? activeColor : inactiveColor);
-                touchSE.setStroke(translucentActiveColor);
-                touchE.setStroke(translucentActiveColor);
-                touchNE.setStroke(translucentActiveColor);
-            }
-            default -> {
+                touchSE.setStroke(transclucentActiveColor);
+                touchE.setStroke(transclucentActiveColor);
+                touchNE.setStroke(transclucentActiveColor);
+                break;
+            case UNLOCKED:
+            default:
                 touchN.setStroke(touchN.isHover() ? activeColor : inactiveColor);
                 touchNW.setStroke(touchNW.isHover() ? activeColor : inactiveColor);
                 touchW.setStroke(touchW.isHover() ? activeColor : inactiveColor);
@@ -572,10 +753,12 @@ public class SpaceXJoystick extends Region {
                 touchSE.setStroke(touchSE.isHover() ? activeColor : inactiveColor);
                 touchE.setStroke(touchE.isHover() ? activeColor : inactiveColor);
                 touchNE.setStroke(touchNE.isHover() ? activeColor : inactiveColor);
-            }
+                break;
         }
 
-        touchPoint.setFill(isTouched() ? activeColor : Color.TRANSPARENT);
-        touchIndicator.setStroke(isTouched() ? activeColor : inactiveColor);
+        touchPoint.setFill(Color.BLACK);
+        //touchPoint.setRadius(size*0.225);
+        touchPoint.setStroke(activeColor);
+        touchIndicator.setStroke(inactiveColor);
     }
 }

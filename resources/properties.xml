@@ -9,7 +9,7 @@
   </void>
   <void property="map">
    <void method="put">
-    <string>Latitude</string>
+    <string>latitude</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>latitude-deg</string>
@@ -23,7 +23,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Longitude</string>
+    <string>longitude</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>longitude-deg</string>
@@ -37,7 +37,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Altitude</string>
+    <string>altitude</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>altimeter_indicated-altitude-ft</string>
@@ -51,7 +51,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Airspeed</string>
+    <string>airspeed</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>airspeed-indicator_indicated-speed-kt</string>
@@ -65,7 +65,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Heading</string>
+    <string>heading</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>indicated-heading-deg</string>
@@ -79,7 +79,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Roll</string>
+    <string>roll</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>attitude-indicator_indicated-roll-deg</string>
@@ -93,7 +93,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Pitch</string>
+    <string>pitch</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>attitude-indicator_internal-pitch-deg</string>
@@ -107,7 +107,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Yaw</string>
+    <string>yaw</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>side-slip-deg</string>
@@ -121,7 +121,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Throttle</string>
+    <string>throttle</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>throttle</string>
@@ -135,7 +135,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Aileron</string>
+    <string>aileron</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>aileron</string>
@@ -149,7 +149,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Elevators</string>
+    <string>elevators</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>elevator</string>
@@ -163,7 +163,7 @@
     </object>
    </void>
    <void method="put">
-    <string>Rudder</string>
+    <string>rudder</string>
     <object class="other.Properties$FeatureProperties">
      <void property="colName">
       <string>rudder</string>

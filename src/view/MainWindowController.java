@@ -49,10 +49,8 @@ public class MainWindowController implements Observer {
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        vm.heading.set(135);
-        vm.altitude.set(2000);
-        vm.pitch.set(15);
-        vm.roll.set(30);
+        vm.getProperty("aileron").set(1);
+        vm.getProperty("elevators").set(1);
     }
 
     public void initialize(ViewModel vm) {
@@ -61,19 +59,15 @@ public class MainWindowController implements Observer {
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
         ApplicationStatus.setPauseDuration(15);
         ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
-        vm.csvPath.bindBidirectional(myPlayer.timeSeriesPath);
-        myJoystick.aileron.bindBidirectional(vm.aileron);
-        myJoystick.elevator.bindBidirectional(vm.elevator);
-        myJoystick.rudder.bind(vm.rudder);
-        myJoystick.throttle.bind(vm.throttle);
-        myClocks.headingDeg.bind(vm.heading);
-        myClocks.pitch.bind(vm.pitch);
-        myClocks.roll.bind(vm.roll);
-        myClocks.altimeter.bind(vm.altitude);
-
-        //TODO: redraw method when x or y changed at spaceXJoystick
-        //TODO: add min/max values to the properties above from Properties file
-
+        vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
+        myJoystick.aileron.bindBidirectional(vm.getProperty("aileron"));
+        myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
+        myJoystick.rudder.bind(vm.getProperty("rudder"));
+        myJoystick.throttle.bind(vm.getProperty("throttle"));
+        myClocks.headingDeg.bind(vm.getProperty("heading"));
+        myClocks.pitch.bind(vm.getProperty("pitch"));
+        myClocks.roll.bind(vm.getProperty("roll"));
+        myClocks.altimeter.bind(vm.getProperty("altitude"));
 
     }
 
