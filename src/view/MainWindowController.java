@@ -1,6 +1,5 @@
 package view;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -22,16 +21,11 @@ public class MainWindowController implements Observer {
 
     ViewModel vm;
     Stage stage;
-    @FXML
-    Player myPlayer;
-    @FXML
-    Joystick myJoystick;
-    @FXML
-    Label appStatus;
-    @FXML
-    Clocks myClocks;
-    @FXML
-    Display myDisplay;
+    @FXML Player myPlayer;
+    @FXML Joystick myJoystick;
+    @FXML Label appStatus;
+    @FXML Clocks myClocks;
+    @FXML Display myDisplay;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -58,15 +52,23 @@ public class MainWindowController implements Observer {
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
         ApplicationStatus.setPauseDuration(15);
         ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
+        myPlayer.controller.onPlay = vm.onPlay;
+        myPlayer.controller.onStop = vm.onStop;
+        myPlayer.controller.onPause = vm.onPause;
+        myPlayer.controller.onFastForward = vm.onFastForward;
+        myPlayer.controller.onSlowForward =vm.onSlowForward;
+        myPlayer.controller.onToEnd = vm.onToEnd;
+        myPlayer.controller.onToStart = vm.onToStart;
 
         assert myPlayer.controller != null;
         vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
         myPlayer.controller.slider.valueProperty().bindBidirectional(vm.timeStep);
+        myPlayer.controller.playSpeed.textProperty().bindBidirectional(vm.playSpeed);
         myJoystick.aileron.bindBidirectional(vm.getProperty("aileron"));
         myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
         myJoystick.rudder.bind(vm.getProperty("rudder"));
         myJoystick.throttle.bind(vm.getProperty("throttle"));
-        myClocks.headingDeg.bindBidirectional(vm.getProperty("heading"));
+        myClocks.headingDeg.bind(vm.getProperty("heading"));
         myClocks.pitch.bind(vm.getProperty("pitch"));
         myClocks.roll.bind(vm.getProperty("roll"));
         myClocks.altimeter.bind(vm.getProperty("altitude"));
@@ -114,32 +116,57 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     myDisplay.propList.setAll(vm.getTimeSeries().getFeatures());
-                    myPlayer.controller.slider.setDisable(false);
+                    setButtonsEnabled();
+
                     myPlayer.controller.slider.setMin(0);
                     myPlayer.controller.slider.setMax(vm.getTimeSeries().getRowSize()-1);
                     myPlayer.controller.slider.setBlockIncrement(1);
                     myPlayer.controller.slider.setMajorTickUnit(1);
                     myPlayer.controller.slider.setMinorTickCount(0);
                     myPlayer.controller.slider.setSnapToTicks(true);
-                    //myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
+                    myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
                     break;
                 }
                 case "missingProperties":{
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
-                    myPlayer.controller.slider.setDisable(true);
+                    setButtonsDisabled();
                     break;
                 }
                 case "incorrectFormat": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
-                    myPlayer.controller.slider.setDisable(true);
+                    setButtonsDisabled();
                     break;
                 }
             }
 
         }
+    }
+
+    private void setButtonsDisabled(){
+        myPlayer.controller.slider.setDisable(true);
+        myPlayer.controller.play.setDisable(true);
+        myPlayer.controller.stop.setDisable(true);
+        myPlayer.controller.pause.setDisable(true);
+        myPlayer.controller.fastForward.setDisable(true);
+        myPlayer.controller.slowForward.setDisable(true);
+        myPlayer.controller.toEnd.setDisable(true);
+        myPlayer.controller.toStart.setDisable(true);
+        myPlayer.controller.playSpeed.clear();
+    }
+
+    private void setButtonsEnabled(){
+        myPlayer.controller.slider.setDisable(false);
+        myPlayer.controller.play.setDisable(false);
+        myPlayer.controller.stop.setDisable(false);
+        myPlayer.controller.pause.setDisable(false);
+        myPlayer.controller.fastForward.setDisable(false);
+        myPlayer.controller.slowForward.setDisable(false);
+        myPlayer.controller.toEnd.setDisable(false);
+        myPlayer.controller.toStart.setDisable(false);
+        myPlayer.controller.playSpeed.setText("1.0");
     }
 }

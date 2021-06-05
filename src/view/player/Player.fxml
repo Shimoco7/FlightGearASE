@@ -12,7 +12,7 @@
 <AnchorPane prefHeight="78.0" prefWidth="587.0" style="-fx-border-color: #000000; -fx-border-radius: 9,8,5,4;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.player.PlayerController">
    <children>
       <Button id="ipad-grey" layoutX="14.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openCSV" prefHeight="30.0" prefWidth="74.0" stylesheets="@player.css" text="Open" textAlignment="CENTER" />
-      <Button layoutX="182.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css" textFill="WHITE">
+      <Button fx:id="play" layoutX="182.0" layoutY="13.0" mnemonicParsing="false" onAction="#play" styleClass="Symbols" stylesheets="@player.css" textFill="WHITE">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -21,7 +21,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="220.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="pause" layoutX="220.0" layoutY="13.0" mnemonicParsing="false" onAction="#pause" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -30,7 +30,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="144.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="slowForward" layoutX="144.0" layoutY="13.0" mnemonicParsing="false" onAction="#slowForward" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -39,7 +39,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="102.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="toStart" layoutX="102.0" layoutY="13.0" mnemonicParsing="false" onAction="#toStart" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -47,7 +47,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Button layoutX="258.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="stop" layoutX="258.0" layoutY="13.0" mnemonicParsing="false" onAction="#stop" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -56,7 +56,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="296.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="fastForward" layoutX="296.0" layoutY="13.0" mnemonicParsing="false" onAction="#fastForward" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -65,7 +65,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="334.0" layoutY="13.0" mnemonicParsing="false" styleClass="Symbols" stylesheets="@player.css">
+      <Button fx:id="toEnd" layoutX="334.0" layoutY="13.0" mnemonicParsing="false" onAction="#toEnd" styleClass="Symbols" stylesheets="@player.css">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -74,7 +74,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextField fx:id="playSpeed" layoutX="461.0" layoutY="12.0" prefHeight="30.0" prefWidth="46.0" />
+      <TextField fx:id="playSpeed" editable="false" layoutX="461.0" layoutY="12.0" prefHeight="30.0" prefWidth="46.0" />
       <Label layoutX="380.0" layoutY="16.0" text="Play Speed" textAlignment="CENTER">
          <font>
             <Font size="15.0" />

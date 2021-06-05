@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -19,11 +20,13 @@ import java.util.ResourceBundle;
 
 public class PlayerController implements Initializable {
 
-    @FXML TextField playSpeed;
-    @FXML Label flightTime;
+    @FXML public TextField playSpeed;
+    @FXML public Label flightTime;
     @FXML public Slider slider;
+    @FXML public Button play,stop,pause,fastForward, slowForward,toEnd,toStart;
     Stage stage;
     public StringProperty timeSeriesPath;
+    public Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
 
 
     public PlayerController() {
@@ -34,6 +37,13 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         slider.setDisable(true);
+        play.setDisable(true);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        fastForward.setDisable(true);
+        slowForward.setDisable(true);
+        toEnd.setDisable(true);
+        toStart.setDisable(true);
     }
 
 
@@ -61,5 +71,40 @@ public class PlayerController implements Initializable {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void play(){
+        if(onPlay!=null)
+            onPlay.run();
+    }
+
+    public void stop(){
+        if(onStop!=null)
+            onStop.run();
+    }
+
+    public void pause(){
+        if(onPause!=null)
+            onPause.run();
+    }
+
+    public void fastForward(){
+        if(onFastForward!=null)
+            onFastForward.run();
+    }
+
+    public void slowForward(){
+        if(onSlowForward !=null)
+            onSlowForward.run();
+    }
+
+    public void toEnd(){
+        if(onToEnd!=null)
+            onToEnd.run();
+    }
+
+    public void toStart(){
+        if(onToStart!=null)
+            onToStart.run();
     }
 }

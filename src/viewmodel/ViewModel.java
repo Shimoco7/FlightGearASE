@@ -1,5 +1,6 @@
 package viewmodel;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import model.FGModel;
 import model.Model;
@@ -18,7 +19,8 @@ public class ViewModel extends Observable implements Observer {
     Properties appProp;
     private HashMap<String, DoubleProperty> displayVariables;
     public IntegerProperty timeStep;
-    public StringProperty csvPath;
+    public StringProperty csvPath,playSpeed;
+    public final Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
 
 
     public ViewModel(Model m) {
@@ -26,6 +28,7 @@ public class ViewModel extends Observable implements Observer {
         displayVariables = new HashMap<>();
         csvPath= new SimpleStringProperty();
         timeStep = new SimpleIntegerProperty();
+        playSpeed = new SimpleStringProperty();
         m.setTimeStep(this.timeStep);
         appProp = m.getProperties();
         initDisplayVariables();
@@ -42,20 +45,29 @@ public class ViewModel extends Observable implements Observer {
 
         timeStep.addListener((o,ov,nv)->{
             ArrayList<Float> row = timeSeries.getRow((Integer) nv);
-            displayVariables.get("aileron").set(row.get(appProp.getMap().get("aileron").getIndex()));
-            displayVariables.get("elevators").set(row.get(appProp.getMap().get("elevators").getIndex()));
-            displayVariables.get("rudder").set(row.get(appProp.getMap().get("rudder").getIndex()));
-            displayVariables.get("throttle").set(row.get(appProp.getMap().get("throttle").getIndex()));
-            displayVariables.get("altitude").set(row.get(appProp.getMap().get("altitude").getIndex()));
-            displayVariables.get("heading").set(-(row.get(appProp.getMap().get("heading").getIndex())));
-            displayVariables.get("pitch").set(row.get(appProp.getMap().get("pitch").getIndex()));
-            displayVariables.get("roll").set(row.get(appProp.getMap().get("roll").getIndex()));
-            displayVariables.get("yaw").set(row.get(appProp.getMap().get("yaw").getIndex()));
-            displayVariables.get("airspeed").set(row.get(appProp.getMap().get("airspeed").getIndex()));
-            displayVariables.get("longitude").set(row.get(appProp.getMap().get("longitude").getIndex()));
-            displayVariables.get("latitude").set(row.get(appProp.getMap().get("latitude").getIndex()));
+            Platform.runLater(() -> {
+                displayVariables.get("aileron").set(row.get(appProp.getMap().get("aileron").getIndex()));
+                displayVariables.get("elevators").set(row.get(appProp.getMap().get("elevators").getIndex()));
+                displayVariables.get("rudder").set(row.get(appProp.getMap().get("rudder").getIndex()));
+                displayVariables.get("throttle").set(row.get(appProp.getMap().get("throttle").getIndex()));
+                displayVariables.get("altitude").set(row.get(appProp.getMap().get("altitude").getIndex()));
+                displayVariables.get("heading").set(-(row.get(appProp.getMap().get("heading").getIndex())));
+                displayVariables.get("pitch").set(row.get(appProp.getMap().get("pitch").getIndex()));
+                displayVariables.get("roll").set(row.get(appProp.getMap().get("roll").getIndex()));
+                displayVariables.get("yaw").set(row.get(appProp.getMap().get("yaw").getIndex()));
+                displayVariables.get("airspeed").set(row.get(appProp.getMap().get("airspeed").getIndex()));
+                displayVariables.get("longitude").set(row.get(appProp.getMap().get("longitude").getIndex()));
+                displayVariables.get("latitude").set(row.get(appProp.getMap().get("latitude").getIndex()));
+            });
         });
 
+        onPlay = ()->m.play();
+        onStop = ()->m.stop();
+        onPause = ()->m.pause();
+        onFastForward = ()->m.fastForward();
+        onSlowForward = ()->m.slowForward();
+        onToStart = ()->m.skipToStart();
+        onToEnd = ()->m.skipToEnd();
 
     }
 
@@ -104,6 +116,23 @@ public class ViewModel extends Observable implements Observer {
                 case "LoadedSuccessfully": {
                     setChanged();
                     notifyObservers("LoadedSuccessfully");
+                    break;
+                }
+            }
+
+            switch((FGModel.playSpeed)arg){
+                case NORMAL:{
+                    playSpeed.set("1.0");
+                    break;
+                }
+
+                case FASTER:{
+                    playSpeed.set("2.0");
+                    break;
+                }
+
+                case FASTEST:{
+                    playSpeed.set("4.0");
                     break;
                 }
             }

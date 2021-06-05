@@ -8,10 +8,7 @@ import ptm1.TimeSeriesAnomalyDetector;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Observable;
-import java.util.Scanner;
+import java.util.*;
 
 public class FGModel extends Observable implements Model{
 
@@ -19,10 +16,15 @@ public class FGModel extends Observable implements Model{
     IntegerProperty timeStep;
     TimeSeries ts;
     FGPlayer fgp;
+    Timer t;
+    int hertzRate;
+    playSpeed ps;
 
     public FGModel() {
         setProperties("./resources/properties.xml");
         fgp = new FGPlayer(appProperties);
+        hertzRate= appProperties.getHertzRate();
+        ps = playSpeed.NORMAL;
     }
 
     @Override
@@ -96,23 +98,94 @@ public class FGModel extends Observable implements Model{
     }
 
     @Override
-    public void play(int start, int rate) {
-
+    public void play() {
+        if(t==null){
+            t= new Timer();
+            setPlaySpeed();
+            t.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    if(timeStep.get()<ts.getRowSize()-1) {
+                        timeStep.set(timeStep.get() + 1);
+                    }
+                    else if(timeStep.get()==ts.getRowSize()-1){
+                        t.cancel();
+                        t=null;
+                    }
+                }
+            }, 0, hertzRate * 10);
+        }
     }
 
     @Override
     public void skipToStart() {
+       stop();
+       play();
+    }
 
+    @Override
+    public void skipToEnd() {
+       if(t!=null){
+           t.cancel();
+           t=null;
+           timeStep.set(ts.getRowSize()-1);
+       }
+    }
+
+    @Override
+    public void fastForward() {
+        if(t!=null){
+            t.cancel();
+            t=null;
+            if(ps==playSpeed.NORMAL){
+                ps=playSpeed.FASTER;
+                setChanged();
+                notifyObservers(playSpeed.FASTER);
+            }
+            else if(ps==playSpeed.FASTER){
+                ps=playSpeed.FASTEST;
+                setChanged();
+                notifyObservers(playSpeed.FASTEST);
+            }
+            play();
+        }
+    }
+
+    @Override
+    public void slowForward() {
+        if(t!=null){
+            t.cancel();
+            t=null;
+            if(ps==playSpeed.FASTEST){
+                ps=playSpeed.FASTER;
+                setChanged();
+                notifyObservers(playSpeed.FASTER);
+            }
+            else if(ps==playSpeed.FASTER){
+                ps=playSpeed.NORMAL;
+                setChanged();
+                notifyObservers(playSpeed.NORMAL);
+            }
+            play();
+        }
     }
 
     @Override
     public void pause() {
-
+        if(t!=null){
+            t.cancel();
+            t=null;
+        }
     }
 
     @Override
     public void stop() {
-
+        if(t!=null){
+            t.cancel();
+            t=null;
+        }
+        timeStep.set(0);
+        ps=playSpeed.NORMAL;
     }
 
     @Override
@@ -160,5 +233,28 @@ public class FGModel extends Observable implements Model{
 
     public Properties getAppProperties() {
         return appProperties;
+    }
+
+    private void setPlaySpeed(){
+        switch(ps){
+            case NORMAL: {
+                hertzRate = appProperties.getHertzRate();
+                break;
+            }
+            case FASTER:{
+                hertzRate = appProperties.getHertzRate()/2;
+                break;
+            }
+            case FASTEST:{
+                hertzRate = appProperties.getHertzRate()/4;
+                break;
+            }
+        }
+    }
+
+    public enum playSpeed{
+        NORMAL,
+        FASTER,
+        FASTEST
     }
 }

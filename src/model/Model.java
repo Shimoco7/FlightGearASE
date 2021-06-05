@@ -13,9 +13,12 @@ public interface Model {
     void setTimeStep(IntegerProperty timeStep);
     <V> Properties getProperties();
     void setAnomalyDetector(TimeSeriesAnomalyDetector ad);
-    void play(int start, int rate);
-    void skipToStart();
+    void play();
     void pause();
     void stop();
+    void skipToStart();
+    void skipToEnd();
+    void fastForward();
+    void slowForward();
     String uploadCsv(String nv);
 }
