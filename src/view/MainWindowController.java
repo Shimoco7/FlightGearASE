@@ -84,27 +84,31 @@ public class MainWindowController implements Observer {
     public void update(Observable o, Object arg) {
         if(o.getClass().equals(ViewModel.class)){
             switch (arg.toString()) {
-                case "FileNotFound" -> {
+                case "FileNotFound": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("File not found");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
-                case "IllegalValues" -> {
+                case "IllegalValues": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Data is missing or invalid");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
-                case "XMLFormatDamaged" -> {
+                case "XMLFormatDamaged": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("XML Format is damaged");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
-                case "LoadedSuccessfully" -> {
+                case "LoadedSuccessfully":{
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("Properties resource has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
-                case "LoadedCSVSuccessfully" ->{
+                case "LoadedCSVSuccessfully":{
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
@@ -116,16 +120,19 @@ public class MainWindowController implements Observer {
                     myPlayer.controller.slider.setMinorTickCount(0);
                     myPlayer.controller.slider.setSnapToTicks(true);
                     myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
+                    break;
                 }
-                case "missingProperties" -> {
+                case "missingProperties":{
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
-                case "incorrectFormat" -> {
+                case "incorrectFormat": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
                 }
             }
 

@@ -86,21 +86,25 @@ public class ViewModel extends Observable implements Observer {
         if(o.getClass().equals(FGModel.class)){
 
             switch (arg.toString()) {
-                case "FileNotFound" -> {
+                case "FileNotFound":{
                     setChanged();
                     notifyObservers("FileNotFound");
+                    break;
                 }
-                case "IllegalValues" -> {
+                case "IllegalValues": {
                     setChanged();
                     notifyObservers("IllegalValues");
+                    break;
                 }
-                case "XMLFormatDamaged" -> {
+                case "XMLFormatDamaged": {
                     setChanged();
                     notifyObservers("XMLFormatDamaged");
+                    break;
                 }
-                case "LoadedSuccessfully" -> {
+                case "LoadedSuccessfully": {
                     setChanged();
                     notifyObservers("LoadedSuccessfully");
+                    break;
                 }
             }
 

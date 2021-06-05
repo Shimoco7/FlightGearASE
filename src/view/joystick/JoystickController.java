@@ -21,11 +21,14 @@ public class JoystickController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         joystick.yProperty().addListener(e-> joystick.paint());
         joystick.xProperty().addListener(e-> joystick.paint());
+        vertical.valueProperty().addListener(e-> System.out.println(vertical.valueProperty().get()));
         vertical.setMin(-1);
         vertical.setMax(1);
         vertical.setBlockIncrement(0.1);
         vertical.setMajorTickUnit(0.1);
+        vertical.setMinorTickCount(0);
         vertical.setShowTickMarks(true);
+        vertical.setShowTickLabels(true);
 
         horizontal.setMin(-1);
         horizontal.setMax(1);
