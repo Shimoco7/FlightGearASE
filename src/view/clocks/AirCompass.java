@@ -148,31 +148,31 @@ public class AirCompass extends Region {
         } else if ("ROTATE".equals(PROPERTY)) {
             // calculate shortest bearingAngle from current position
             double target  = getBearing();
-            double current = bearingCanvas.getRotate();
-            double alpha   = target - current;
-            double beta    = target - current + 360.0;
-            double gamma   = target - current - 360.0;
-            double rotationAngle   = 0;
-            if (Math.abs(alpha) < Math.abs(beta) && Math.abs(alpha) < Math.abs(gamma)) {
-                rotationAngle = alpha < 0 ? alpha : -alpha;
-            } else if (Math.abs(beta) < Math.abs(alpha) && Math.abs(beta) < Math.abs(gamma)) {
-                rotationAngle = beta < 0 ? beta : -beta;
-            } else if (Math.abs(gamma) < Math.abs(alpha) && Math.abs(gamma) < Math.abs(beta)) {
-                rotationAngle = gamma < 0 ? gamma : -gamma;
-            }
+//            double current = bearingCanvas.getRotate();
+//            double alpha   = target - current;
+//            double beta    = target - current + 360.0;
+//            double gamma   = target - current - 360.0;
+//            double rotationAngle   = 0;
+//            if (Math.abs(alpha) < Math.abs(beta) && Math.abs(alpha) < Math.abs(gamma)) {
+//                rotationAngle = alpha < 0 ? alpha : -alpha;
+//            } else if (Math.abs(beta) < Math.abs(alpha) && Math.abs(beta) < Math.abs(gamma)) {
+//                rotationAngle = beta < 0 ? beta : -beta;
+//            } else if (Math.abs(gamma) < Math.abs(alpha) && Math.abs(gamma) < Math.abs(beta)) {
+//                rotationAngle = gamma < 0 ? gamma : -gamma;
+//            }
             if (isAnimated()) {
                 KeyValue kvBearingAngleBegin = new KeyValue(bearingAngle, bearingCanvas.getRotate(), Interpolator.EASE_IN);
                 KeyValue kvBearingCanvasRotateBegin = new KeyValue(bearingCanvas.rotateProperty(), bearingCanvas.getRotate(), Interpolator.EASE_IN);
 
-                KeyValue kvBearingAngleEnd = new KeyValue(bearingAngle, rotationAngle, Interpolator.EASE_OUT);
-                KeyValue kvBearingCanvasRotateEnd = new KeyValue(bearingCanvas.rotateProperty(), rotationAngle, Interpolator.EASE_OUT);
+                KeyValue kvBearingAngleEnd = new KeyValue(bearingAngle, target, Interpolator.EASE_OUT);
+                KeyValue kvBearingCanvasRotateEnd = new KeyValue(bearingCanvas.rotateProperty(), target, Interpolator.EASE_OUT);
 
                 KeyFrame kfBegin = new KeyFrame(Duration.ZERO, kvBearingAngleBegin, kvBearingCanvasRotateBegin);
                 KeyFrame kfEnd = new KeyFrame(Duration.millis(800), kvBearingAngleEnd, kvBearingCanvasRotateEnd);
                 timeline.getKeyFrames().setAll(kfBegin, kfEnd);
                 timeline.play();
             } else {
-                bearingCanvas.setRotate(rotationAngle);
+                bearingCanvas.setRotate(target);
             }
         }
     }

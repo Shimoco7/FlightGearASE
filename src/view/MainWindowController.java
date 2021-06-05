@@ -1,5 +1,6 @@
 package view;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -65,7 +66,7 @@ public class MainWindowController implements Observer {
         myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
         myJoystick.rudder.bind(vm.getProperty("rudder"));
         myJoystick.throttle.bind(vm.getProperty("throttle"));
-        myClocks.headingDeg.bind(vm.getProperty("heading"));
+        myClocks.headingDeg.bindBidirectional(vm.getProperty("heading"));
         myClocks.pitch.bind(vm.getProperty("pitch"));
         myClocks.roll.bind(vm.getProperty("roll"));
         myClocks.altimeter.bind(vm.getProperty("altitude"));

@@ -47,7 +47,7 @@ public class ViewModel extends Observable implements Observer {
             displayVariables.get("rudder").set(row.get(appProp.getMap().get("rudder").getIndex()));
             displayVariables.get("throttle").set(row.get(appProp.getMap().get("throttle").getIndex()));
             displayVariables.get("altitude").set(row.get(appProp.getMap().get("altitude").getIndex()));
-            displayVariables.get("heading").set(row.get(appProp.getMap().get("heading").getIndex()));
+            displayVariables.get("heading").set(-(row.get(appProp.getMap().get("heading").getIndex())));
             displayVariables.get("pitch").set(row.get(appProp.getMap().get("pitch").getIndex()));
             displayVariables.get("roll").set(row.get(appProp.getMap().get("roll").getIndex()));
             displayVariables.get("yaw").set(row.get(appProp.getMap().get("yaw").getIndex()));
