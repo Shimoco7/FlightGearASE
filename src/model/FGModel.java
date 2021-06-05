@@ -81,6 +81,11 @@ public class FGModel extends Observable implements Model{
     }
 
     @Override
+    public void setTimeStep(IntegerProperty timeStep) {
+        this.timeStep = timeStep;
+    }
+
+    @Override
     public <V> Properties getProperties() {
         return appProperties;
     }
@@ -115,9 +120,9 @@ public class FGModel extends Observable implements Model{
         HashSet<String> set = new HashSet<>();
         LinkedHashMap<String, Properties.FeatureProperties> map = appProperties.getMap();
 
-        for(Properties.FeatureProperties fp : map.values()){
-            set.add(fp.getColName());
-        }
+//        for(Properties.FeatureProperties fp : map.values()){
+//            set.add(fp.getIndex());
+//        }
 
         Scanner scanner = null;
         try {
@@ -128,14 +133,14 @@ public class FGModel extends Observable implements Model{
 
         String line = scanner.nextLine();
         String[] features= line.split(",");
-        for(String feature: features){
-            if(set.contains(feature)){
-                set.remove(feature);
-            }
-        }
-
-        if(set.size()!=0)
-            return "missingProperties";
+//        for(String feature: features){
+//            if(set.contains(feature)){
+//                set.remove(feature);
+//            }
+//        }
+//
+//        if(set.size()!=0)
+//            return "missingProperties";
 
         while(scanner.hasNext()){
             features = scanner.next().split(",");

@@ -49,4 +49,11 @@ public class TimeSeries {
         return dataRowSize;
     }
 
+    public ArrayList<Float> getRow(int index){
+        ArrayList<Float> row = new ArrayList<>();
+        for(String f : features){
+            row.add(tsMap.get(f).get(index));
+        }
+        return row;
+    }
 }

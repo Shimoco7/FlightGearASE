@@ -85,6 +85,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Slider layoutX="19.0" layoutY="49.0" prefHeight="14.0" prefWidth="559.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="49.0" />
+      <Slider fx:id="slider" layoutX="19.0" layoutY="49.0" prefHeight="14.0" prefWidth="559.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="49.0" />
    </children>
 </AnchorPane>

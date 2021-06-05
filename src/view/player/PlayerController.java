@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -18,12 +19,12 @@ import java.util.ResourceBundle;
 
 public class PlayerController implements Initializable {
 
-    @FXML
-    TextField playSpeed;
-    @FXML
-    Label flightTime;
+    @FXML TextField playSpeed;
+    @FXML Label flightTime;
+    @FXML public Slider slider;
     Stage stage;
     public StringProperty timeSeriesPath;
+
 
     public PlayerController() {
         stage = Main.getGuiStage();

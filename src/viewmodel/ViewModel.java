@@ -6,6 +6,7 @@ import model.Model;
 import other.Properties;
 import ptm1.TimeSeries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,6 +17,7 @@ public class ViewModel extends Observable implements Observer {
     TimeSeries timeSeries;
     Properties appProp;
     private HashMap<String, DoubleProperty> displayVariables;
+    public IntegerProperty timeStep;
     public StringProperty csvPath;
 
 
@@ -23,6 +25,8 @@ public class ViewModel extends Observable implements Observer {
         this.m = m;
         displayVariables = new HashMap<>();
         csvPath= new SimpleStringProperty();
+        timeStep = new SimpleIntegerProperty();
+        m.setTimeStep(this.timeStep);
         appProp = m.getProperties();
         initDisplayVariables();
 
@@ -35,6 +39,24 @@ public class ViewModel extends Observable implements Observer {
             setChanged();
             notifyObservers(res);
         });
+
+        timeStep.addListener((o,ov,nv)->{
+            ArrayList<Float> row = timeSeries.getRow((Integer) nv);
+            displayVariables.get("aileron").set(row.get(appProp.getMap().get("aileron").getIndex()));
+            displayVariables.get("elevators").set(row.get(appProp.getMap().get("elevators").getIndex()));
+            displayVariables.get("rudder").set(row.get(appProp.getMap().get("rudder").getIndex()));
+            displayVariables.get("throttle").set(row.get(appProp.getMap().get("throttle").getIndex()));
+            displayVariables.get("altitude").set(row.get(appProp.getMap().get("altitude").getIndex()));
+            displayVariables.get("heading").set(row.get(appProp.getMap().get("heading").getIndex()));
+            displayVariables.get("pitch").set(row.get(appProp.getMap().get("pitch").getIndex()));
+            displayVariables.get("roll").set(row.get(appProp.getMap().get("roll").getIndex()));
+            displayVariables.get("yaw").set(row.get(appProp.getMap().get("yaw").getIndex()));
+            displayVariables.get("airspeed").set(row.get(appProp.getMap().get("airspeed").getIndex()));
+            displayVariables.get("longitude").set(row.get(appProp.getMap().get("longitude").getIndex()));
+            displayVariables.get("latitude").set(row.get(appProp.getMap().get("latitude").getIndex()));
+        });
+
+
     }
 
     public DoubleProperty getProperty(String name){

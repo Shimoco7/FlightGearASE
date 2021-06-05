@@ -49,8 +49,6 @@ public class MainWindowController implements Observer {
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        vm.getProperty("aileron").set(1);
-        vm.getProperty("elevators").set(1);
     }
 
     public void initialize(ViewModel vm) {
@@ -59,7 +57,10 @@ public class MainWindowController implements Observer {
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
         ApplicationStatus.setPauseDuration(15);
         ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
+
+        assert myPlayer.controller != null;
         vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
+        myPlayer.controller.slider.valueProperty().bindBidirectional(vm.timeStep);
         myJoystick.aileron.bindBidirectional(vm.getProperty("aileron"));
         myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
         myJoystick.rudder.bind(vm.getProperty("rudder"));
@@ -108,6 +109,13 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     myDisplay.propList.setAll(vm.getTimeSeries().getFeatures());
+                    myPlayer.controller.slider.setMin(0);
+                    myPlayer.controller.slider.setMax(vm.getTimeSeries().getRowSize()-1);
+                    myPlayer.controller.slider.setBlockIncrement(1);
+                    myPlayer.controller.slider.setMajorTickUnit(1);
+                    myPlayer.controller.slider.setMinorTickCount(0);
+                    myPlayer.controller.slider.setSnapToTicks(true);
+                    myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
                 }
                 case "missingProperties" -> {
                     ApplicationStatus.setAppColor(Color.RED);
