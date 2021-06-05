@@ -18,7 +18,6 @@ public class Clocks extends StackPane {
             ClocksController clocksController = loader.getController();
             clocks.setAlignment(Pos.CENTER);
             headingDeg=clocksController.myAirCompass.bearingProperty();
-            headingDeg.addListener(e-> System.out.println(headingDeg.get()));
             pitch = clocksController.myHorizon.pitchProperty();
             roll = clocksController.myHorizon.rollProperty();
             altimeter = clocksController.myAltimeter.valueProperty();

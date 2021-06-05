@@ -208,20 +208,10 @@ public class SpaceXJoystick extends Region {
     public void paint(){
         touchPoint.setFill(Color.BLACK);
         touchPoint.setStroke(getActiveColor());
-        double x   = getX();
-        double y   = getY();
-
-//        double dx  = x - center;
-//        double dy  = -(y - center);
-//        double rad = Math.atan2(dy, dx) + HALF_PI;
-//        double phi = Math.toDegrees(rad - Math.PI);
-//        if (phi < 0) { phi += 360.0; }
         double maxR = size * 0.35;
         touchPoint.setCenterX(getX()*maxR+center);
         touchPoint.setCenterY(-getY()*maxR+center);
-//        setAngle(phi);
         drawBackground();
-
     }
 
     public LockState getLockState() { return null == lockState ? _lockState : lockState.get(); }
@@ -757,7 +747,7 @@ public class SpaceXJoystick extends Region {
         }
 
         touchPoint.setFill(Color.BLACK);
-        //touchPoint.setRadius(size*0.225);
+        touchPoint.setRadius(size*0.175);
         touchPoint.setStroke(activeColor);
         touchIndicator.setStroke(inactiveColor);
     }

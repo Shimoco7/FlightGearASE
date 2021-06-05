@@ -114,25 +114,28 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     myDisplay.propList.setAll(vm.getTimeSeries().getFeatures());
+                    myPlayer.controller.slider.setDisable(false);
                     myPlayer.controller.slider.setMin(0);
                     myPlayer.controller.slider.setMax(vm.getTimeSeries().getRowSize()-1);
                     myPlayer.controller.slider.setBlockIncrement(1);
                     myPlayer.controller.slider.setMajorTickUnit(1);
                     myPlayer.controller.slider.setMinorTickCount(0);
                     myPlayer.controller.slider.setSnapToTicks(true);
-                    myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
+                    //myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
                     break;
                 }
                 case "missingProperties":{
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
+                    myPlayer.controller.slider.setDisable(true);
                     break;
                 }
                 case "incorrectFormat": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
+                    myPlayer.controller.slider.setDisable(true);
                     break;
                 }
             }
