@@ -128,16 +128,24 @@ public class FGModel extends Observable implements Model{
        if(t!=null){
            t.cancel();
            t=null;
-           timeStep.set(ts.getRowSize()-1);
        }
+       timeStep.set(ts.getRowSize()-1);
     }
 
     @Override
     public void fastForward() {
-        if(t!=null){
-            t.cancel();
-            t=null;
-            if(ps==playSpeed.NORMAL){
+
+            if(ps==playSpeed.SLOWEST){
+                ps=playSpeed.SLOWER;
+                setChanged();
+                notifyObservers(playSpeed.SLOWER);
+            }
+            else if(ps==playSpeed.SLOWER){
+                ps=playSpeed.NORMAL;
+                setChanged();
+                notifyObservers(playSpeed.NORMAL);
+            }
+            else if(ps==playSpeed.NORMAL){
                 ps=playSpeed.FASTER;
                 setChanged();
                 notifyObservers(playSpeed.FASTER);
@@ -147,16 +155,28 @@ public class FGModel extends Observable implements Model{
                 setChanged();
                 notifyObservers(playSpeed.FASTEST);
             }
+
+        if(t!=null) {
+            t.cancel();
+            t = null;
             play();
         }
     }
 
+
     @Override
     public void slowForward() {
-        if(t!=null){
-            t.cancel();
-            t=null;
-            if(ps==playSpeed.FASTEST){
+            if(ps==playSpeed.SLOWER){
+                ps=playSpeed.SLOWEST;
+                setChanged();
+                notifyObservers(playSpeed.SLOWEST);
+            }
+            else if(ps==playSpeed.NORMAL){
+                ps=playSpeed.SLOWER;
+                setChanged();
+                notifyObservers(playSpeed.SLOWER);
+            }
+            else if(ps==playSpeed.FASTEST){
                 ps=playSpeed.FASTER;
                 setChanged();
                 notifyObservers(playSpeed.FASTER);
@@ -166,9 +186,14 @@ public class FGModel extends Observable implements Model{
                 setChanged();
                 notifyObservers(playSpeed.NORMAL);
             }
+
+        if(t!=null) {
+            t.cancel();
+            t = null;
             play();
         }
     }
+
 
     @Override
     public void pause() {
@@ -186,6 +211,8 @@ public class FGModel extends Observable implements Model{
         }
         timeStep.set(0);
         ps=playSpeed.NORMAL;
+        setChanged();
+        notifyObservers(playSpeed.NORMAL);
     }
 
     @Override
@@ -237,22 +264,34 @@ public class FGModel extends Observable implements Model{
 
     private void setPlaySpeed(){
         switch(ps){
+            case SLOWEST:{
+                hertzRate = appProperties.getHertzRate()*4;
+                break;
+            }
+            case SLOWER:{
+                hertzRate=appProperties.getHertzRate()*2;
+                break;
+            }
             case NORMAL: {
                 hertzRate = appProperties.getHertzRate();
                 break;
             }
             case FASTER:{
-                hertzRate = appProperties.getHertzRate()/2;
+                if(hertzRate>2)
+                    hertzRate = appProperties.getHertzRate()/2;
                 break;
             }
             case FASTEST:{
-                hertzRate = appProperties.getHertzRate()/4;
+                if(hertzRate>4)
+                    hertzRate = appProperties.getHertzRate()/4;
                 break;
             }
         }
     }
 
     public enum playSpeed{
+        SLOWEST,
+        SLOWER,
         NORMAL,
         FASTER,
         FASTEST

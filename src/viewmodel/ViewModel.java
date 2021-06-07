@@ -121,16 +121,22 @@ public class ViewModel extends Observable implements Observer {
             }
 
             switch((FGModel.playSpeed)arg){
+                case SLOWEST:{
+                    playSpeed.set("0.25");
+                    break;
+                }
+                case SLOWER:{
+                    playSpeed.set("0.5");
+                    break;
+                }
                 case NORMAL:{
                     playSpeed.set("1.0");
                     break;
                 }
-
                 case FASTER:{
                     playSpeed.set("2.0");
                     break;
                 }
-
                 case FASTEST:{
                     playSpeed.set("4.0");
                     break;
