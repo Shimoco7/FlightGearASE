@@ -1,5 +1,7 @@
 package view;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -60,7 +62,7 @@ public class MainWindowController implements Observer {
         myPlayer.controller.onToEnd = vm.onToEnd;
         myPlayer.controller.onToStart = vm.onToStart;
 
-        assert myPlayer.controller != null;
+        myPlayer.controller.flightTime.textProperty().bind(vm.flightTime);
         vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
         myPlayer.controller.slider.valueProperty().bindBidirectional(vm.timeStep);
         myPlayer.controller.playSpeed.textProperty().bindBidirectional(vm.playSpeed);
@@ -72,6 +74,23 @@ public class MainWindowController implements Observer {
         myClocks.pitch.bind(vm.getProperty("pitch"));
         myClocks.roll.bind(vm.getProperty("roll"));
         myClocks.altimeter.bind(vm.getProperty("altitude"));
+        myClocks.yaw.bind(vm.getProperty("yaw"));
+        myClocks.airspeed.bind(vm.getProperty("airspeed"));
+
+
+        registerListeners();
+
+
+
+    }
+
+    private void registerListeners(){
+        myPlayer.controller.slider.setOnMouseReleased(e->{
+            if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null){
+                ObservableList<Float> listItem= vm.getListItem(myDisplay.controller.list.getSelectionModel().getSelectedItem().toString());
+                Platform.runLater(()->myDisplay.controller.display(listItem));
+            }
+        });
 
     }
 
@@ -115,9 +134,11 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
-                    myDisplay.propList.setAll(vm.getTimeSeries().getFeatures());
+                    assert myDisplay.controller != null;
+                    myDisplay.controller.list.getItems().setAll(vm.getTimeSeries().getFeatures());
                     setButtonsEnabled();
 
+                    assert myPlayer.controller != null;
                     myPlayer.controller.slider.setMin(0);
                     myPlayer.controller.slider.setMax(vm.getTimeSeries().getRowSize()-1);
                     myPlayer.controller.slider.setBlockIncrement(1);
@@ -147,6 +168,7 @@ public class MainWindowController implements Observer {
     }
 
     private void setButtonsDisabled(){
+        assert myPlayer.controller != null;
         myPlayer.controller.slider.setDisable(true);
         myPlayer.controller.play.setDisable(true);
         myPlayer.controller.stop.setDisable(true);
@@ -159,6 +181,7 @@ public class MainWindowController implements Observer {
     }
 
     private void setButtonsEnabled(){
+        assert myPlayer.controller != null;
         myPlayer.controller.slider.setDisable(false);
         myPlayer.controller.play.setDisable(false);
         myPlayer.controller.stop.setDisable(false);
@@ -169,4 +192,5 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toStart.setDisable(false);
         myPlayer.controller.playSpeed.setText("1.0");
     }
+
 }

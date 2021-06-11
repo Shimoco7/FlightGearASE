@@ -1,5 +1,6 @@
 package view.clocks;
 
+import eu.hansolo.medusa.Gauge;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,12 +12,10 @@ import java.util.ResourceBundle;
 
 public class ClocksController implements Initializable {
     Stage stage;
-    @FXML
-    Altimeter myAltimeter;
-    @FXML
-    AirCompass myAirCompass;
-    @FXML
-    Horizon myHorizon;
+    @FXML Altimeter myAltimeter;
+    @FXML AirCompass myAirCompass;
+    @FXML Horizon myHorizon;
+    @FXML Gauge yaw,airspeed;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

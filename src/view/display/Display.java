@@ -11,18 +11,26 @@ import view.player.PlayerController;
 import java.io.IOException;
 
 public class Display extends StackPane {
-    public ObservableList<String> propList;
+
+    public final DisplayController controller;
     public Display() {
         super();
-        try {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Display.fxml"));
-            StackPane display = loader.load();
-            display.setAlignment(Pos.CENTER);
-            DisplayController displayController = loader.getController();
-            propList = displayController.list.getItems();
-            this.getChildren().add(display);
-        } catch (IOException e) {
-            e.printStackTrace();
+            StackPane displayer=null;
+            try {
+                displayer = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        if(displayer!=null){
+            controller = loader.getController();
+            displayer.setAlignment(Pos.CENTER);
+            this.getChildren().add(displayer);
+        }
+        else{
+            controller = null;
         }
     }
 }

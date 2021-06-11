@@ -2,8 +2,11 @@ package viewmodel;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.FGModel;
 import model.Model;
+import other.Calculate;
 import other.Properties;
 import ptm1.TimeSeries;
 
@@ -19,7 +22,7 @@ public class ViewModel extends Observable implements Observer {
     Properties appProp;
     private HashMap<String, DoubleProperty> displayVariables;
     public IntegerProperty timeStep;
-    public StringProperty csvPath,playSpeed;
+    public StringProperty csvPath,playSpeed, flightTime;
     public final Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
 
 
@@ -29,6 +32,7 @@ public class ViewModel extends Observable implements Observer {
         csvPath= new SimpleStringProperty();
         timeStep = new SimpleIntegerProperty();
         playSpeed = new SimpleStringProperty();
+        flightTime = new SimpleStringProperty("00:00:00");
         m.setTimeStep(this.timeStep);
         appProp = m.getProperties();
         initDisplayVariables();
@@ -58,7 +62,9 @@ public class ViewModel extends Observable implements Observer {
                 displayVariables.get("airspeed").set(row.get(appProp.getMap().get("airspeed").getIndex()));
                 displayVariables.get("longitude").set(row.get(appProp.getMap().get("longitude").getIndex()));
                 displayVariables.get("latitude").set(row.get(appProp.getMap().get("latitude").getIndex()));
+                flightTime.set(updateFlightTime());
             });
+
         });
 
         onPlay = ()->m.play();
@@ -70,6 +76,16 @@ public class ViewModel extends Observable implements Observer {
         onToEnd = ()->m.skipToEnd();
 
     }
+    public ObservableList<Float> getListItem(String feature){
+        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(feature).subList(0,timeStep.get()));
+        return listItem;
+    }
+
+    public String updateFlightTime() {
+        int timeInSeconds = timeStep.get()/appProp.getHertzRate();
+        return Calculate.getTimeString(timeInSeconds);
+    }
+
 
     public DoubleProperty getProperty(String name){
         if(displayVariables.containsKey(name))

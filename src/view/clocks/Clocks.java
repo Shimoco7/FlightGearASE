@@ -3,13 +3,13 @@ package view.clocks;
 import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import eu.hansolo.medusa.*;
 
 import java.io.IOException;
 
 public class Clocks extends StackPane {
-    public DoubleProperty headingDeg,pitch,roll,altimeter;
+    public DoubleProperty headingDeg,pitch,roll,altimeter,yaw,airspeed;
     public Clocks() {
         super();
         try {
@@ -21,6 +21,8 @@ public class Clocks extends StackPane {
             pitch = clocksController.myHorizon.pitchProperty();
             roll = clocksController.myHorizon.rollProperty();
             altimeter = clocksController.myAltimeter.valueProperty();
+            yaw = clocksController.yaw.valueProperty();
+            airspeed = clocksController.airspeed.valueProperty();
 
             this.getChildren().add(clocks);
         } catch (IOException e) {
