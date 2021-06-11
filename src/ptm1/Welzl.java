@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SCE {
+public class Welzl {
 
 	public static Circle makeCircle(List<Point> points) {
 
