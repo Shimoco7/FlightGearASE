@@ -12,17 +12,6 @@ public class Circle {
 		this.radius = radius;
 	}
 
-	public boolean isCircleInside(Circle second) { //Checks if Circle second is contained in this circle
-		float distSq = (float) Math.sqrt(Math.pow(this.getPoint().x - second.getPoint().x, 2)
-				* Math.pow(this.getPoint().y - second.getPoint().y, 2));
-		if (distSq + second.getRadius() == this.getRadius())
-			return true;
-		else if (distSq + second.getRadius() < this.getRadius())
-			return true;
-		else
-			return false;
-	}
-
 	public Point getPoint() { //Returns Circel's center point
 		return this.p;
 	}

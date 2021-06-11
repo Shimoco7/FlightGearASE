@@ -85,6 +85,11 @@ public class MainWindowController implements Observer {
     }
 
     private void registerListeners(){
+        myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
+            ObservableList<Float> listItem= vm.getListItem(nv.toString());
+            Platform.runLater(()->myDisplay.controller.display(listItem));
+        });
+
         myPlayer.controller.slider.setOnMouseReleased(e->{
             if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null){
                 ObservableList<Float> listItem= vm.getListItem(myDisplay.controller.list.getSelectionModel().getSelectedItem().toString());

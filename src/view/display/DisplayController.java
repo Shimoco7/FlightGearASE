@@ -29,13 +29,18 @@ public class DisplayController implements Initializable {
         series = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
+
+        list.getSelectionModel().selectedItemProperty().addListener(e->{
+            leftGraph.getData().clear();
+        });
+
     }
 
     public void display(ObservableList<Float> listItem) {
        leftGraph.getData().clear();
        series.getData().clear();
         for(int i=0;i<listItem.size();i++){
-            series.getData().add(new XYChart.Data<>(getTimeByIndex(i),listItem.get(i)));
+            leftGraph.getData().add(new XYChart.Data<>(getTimeByIndex(i),listItem.get(i)));
         }
 
         leftGraph.getData().add(series);

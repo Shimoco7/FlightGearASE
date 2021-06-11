@@ -1,7 +1,6 @@
 package view.clocks;
 
 import eu.hansolo.medusa.Gauge;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;

@@ -1,8 +1,6 @@
 package ptm1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -66,7 +64,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 				zMap.put(ft.get(col1), maxTh);
 			} else { // The correlation is between 0.5 to 0.95 -> Welzl Algorithm learn
-				// WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(ts.getFeatureData(ft.get(col1)),
 						ts.getFeatureData(ft.get(col2)));
 				Circle wCircle = Welzl.makeCircle(ps);

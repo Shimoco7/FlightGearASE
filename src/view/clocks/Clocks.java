@@ -4,7 +4,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
-import eu.hansolo.medusa.*;
 
 import java.io.IOException;
 
