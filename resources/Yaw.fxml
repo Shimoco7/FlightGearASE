@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import eu.hansolo.medusa.Gauge?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.YawController">
+   <children>
+      <Gauge layoutX="-6.0" prefHeight="225.0" prefWidth="261.0" skinType="MODERN" threshold="90.0" thresholdVisible="true" title="AIR SPEED" unit="KNOT">
+         <tickLabelColor>
+            <Color red="0.6447368264198303" green="0.6447368264198303" blue="0.6447368264198303" />
+         </tickLabelColor>
+         <thresholdColor>
+            <Color red="0.8842105269432068" green="0.02619883045554161" blue="0.02619883045554161" />
+         </thresholdColor>
+      </Gauge>
+      <Gauge angleRange="360.0" animated="true" autoScale="false" borderPaint="#32313100" layoutX="275.0" layoutY="-7.0" maxValue="360.0" needleBehavior="OPTIMIZED" needleType="BIG" startAngle="180.0" subTitle="YAW" tickLabelsVisible="false">
+         <knobColor>
+            <Color />
+         </knobColor>
+         <needleBorderColor>
+            <Color red="0.2631579041481018" green="0.2497563362121582" blue="0.2497563362121582" opacity="0.0" />
+         </needleBorderColor>
+         <barBorderColor>
+            <Color red="0.22368420660495758" green="0.21332846581935883" blue="0.21332846581935883" opacity="0.0" />
+         </barBorderColor>
+         <subTitleColor>
+            <Color red="1.0" />
+         </subTitleColor>
+      </Gauge>
+   </children>
+</AnchorPane>
