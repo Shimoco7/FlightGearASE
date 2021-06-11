@@ -69,8 +69,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				// WelzlMEC wMEC = new WelzlMEC();
 				ArrayList<Point> ps = toPointsArrayList(ts.getFeatureData(ft.get(col1)),
 						ts.getFeatureData(ft.get(col2)));
-				// Circle wCircle = wMEC.welzl(ps);
-				Circle wCircle = SCE.makeCircle(ps);
+				Circle wCircle = Welzl.makeCircle(ps);
 				wMap.put(ft.get(col1) + "," + ft.get(col2), wCircle);
 
 			}
@@ -121,7 +120,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		}
 		for (String s : wMap.keySet()) { // Welzl Algorithm detect
 			String[] features = s.split(",");
-			// WelzlMEC wMEC = new WelzlMEC();
 			ArrayList<Float> col1Arr = ts.getFeatureData(features[0]);
 			ArrayList<Float> col2Arr = ts.getFeatureData(features[1]);
 			ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
