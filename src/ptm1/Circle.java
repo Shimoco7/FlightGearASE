@@ -24,11 +24,11 @@ public class Circle {
 	}
 
 	public Point getPoint() { //Returns Circel's center point
-		return p;
+		return this.p;
 	}
 
 	public float getRadius() { //Returns Circel's radius
-		return radius;
+		return this.radius;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class Circle {
 	}
 	
 	
-    public boolean contains(Point p) { //Checks if point is in the circle
-        return p.distance(p) <= radius * MULTIPLICATIVE_EPSILON;
+    public boolean contains(Point po) { //Checks if point is in the circle
+        return this.getPoint().distance(po) <= radius * MULTIPLICATIVE_EPSILON;
     }
 
 
