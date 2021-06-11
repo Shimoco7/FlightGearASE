@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public class Circle {
 
-	public final float radius; //Circel's radius and center point
+	public final float radius; //Circle's radius and center point
 	public Point p;
 	private static final double MULTIPLICATIVE_EPSILON = 1 + 1e-14;
 	public Circle(Point p, float radius) {
@@ -26,14 +26,14 @@ public class Circle {
 	}
 	
 	
-    public boolean contains(Point po) { //Checks if point is in the circle
+    public boolean isContained(Point po) { //Checks if point is in the circle
         return this.getPoint().distance(po) <= radius * MULTIPLICATIVE_EPSILON;
     }
 
 
-    public boolean contains(Collection<Point> ps) { //Checks if few points is in the circle
+    public boolean isContained(Collection<Point> ps) { //Checks if few points is in the circle
         for (Point p : ps) {
-            if (!contains(p))
+            if (!isContained(p))
                 return false;
         }
         return true;

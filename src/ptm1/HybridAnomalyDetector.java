@@ -122,7 +122,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 			// Circle wCircle = wMEC.welzl(ps);
 			for (int j = 0; j < ps.size(); j++) {
-				if (!wMap.get(s).contains(ps.get(j))) // Checks if the point is contained in the Circle from the
+				if (!wMap.get(s).isContained(ps.get(j))) // Checks if the point is contained in the Circle from the
 														// learnNormal
 					ar.add(new AnomalyReport(features[0], j + 1)); // ??
 			}

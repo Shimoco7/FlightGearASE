@@ -4,40 +4,41 @@ import other.Properties;
 
 import java.beans.XMLDecoder;
 import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainTrain {
 
     public static void main(String[] args) {
+//        Random r=new Random();
+//        int port=6000+r.nextInt(1000);
+//        Server server=new Server();
+//        server.start(port, new AnomalyDetectionHandler());
+//        testClient(port);
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {}
+//        server.stop();
+//        check("output.txt", "expectedOutput.txt");
+//        System.out.println("done");
 
-//
-//        ArrayList<AnomalyReport> arr = new ArrayList<>();
-//        ZscoreAnomalyDetector z = new ZscoreAnomalyDetector();
-//        SimpleAnomalyDetector s = new SimpleAnomalyDetector();
-//        TimeSeries train = new TimeSeries("./resources/reg_flight.csv");
-//        TimeSeries test = new TimeSeries("./anomaly_flight.csv");
+        ArrayList<AnomalyReport> arr = new ArrayList<>();
+        //  ZscoreAnomalyDetector z = new ZscoreAnomalyDetector();
+        // SimpleAnomalyDetector s = new SimpleAnomalyDetector();
+        HybridAnomalyDetector h = new HybridAnomalyDetector();
+        TimeSeries train = new TimeSeries("./resources/reg_flight.csv");
+        TimeSeries test = new TimeSeries("./resources/anomaly_flight.csv");
 //        z.learnNormal(train);
 //        arr = (ArrayList<AnomalyReport>) z.detect(test);
-       // s.learnNormal(train);
+        // s.learnNormal(train);
         //arr = (ArrayList<AnomalyReport>) s.detect(test);
-//
-//        for(AnomalyReport a : arr){
-//            System.out.println(a.description +" "+  a.timeStep);
-//        }
-
-        Properties p = new Properties();
-        p.setDefaultProperties();
-        p.createXML();
-        XMLDecoder d = null;
-        try {
-            d = new XMLDecoder(
-                    new BufferedInputStream(
-                            new FileInputStream("./resources/properties.xml")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        h.learnNormal(train);
+        arr = (ArrayList<AnomalyReport>)h.detect(test);
+        for(AnomalyReport a : arr){
+            System.out.println(a.description +" "+  a.timeStep);
         }
-        Properties result = (Properties) d.readObject();
-        d.close();
+
 
 
     }

@@ -1,7 +1,6 @@
 package ptm1;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -16,38 +15,38 @@ public class Welzl {
 		Circle c = null;
 		for (int i = 0; i < shuffled.size(); i++) {
 			Point p = shuffled.get(i);
-			if (c == null || !c.contains(p))
-				c = makeCircleOnePoint(shuffled.subList(0, i + 1), p);
+			if (c == null || !c.isContained(p))
+				c = makeOnePointCircle(shuffled.subList(0, i + 1), p);
 		}
 		return c;
 	}
 
-	private static Circle makeCircleOnePoint(List<Point> points, Point p) {
+	private static Circle makeOnePointCircle(List<Point> points, Point p) {
 		Circle c = new Circle(p, 0);
 		for (int i = 0; i < points.size(); i++) {
 			Point q = points.get(i);
-			if (!c.contains(q)) {
+			if (!c.isContained(q)) {
 				if (c.getRadius() == 0)
 					c = makeDiameter(p, q);
 				else
-					c = makeCircleTwoPoints(points.subList(0, i + 1), p, q);
+					c = makeTwoPointsCircle(points.subList(0, i + 1), p, q);
 			}
 		}
 		return c;
 	}
 
-	private static Circle makeCircleTwoPoints(List<Point> points, Point p, Point q) {
+	private static Circle makeTwoPointsCircle(List<Point> points, Point p, Point q) {
 		Circle circ = makeDiameter(p, q);
 		Circle left = null;
 		Circle right = null;
 
 		Point pq = q.subtract(p);
 		for (Point r : points) {
-			if (circ.contains(r))
+			if (circ.isContained(r))
 				continue;
 
 			float cross = pq.cross(r.subtract(p));
-			Circle c = makeCircumcircle(p, q, r);
+			Circle c = makeCircumCircle(p, q, r);
 			if (c == null)
 				continue;
 			else if (cross > 0
@@ -73,7 +72,7 @@ public class Welzl {
 		return new Circle(c, Math.max(c.distance(a), c.distance(b)));
 	}
 
-	static Circle makeCircumcircle(Point a, Point b, Point c) {
+	static Circle makeCircumCircle(Point a, Point b, Point c) {
 
 		float ox = (Math.min(Math.min(a.x, b.x), c.x) + Math.max(Math.max(a.x, b.x), c.x)) / 2;
 		float oy = (Math.min(Math.min(a.y, b.y), c.y) + Math.max(Math.max(a.y, b.y), c.y)) / 2;
