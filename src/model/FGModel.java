@@ -228,9 +228,6 @@ public class FGModel extends Observable implements Model{
             set.add(entry.getValue().getColChosenName());
             indexToFeature.put(entry.getValue().getIndex(),entry.getKey());
         }
-//        for(Properties.FeatureProperties fp : map.values()){
-//            set.add(fp.getColChosenName());
-//        }
 
         Scanner scanner = null;
         try {

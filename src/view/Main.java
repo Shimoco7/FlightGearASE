@@ -26,7 +26,7 @@ public class Main extends Application {
         MainWindowController myController = loader.getController();
 
         myController.setStage(primaryStage);
-        primaryStage.setTitle("Flight-Gear Projector");
+        primaryStage.setTitle("Flight-Gear Anomaly-Detector");
         primaryStage.setScene(new Scene(root, 1000 , 600));
         primaryStage.show();
         setWindowSize(primaryStage,1000,1000,600,600);
@@ -34,8 +34,6 @@ public class Main extends Application {
         MainWindowController mwc = loader.getController();
         mwc.initialize(vm);
         vm.addObserver(mwc);
-
-
     }
 
 

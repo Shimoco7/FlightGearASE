@@ -2,6 +2,7 @@ package view;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -78,21 +79,26 @@ public class MainWindowController implements Observer {
         myClocks.airspeed.bind(vm.getProperty("airspeed"));
         registerListeners();
 
-
-
     }
 
     private void registerListeners(){
-        myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
-            ObservableList<Float> listItem= vm.getListItem(nv.toString());
-            Platform.runLater(()->myDisplay.controller.display(listItem));
+        vm.timeStep.addListener((o,ov,nv)->{
+            if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null) {
+                String selectedFeature = myDisplay.controller.list.getSelectionModel().getSelectedItem().toString();
+                if(nv.intValue()<=ov.intValue()){
+                    ObservableList<Float> listItem= vm.getListItem(selectedFeature,0,vm.timeStep.get());
+                    Platform.runLater(()->myDisplay.controller.display(listItem));
+                }
+                else {
+                    ObservableList<Float> listItem = vm.getListItem(selectedFeature, ov.intValue(), nv.intValue());
+                    Platform.runLater(() -> myDisplay.controller.updateDisplay(listItem, ov.intValue(), nv.intValue()));
+                }
+            }
         });
 
-        myPlayer.controller.slider.setOnMouseReleased(e->{
-            if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null){
-                ObservableList<Float> listItem= vm.getListItem(myDisplay.controller.list.getSelectionModel().getSelectedItem().toString());
-                Platform.runLater(()->myDisplay.controller.display(listItem));
-            }
+        myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
+            ObservableList<Float> listItem= vm.getListItem(nv.toString(),0,vm.timeStep.get());
+            Platform.runLater(()->myDisplay.controller.display(listItem));
         });
 
     }
@@ -212,4 +218,7 @@ public class MainWindowController implements Observer {
         myPlayer.controller.playSpeed.setText("1.0");
     }
 
+    public void close(ActionEvent actionEvent) {
+        stage.close();
+    }
 }

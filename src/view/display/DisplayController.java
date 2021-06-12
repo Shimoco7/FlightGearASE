@@ -51,4 +51,13 @@ public class DisplayController implements Initializable {
         int timeInSeconds = index/10;
         return Calculate.getTimeString(timeInSeconds);
     }
+
+    public void updateDisplay(ObservableList<Float> listItem,int ov,int nv) {
+        if(list.getSelectionModel().getSelectedItem()!=null){
+            int j = ov;
+            for(int i=0;i<listItem.size();i++){
+                series.getData().add(new XYChart.Data<>(getTimeByIndex(j++),listItem.get(i)));
+            }
+        }
+    }
 }

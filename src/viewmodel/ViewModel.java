@@ -76,8 +76,8 @@ public class ViewModel extends Observable implements Observer {
         onToEnd = ()->m.skipToEnd();
 
     }
-    public ObservableList<Float> getListItem(String feature){
-        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(feature).subList(0,timeStep.get()));
+    public ObservableList<Float> getListItem(String feature, int oldVal,int newVal){
+        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(feature).subList(oldVal,newVal));
         return listItem;
     }
 
