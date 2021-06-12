@@ -104,6 +104,10 @@ public class ViewModel extends Observable implements Observer {
     public void setAppProperties(String path){
         m.setProperties(path);
     }
+    
+    public void setAlgorithm(String path){
+        m.setAnomalyDetector(path);
+    }
 
     public TimeSeries getTimeSeries() {
         return timeSeries;
