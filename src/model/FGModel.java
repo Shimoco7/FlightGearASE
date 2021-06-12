@@ -3,8 +3,6 @@ package model;
 import javafx.beans.property.IntegerProperty;
 import ptm1.*;
 import other.Properties;
-import ptm1.TimeSeries;
-import ptm1.TimeSeriesAnomalyDetector;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -137,21 +135,25 @@ public class FGModel extends Observable implements Model{
 
 		setChanged();
 		notifyObservers("LoadedClassSuccessfully");
-
+		ArrayList<AnomalyReport> arr = new ArrayList<>();
 		if (detectAlgo instanceof LineRegressionAnomalyDetector) {
 			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(ts);
-			((LineRegressionAnomalyDetector) detectAlgo).detect(test);
+			 arr = (ArrayList<AnomalyReport>)((LineRegressionAnomalyDetector) detectAlgo).detect(test);
 		}
 
-		if (detectAlgo instanceof HybridAnomalyDetector) {
+		else if (detectAlgo instanceof HybridAnomalyDetector) {
 			((HybridAnomalyDetector) detectAlgo).learnNormal(ts);
-			((HybridAnomalyDetector) detectAlgo).detect(test);
+			 arr = (ArrayList<AnomalyReport>)((HybridAnomalyDetector) detectAlgo).detect(test);
 		}
 
-		if (detectAlgo instanceof ZscoreAnomalyDetector) {
+		else if (detectAlgo instanceof ZscoreAnomalyDetector) {
 			((ZscoreAnomalyDetector) detectAlgo).learnNormal(ts);
-			((ZscoreAnomalyDetector) detectAlgo).detect(test);
+			 arr = (ArrayList<AnomalyReport>)((ZscoreAnomalyDetector) detectAlgo).detect(test);
 		}
+		
+        for(AnomalyReport a : arr){
+            System.out.println(a.description +" "+  a.timeStep);
+        }
 
 	}
 
