@@ -40,10 +40,11 @@ public class DisplayController implements Initializable {
        leftGraph.getData().clear();
        series.getData().clear();
         for(int i=0;i<listItem.size();i++){
-            leftGraph.getData().add(new XYChart.Data<>(getTimeByIndex(i),listItem.get(i)));
+            series.getData().add(new XYChart.Data<>(getTimeByIndex(i),listItem.get(i)));
         }
 
         leftGraph.getData().add(series);
+
     }
 
     private String getTimeByIndex(int index){

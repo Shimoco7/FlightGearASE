@@ -1,21 +1,18 @@
 package other;
 
 import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class Properties implements Serializable {
     private String ip;
     private Integer port;
     private Integer hertzRate;
-    private LinkedHashMap<String,FeatureProperties> map;
+    private HashMap<String,FeatureProperties> map;
     private String regularFlightCSV;
 
     public Properties() {
-        map = new LinkedHashMap<>();
+        map = new HashMap<>();
     }
 
     public void createXML(){
@@ -57,11 +54,11 @@ public class Properties implements Serializable {
         this.hertzRate = hertzRate;
     }
 
-    public LinkedHashMap<String, FeatureProperties> getMap() {
+    public HashMap<String, FeatureProperties> getMap() {
         return map;
     }
 
-    public void setMap(LinkedHashMap<String, FeatureProperties> map) {
+    public void setMap(HashMap<String, FeatureProperties> map) {
         this.map = map;
     }
 
@@ -75,21 +72,21 @@ public class Properties implements Serializable {
         hertzRate=10;
         regularFlightCSV="./resources/reg_flight.csv";
         //Gps
-        map.put("latitude", new Properties.FeatureProperties(14, Float.valueOf(-90),Float.valueOf(90)));
-        map.put("longitude", new Properties.FeatureProperties(15, Float.valueOf(-180),Float.valueOf(180)));
-        map.put("altitude", new Properties.FeatureProperties(25, Float.MIN_VALUE,Float.MAX_VALUE));
+        map.put("latitude", new Properties.FeatureProperties("latitude-deg",14, (float) -90, 90F));
+        map.put("longitude", new Properties.FeatureProperties("longitude-deg",15, (float) -180, 180F));
+        map.put("altitude", new Properties.FeatureProperties("altimeter_indicated-altitude-ft",25, (float) -1412,Float.MAX_VALUE)); //-1412ft is the lowest place on Earth(Dead-Sea)
 
-        map.put("airspeed", new Properties.FeatureProperties(24, Float.valueOf(0),Float.MAX_VALUE));
-        map.put("heading", new Properties.FeatureProperties(36, Float.valueOf(0),Float.valueOf(359)));
-        map.put("roll", new Properties.FeatureProperties(28, Float.valueOf(-90),Float.valueOf(90)));
-        map.put("pitch", new Properties.FeatureProperties(27, Float.valueOf(-90),Float.valueOf(90)));
-        map.put("yaw", new Properties.FeatureProperties(20, Float.valueOf(-90),Float.valueOf(90)));
+        map.put("airspeed", new Properties.FeatureProperties("airspeed-indicator_indicated-speed-kt",24, (float) -1,Float.MAX_VALUE));
+        map.put("heading", new Properties.FeatureProperties("indicated-heading-deg",36, (float) 0, 359F));
+        map.put("roll", new Properties.FeatureProperties("attitude-indicator_indicated-roll-deg",28, (float) -90, 90F));
+        map.put("pitch", new Properties.FeatureProperties("attitude-indicator_indicated-pitch-deg",27, (float) -90, 90F));
+        map.put("yaw", new Properties.FeatureProperties("side-slip-deg",20, (float) -90, 90F));
 
-        map.put("throttle", new Properties.FeatureProperties(6, Float.valueOf(0),Float.valueOf(1)));
+        map.put("throttle", new Properties.FeatureProperties("throttle",6, (float) 0, 1F));
 
-        map.put("aileron", new Properties.FeatureProperties(0, Float.valueOf(-1),Float.valueOf(1)));
-        map.put("elevators", new Properties.FeatureProperties(1,  Float.valueOf(-1),Float.valueOf(1)));
-        map.put("rudder", new Properties.FeatureProperties(2,  Float.valueOf(-1),Float.valueOf(1)));
+        map.put("aileron", new Properties.FeatureProperties("aileron",0, (float) -1, 1F));
+        map.put("elevators", new Properties.FeatureProperties("elevator",1, (float) -1, 1F));
+        map.put("rudder", new Properties.FeatureProperties("rudder",2, (float) -1, 1F));
     }
 
     public boolean isValidProperties(){
@@ -102,48 +99,66 @@ public class Properties implements Serializable {
         ArrayList<FeatureProperties> fp = new ArrayList<>();
         for(Map.Entry<String,FeatureProperties> e : map.entrySet())
             fp.add(e.getValue());
+        if(!isValidRegFlightCSV())
+            return false;
+        return true;
+    }
 
-//        if(!fp.get(0).checkFeatureRanges("latitude-deg",Float.valueOf(-90),Float.valueOf(90)))
-//            return false;
-//        if(!fp.get(1).checkFeatureRanges("longitude-deg", Float.valueOf(-180),Float.valueOf(180)))
-//            return false;
-//        if(!fp.get(2).checkFeatureRanges("altimeter_indicated-altitude-ft", Float.MIN_VALUE,Float.MAX_VALUE))
-//            return false;
-//        if(!fp.get(3).checkFeatureRanges("airspeed-indicator_indicated-speed-kt", Float.valueOf(0),Float.MAX_VALUE))
-//            return false;
-//        if(!fp.get(4).checkFeatureRanges("indicated-heading-deg", Float.valueOf(0),Float.valueOf(359)))
-//            return false;
-//        if(!fp.get(5).checkFeatureRanges("attitude-indicator_indicated-roll-deg", Float.valueOf(-90),Float.valueOf(90)))
-//            return false;
-//        if(!fp.get(6).checkFeatureRanges("attitude-indicator_internal-pitch-deg", Float.valueOf(-90),Float.valueOf(90)))
-//            return false;
-//        if(!fp.get(7).checkFeatureRanges("side-slip-deg", Float.valueOf(-90),Float.valueOf(90)))
-//            return false;
-//        if(!fp.get(8).checkFeatureRanges("throttle", Float.valueOf(0),Float.valueOf(1)))
-//            return false;
-//        if(!fp.get(9).checkFeatureRanges("aileron", Float.valueOf(-1),Float.valueOf(1)))
-//            return false;
-//        if(!fp.get(10).checkFeatureRanges("elevator",  Float.valueOf(-1),Float.valueOf(1)))
-//            return false;
-//        if(!fp.get(11).checkFeatureRanges("rudder",  Float.valueOf(-1),Float.valueOf(1)))
-//            return false;
+    private boolean isValidRegFlightCSV() {
+        HashSet<String> set = new HashSet<>();
+
+        for(Properties.FeatureProperties fp : map.values()){
+            set.add(fp.getColChosenName());
+        }
+
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new BufferedReader(new FileReader(regularFlightCSV)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String line = scanner.nextLine();
+        String[] features= line.split(",");
+        for(String feature: features){
+            if(set.contains(feature)){
+                set.remove(feature);
+            }
+        }
+
+        if(set.size()!=0)
+            return false;
+
+        while(scanner.hasNext()){
+            features = scanner.next().split(",");
+            for(String f : features){
+                try{
+                    Double.parseDouble(f);
+                }
+                catch (NumberFormatException e){
+                    return false;
+                }
+            }
+        }
+        scanner.close();
 
         return true;
     }
 
-    public static boolean validateIp(final String ip) {
-        String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
-        return ip.matches(PATTERN);
+    private static boolean validateIp(final String ip) {
+        String Pattern = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+        return ip.matches(Pattern);
     }
 
     public static class FeatureProperties implements Serializable{
+        String colChosenName;
         Integer index;
         Float minVal, maxVal;
 
-        public FeatureProperties() {
-        }
+        public FeatureProperties() { }
 
-        public FeatureProperties(Integer index, Float minVal, Float maxVal) {
+        public FeatureProperties(String name, Integer index, Float minVal, Float maxVal) {
+            this.colChosenName = name;
             this.index = index;
             this.minVal = minVal;
             this.maxVal = maxVal;
@@ -169,15 +184,9 @@ public class Properties implements Serializable {
             this.maxVal = maxVal;
         }
 
-//        public boolean checkFeatureRanges(String s,Float min,Float max){
-//            if(this.minVal<min||this.minVal>max)
-//                return false;
-//            if(this.maxVal<min||this.maxVal>max)
-//                return false;
-//            if(this.maxVal<this.minVal)
-//                return false;
-//            return true;
-//        }
+        public String getColChosenName() { return colChosenName; }
+
+        public void setColChosenName(String colChosenName) { this.colChosenName = colChosenName; }
 
     }
 }

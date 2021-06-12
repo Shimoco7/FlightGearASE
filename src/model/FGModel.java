@@ -63,7 +63,6 @@ public class FGModel extends Observable implements Model{
             }
         }
         catch(Exception e){
-            e.printStackTrace();
             setChanged();
             notifyObservers("XMLFormatDamaged");
         }
@@ -217,11 +216,20 @@ public class FGModel extends Observable implements Model{
 
     @Override
     public String uploadCsv(String nv) {
-        HashSet<String> set = new HashSet<>();
-        LinkedHashMap<String, Properties.FeatureProperties> map = appProperties.getMap();
+        if(nv.equals("")){
+            return "";
+        }
 
+        HashSet<String> set = new HashSet<>();
+        HashMap<String, Properties.FeatureProperties> map = appProperties.getMap();
+        HashMap<Integer,String> indexToFeature = new HashMap<>();
+
+        for(Map.Entry<String, Properties.FeatureProperties> entry : map.entrySet()){
+            set.add(entry.getValue().getColChosenName());
+            indexToFeature.put(entry.getValue().getIndex(),entry.getKey());
+        }
 //        for(Properties.FeatureProperties fp : map.values()){
-//            set.add(fp.getIndex());
+//            set.add(fp.getColChosenName());
 //        }
 
         Scanner scanner = null;
@@ -233,20 +241,25 @@ public class FGModel extends Observable implements Model{
 
         String line = scanner.nextLine();
         String[] features= line.split(",");
-//        for(String feature: features){
-//            if(set.contains(feature)){
-//                set.remove(feature);
-//            }
-//        }
-//
-//        if(set.size()!=0)
-//            return "missingProperties";
+        for(String feature: features){
+            if(set.contains(feature)){
+                set.remove(feature);
+            }
+        }
+
+        if(set.size()!=0)
+            return "missingProperties";
 
         while(scanner.hasNext()){
             features = scanner.next().split(",");
-            for(String f : features){
+            for(int i=0;i<features.length;i++){
                 try{
-                    Double.parseDouble(f);
+                    if(indexToFeature.containsKey(i)) {
+                        if (!checkFeatureRanges(indexToFeature.get(i), features[i])) {
+                            return "dataOutOfRange";
+                        }
+                    }
+                    Double.parseDouble(features[i]);
                 }
                 catch (NumberFormatException e){
                     return "incorrectFormat";
@@ -256,6 +269,14 @@ public class FGModel extends Observable implements Model{
         scanner.close();
 
         return "LoadedCSVSuccessfully";
+    }
+
+    private boolean checkFeatureRanges(String s, String data) {
+        Properties.FeatureProperties fp = appProperties.getMap().get(s);
+        double value = Double.parseDouble(data);
+        if(value<fp.getMinVal()||value> fp.getMaxVal())
+            return false;
+        return true;
     }
 
     public Properties getAppProperties() {

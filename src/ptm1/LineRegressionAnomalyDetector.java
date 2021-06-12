@@ -3,12 +3,12 @@ package ptm1;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
+public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     ArrayList<CorrelatedFeatures> corFeatures;
     float corlThreshold;
 
-    public SimpleAnomalyDetector() {
+    public LineRegressionAnomalyDetector() {
         corFeatures = new ArrayList<CorrelatedFeatures>();
         corlThreshold = (float)0.9;
     }

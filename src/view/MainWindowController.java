@@ -76,8 +76,6 @@ public class MainWindowController implements Observer {
         myClocks.altimeter.bind(vm.getProperty("altitude"));
         myClocks.yaw.bind(vm.getProperty("yaw"));
         myClocks.airspeed.bind(vm.getProperty("airspeed"));
-
-
         registerListeners();
 
 
@@ -121,18 +119,24 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Data is missing or invalid");
                     ApplicationStatus.pausePlayFromStart();
+                    setButtonsDisabled();
                     break;
                 }
                 case "XMLFormatDamaged": {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("XML Format is damaged");
                     ApplicationStatus.pausePlayFromStart();
+                    setButtonsDisabled();
+                    vm.csvPath.set("");
                     break;
                 }
+
                 case "LoadedSuccessfully":{
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("Properties resource has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
+                    setButtonsDisabled();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "LoadedCSVSuccessfully":{
@@ -141,6 +145,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.pausePlayFromStart();
                     assert myDisplay.controller != null;
                     myDisplay.controller.list.getItems().setAll(vm.getTimeSeries().getFeatures());
+                    vm.onStop.run();
                     setButtonsEnabled();
 
                     assert myPlayer.controller != null;
@@ -167,8 +172,14 @@ public class MainWindowController implements Observer {
                     setButtonsDisabled();
                     break;
                 }
+                case "dataOutOfRange":{
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("One or more data values is out of feature's legal range");
+                    ApplicationStatus.pausePlayFromStart();
+                    setButtonsDisabled();
+                    break;
+                }
             }
-
         }
     }
 
@@ -183,6 +194,9 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toEnd.setDisable(true);
         myPlayer.controller.toStart.setDisable(true);
         myPlayer.controller.playSpeed.clear();
+        myPlayer.controller.slider.valueProperty().set(0);
+        vm.flightTime.set("00:00:00");
+        myDisplay.controller.list.getItems().clear();
     }
 
     private void setButtonsEnabled(){
