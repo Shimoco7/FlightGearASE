@@ -50,7 +50,7 @@ public class FGModel extends Observable implements Model{
         } catch (FileNotFoundException e) {
            e.printStackTrace();
             setChanged();
-            notifyObservers("FileNotFound");
+			notifyObservers("FileNotFound");
         }
         try {
             Properties tempProperties =(Properties) d.readObject();
@@ -103,13 +103,17 @@ public class FGModel extends Observable implements Model{
 			setChanged();
 			notifyObservers("FailedToLoadClass");
 		}
+		else {
+			setChanged();
+			notifyObservers("LoadedClassSuccessfully");
+		}
 
 		// load class directory
-		 className = file.getParentFile().getName() + "." + file.getName().substring(0,file.getName().indexOf("."));
+		 className = "ptm1" + "." + file.getName().substring(0,file.getName().indexOf("."));
 		URL[] url = new URL[1];
 		// change this path to your local one
 		try {
-			url[0] = new URL("file://" + file.getParentFile().getParent() + "/");
+			url[0] = new URL("file://" + file.getParent() + "/");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,9 +136,6 @@ public class FGModel extends Observable implements Model{
 			e.printStackTrace();
 		}
 		// create an Algorithms instance
-
-		setChanged();
-		notifyObservers("LoadedClassSuccessfully");
 		ArrayList<AnomalyReport> arr = new ArrayList<>();
 		if (detectAlgo instanceof LineRegressionAnomalyDetector) {
 			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(ts);
