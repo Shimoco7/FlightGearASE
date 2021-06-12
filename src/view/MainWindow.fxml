@@ -24,6 +24,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#loadProperties" text="Load Properties" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadAlgorithm" text="Load Algorithm" />
                 <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
