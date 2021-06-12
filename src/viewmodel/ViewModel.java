@@ -138,6 +138,17 @@ public class ViewModel extends Observable implements Observer {
                     notifyObservers("LoadedSuccessfully");
                     break;
                 }
+                case "FailedToLoadClass": {
+                    setChanged();
+                    notifyObservers("FailedToLoadClass");
+                    break;
+                }
+                case "LoadedClassSuccessfully": {
+                    setChanged();
+                    notifyObservers("LoadedClassSuccessfully");
+                    break;
+                }
+                
 
                 case "SLOWEST":{
                     playSpeed.set("0.25");
