@@ -1,6 +1,7 @@
 package model;
 
 import javafx.beans.property.IntegerProperty;
+import ptm1.*;
 import other.Properties;
 import ptm1.TimeSeries;
 import ptm1.TimeSeriesAnomalyDetector;
@@ -8,6 +9,9 @@ import ptm1.TimeSeriesAnomalyDetector;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 public class FGModel extends Observable implements Model{
@@ -15,6 +19,7 @@ public class FGModel extends Observable implements Model{
     Properties appProperties;
     IntegerProperty timeStep;
     TimeSeries ts;
+    TimeSeries test = new TimeSeries("./resources/anomaly_flight.csv");
     FGPlayer fgp;
     Timer t;
     int hertzRate;
@@ -58,7 +63,7 @@ public class FGModel extends Observable implements Model{
             else{
                 appProperties = tempProperties;
                 setChanged();
-                notifyObservers("LoadedSuccessfully");
+				notifyObservers("LoadedSuccessfully");
                 notifyObservers(appProperties);
             }
         }
@@ -91,10 +96,64 @@ public class FGModel extends Observable implements Model{
         return appProperties;
     }
 
-    @Override
-    public void setAnomalyDetector(TimeSeriesAnomalyDetector ad) {
+	@Override
+	public void setAnomalyDetector(String path) {
+		Object detectAlgo = null;
+		String className;
+		File file = new File(path);
+		if (file == null) {
+			setChanged();
+			notifyObservers("FailedToLoadClass");
+		}
 
-    }
+		// load class directory
+		 className = file.getParentFile().getName() + "." + file.getName().substring(0,file.getName().indexOf("."));
+		URL[] url = new URL[1];
+		// change this path to your local one
+		try {
+			url[0] = new URL("file://" + file.getParentFile().getParent() + "/");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		URLClassLoader urlClassLoader = new URLClassLoader(url);
+		Class<?> c;
+		try {
+			c = urlClassLoader.loadClass(className);
+			try {
+				detectAlgo = c.newInstance();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// create an Algorithms instance
+
+		setChanged();
+		notifyObservers("LoadedClassSuccessfully");
+
+		if (detectAlgo instanceof LineRegressionAnomalyDetector) {
+			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(ts);
+			((LineRegressionAnomalyDetector) detectAlgo).detect(test);
+		}
+
+		if (detectAlgo instanceof HybridAnomalyDetector) {
+			((HybridAnomalyDetector) detectAlgo).learnNormal(ts);
+			((HybridAnomalyDetector) detectAlgo).detect(test);
+		}
+
+		if (detectAlgo instanceof ZscoreAnomalyDetector) {
+			((ZscoreAnomalyDetector) detectAlgo).learnNormal(ts);
+			((ZscoreAnomalyDetector) detectAlgo).detect(test);
+		}
+
+	}
 
     @Override
     public void play() {
