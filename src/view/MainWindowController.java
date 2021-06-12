@@ -206,7 +206,7 @@ public class MainWindowController implements Observer {
                     break;
                 }
                 case "LoadedClassSuccessfully":{
-                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("class-File has been loaded successfully");
                     break;
                 }
