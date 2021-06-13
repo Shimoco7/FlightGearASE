@@ -27,10 +27,6 @@ public class FGModel extends Observable implements Model{
         ps = playSpeed.NORMAL;
     }
 
-    @Override
-    public void start() {
-
-    }
 
     @Override
     public void setTimeSeries(TimeSeries ts) {
@@ -80,6 +76,7 @@ public class FGModel extends Observable implements Model{
         }
         e.close();
     }
+
 
     @Override
     public void setTimeStep(IntegerProperty timeStep) {
@@ -274,10 +271,6 @@ public class FGModel extends Observable implements Model{
         if(value<fp.getMinVal()||value> fp.getMaxVal())
             return false;
         return true;
-    }
-
-    public Properties getAppProperties() {
-        return appProperties;
     }
 
     private void setPlaySpeed(){

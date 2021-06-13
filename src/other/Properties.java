@@ -46,9 +46,7 @@ public class Properties implements Serializable {
         this.port = port;
     }
 
-    public Integer getHertzRate() {
-        return hertzRate;
-    }
+    public Integer getHertzRate() { return hertzRate; }
 
     public void setHertzRate(Integer hertzRate) {
         this.hertzRate = hertzRate;

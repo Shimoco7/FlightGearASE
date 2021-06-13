@@ -19,32 +19,37 @@ public class DisplayController implements Initializable {
     public @FXML ListView list;
     public @FXML LineChart leftGraph,rightGraph;
     public @FXML ScatterChart mainGraph;
-    XYChart.Series series;
+    XYChart.Series leftSeries,rightSeries;
 
 
     public DisplayController() { }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        series = new XYChart.Series();
+        leftSeries = new XYChart.Series();
+        rightSeries = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
 
-        list.getSelectionModel().selectedItemProperty().addListener(e->{
-            leftGraph.getData().clear();
-        });
+//        list.getSelectionModel().selectedItemProperty().addListener(e->{
+//            leftGraph.getData().clear();
+//        });
 
     }
 
-    public void display(ObservableList<Float> listItem) {
+    public void display(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem) {
        leftGraph.getData().clear();
-       series.getData().clear();
-        for(int i=0;i<listItem.size();i++){
-            series.getData().add(new XYChart.Data<>(getTimeByIndex(i),listItem.get(i)));
+       leftSeries.getData().clear();
+       rightGraph.getData().clear();
+       rightSeries.getData().clear();
+
+        for(int i=0;i<leftListItem.size();i++){
+            leftSeries.getData().add(new XYChart.Data<>(getTimeByIndex(i),leftListItem.get(i)));
+            rightSeries.getData().add(new XYChart.Data<>(getTimeByIndex(i),rightListItem.get(i)));
         }
 
-        leftGraph.getData().add(series);
-
+        leftGraph.getData().add(leftSeries);
+        rightGraph.getData().add(rightSeries);
     }
 
     private String getTimeByIndex(int index){
@@ -52,11 +57,12 @@ public class DisplayController implements Initializable {
         return Calculate.getTimeString(timeInSeconds);
     }
 
-    public void updateDisplay(ObservableList<Float> listItem,int ov,int nv) {
+    public void updateDisplay(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem,int ov,int nv) {
         if(list.getSelectionModel().getSelectedItem()!=null){
             int j = ov;
-            for(int i=0;i<listItem.size();i++){
-                series.getData().add(new XYChart.Data<>(getTimeByIndex(j++),listItem.get(i)));
+            for(int i=0;i<leftListItem.size();i++){
+                leftSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j++),leftListItem.get(i)));
+                rightSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j++),rightListItem.get(i)));
             }
         }
     }

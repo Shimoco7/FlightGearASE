@@ -8,6 +8,7 @@ import model.FGModel;
 import model.Model;
 import other.Calculate;
 import other.Properties;
+import ptm1.StatLib;
 import ptm1.TimeSeries;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class ViewModel extends Observable implements Observer {
     TimeSeries timeSeries;
     Properties appProp;
     private HashMap<String, DoubleProperty> displayVariables;
+    private HashMap<String,String> featuresCorrelations;
     public IntegerProperty timeStep;
     public StringProperty csvPath,playSpeed, flightTime;
     public final Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
@@ -29,6 +31,7 @@ public class ViewModel extends Observable implements Observer {
     public ViewModel(Model m) {
         this.m = m;
         displayVariables = new HashMap<>();
+        featuresCorrelations= new HashMap<>();
         csvPath= new SimpleStringProperty();
         timeStep = new SimpleIntegerProperty();
         playSpeed = new SimpleStringProperty();
@@ -42,6 +45,7 @@ public class ViewModel extends Observable implements Observer {
             if (res.equals("LoadedCSVSuccessfully")) {
                 timeSeries = new TimeSeries(nv);
                 this.m.setTimeSeries(timeSeries);
+                setCorrelations(appProp);
             }
             setChanged();
             notifyObservers(res);
@@ -81,6 +85,12 @@ public class ViewModel extends Observable implements Observer {
         return listItem;
     }
 
+    public ObservableList<Float> getCorrelatedListItem(String selectedFeature, int oldVal, int newVal) {
+        String corlFeature = featuresCorrelations.get(selectedFeature);
+        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(corlFeature).subList(oldVal,newVal));
+        return listItem;
+    }
+
     public String updateFlightTime() {
         int timeInSeconds = timeStep.get()/appProp.getHertzRate();
         return Calculate.getTimeString(timeInSeconds);
@@ -105,9 +115,42 @@ public class ViewModel extends Observable implements Observer {
         m.setProperties(path);
     }
 
+    private void setCorrelations(Properties p) {
+        TimeSeries ts = new TimeSeries(p.getRegularFlightCSV());
+        for(String feature1 : ts.getFeatures()){
+            String maxCorlFeature="";
+            float maxCorl=0;
+            for(String feature2: ts.getFeatures()){
+                if(!feature1.equals(feature2)){
+                    ArrayList<Float> f1 = ts.getFeatureData(feature1);
+                    ArrayList<Float> f2 = ts.getFeatureData(feature2);
+
+                    float[] f1Arr = new float[f1.size()];
+                    float[] f2Arr = new float[f2.size()];
+                    for(int i=0;i<f1.size();i++){
+                        f1Arr[i] = f1.get(i);
+                        f2Arr[i] = f2.get(i);
+                    }
+                    float correlation = StatLib.pearson(f1Arr,f2Arr);
+                    if(Math.abs(correlation)>maxCorl){
+                        maxCorl = Math.abs(correlation);
+                        maxCorlFeature = feature2;
+                    }
+                }
+            }
+            if(maxCorlFeature.equals("")){
+                featuresCorrelations.put(feature1,feature1);
+            }
+            else {
+                featuresCorrelations.put(feature1, maxCorlFeature);
+            }
+        }
+    }
+
     public TimeSeries getTimeSeries() {
         return timeSeries;
     }
+    public HashMap<String, String> getFeaturesCorrelations() { return featuresCorrelations; }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -134,7 +177,6 @@ public class ViewModel extends Observable implements Observer {
                     notifyObservers("LoadedSuccessfully");
                     break;
                 }
-
                 case "SLOWEST":{
                     playSpeed.set("0.25");
                     break;
@@ -163,4 +205,5 @@ public class ViewModel extends Observable implements Observer {
             }
         }
     }
+
 }

@@ -47,6 +47,7 @@ public class MainWindowController implements Observer {
         else{
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
+        myDisplay.controller.leftGraph.setTitle("aileron");
     }
 
     public void initialize(ViewModel vm) {
@@ -85,20 +86,26 @@ public class MainWindowController implements Observer {
         vm.timeStep.addListener((o,ov,nv)->{
             if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null) {
                 String selectedFeature = myDisplay.controller.list.getSelectionModel().getSelectedItem().toString();
+                ObservableList<Float> leftListItem,rightListItem;
                 if(nv.intValue()<=ov.intValue()){
-                    ObservableList<Float> listItem= vm.getListItem(selectedFeature,0,vm.timeStep.get());
-                    Platform.runLater(()->myDisplay.controller.display(listItem));
+                    leftListItem= vm.getListItem(selectedFeature,0,vm.timeStep.get());
+                    rightListItem = vm.getCorrelatedListItem(selectedFeature,0,vm.timeStep.get());
+                    Platform.runLater(()->myDisplay.controller.display(leftListItem,rightListItem));
                 }
                 else {
-                    ObservableList<Float> listItem = vm.getListItem(selectedFeature, ov.intValue(), nv.intValue());
-                    Platform.runLater(() -> myDisplay.controller.updateDisplay(listItem, ov.intValue(), nv.intValue()));
+                    leftListItem= vm.getListItem(selectedFeature, ov.intValue(), nv.intValue());
+                    rightListItem = vm.getCorrelatedListItem(selectedFeature,ov.intValue(), nv.intValue());
+                    Platform.runLater(() -> myDisplay.controller.updateDisplay(leftListItem,rightListItem, ov.intValue(), nv.intValue()));
                 }
             }
         });
 
         myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
-            ObservableList<Float> listItem= vm.getListItem(nv.toString(),0,vm.timeStep.get());
-            Platform.runLater(()->myDisplay.controller.display(listItem));
+            if(nv!=null) {
+                ObservableList<Float> leftListItem = vm.getListItem(nv.toString(), 0, vm.timeStep.get());
+                ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
+                Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
+            }
         });
 
     }
@@ -202,6 +209,7 @@ public class MainWindowController implements Observer {
         myPlayer.controller.playSpeed.clear();
         myPlayer.controller.slider.valueProperty().set(0);
         vm.flightTime.set("00:00:00");
+        assert myDisplay.controller != null;
         myDisplay.controller.list.getItems().clear();
     }
 
