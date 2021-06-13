@@ -209,13 +209,20 @@ public class SpaceXJoystick extends Region {
         touchPoint.setFill(Color.BLACK);
         touchPoint.setStroke(getActiveColor());
         double maxR = size * 0.35;
-        double Ang=Math.atan((getY()/getX()));
+//        double xy=(getY()/getX());
+        if ((Math.pow(getX(), 2.0)+Math.pow(getY(), 2.0))>1) {
+        double Ang=Math.atan2(getY(), getX());
+        double Angcheck=(Ang*180)/Math.PI; //to DELETE//
         double x=maxR*Math.cos(Ang);
         double y=maxR*Math.sin(Ang);
         touchPoint.setCenterX(x+center);
         touchPoint.setCenterY(-y+center);
-//        touchPoint.setCenterX(getX()*maxR+center);
-//        touchPoint.setCenterY(-getY()*maxR+center);
+        }
+        
+        else {
+        touchPoint.setCenterX(getX()*maxR+center);
+        touchPoint.setCenterY(-getY()*maxR+center);
+        }
         drawBackground();
     }
 
