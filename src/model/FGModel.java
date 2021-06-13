@@ -96,13 +96,12 @@ public class FGModel extends Observable implements Model{
 		Object detectAlgo = null;
 		String className;
 		File file = new File(path);
-		if (file == null) {
-			setChanged();
-			notifyObservers("FailedToLoadClass");
+        setChanged();
+        if (file == null) {
+            notifyObservers("FailedToLoadClass");
 		}
 		else {
-			setChanged();
-			notifyObservers("LoadedClassSuccessfully");
+            notifyObservers("LoadedClassSuccessfully");
 		}
 
 		// load class directory

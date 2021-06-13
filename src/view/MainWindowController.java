@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ public class MainWindowController implements Observer {
     @FXML Label appStatus;
     @FXML Clocks myClocks;
     @FXML Display myDisplay;
+    @FXML MenuItem loadAlgorithm;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -39,15 +41,9 @@ public class MainWindowController implements Observer {
         fc.getExtensionFilters().add(extensionFilter);
         File chosenFile = fc.showOpenDialog(stage);
 
-        if(chosenFile==null){
-            ApplicationStatus.setAppColor(Color.RED);
-            ApplicationStatus.setAppStatusValue("Failed to load resource");
-            ApplicationStatus.pausePlayFromStart();
-        }
-        else{
+        if(chosenFile!=null){
             vm.setAppProperties(chosenFile.getAbsolutePath());
         }
-        myDisplay.controller.leftGraph.setTitle("aileron");
     }
     
     public void loadAlgorithm(){
@@ -59,18 +55,14 @@ public class MainWindowController implements Observer {
         fc.getExtensionFilters().add(extensionFilter);
         File chosenFile = fc.showOpenDialog(stage);
 
-        if(chosenFile==null){
-            ApplicationStatus.setAppColor(Color.RED);
-            ApplicationStatus.setAppStatusValue("Failed to load algorithm");
-            ApplicationStatus.pausePlayFromStart();
-        }
-        else{
+        if(chosenFile!=null){
             vm.setAlgorithm(chosenFile.getAbsolutePath());
         }
     }
 
     public void initialize(ViewModel vm) {
         this.vm = vm;
+        loadAlgorithm.setDisable(true);
         appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusStringProperty());
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
         ApplicationStatus.setPauseDuration(15);
@@ -240,6 +232,7 @@ public class MainWindowController implements Observer {
         vm.flightTime.set("00:00:00");
         assert myDisplay.controller != null;
         myDisplay.controller.list.getItems().clear();
+        loadAlgorithm.setDisable(true);
     }
 
     private void setButtonsEnabled(){
@@ -253,6 +246,7 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toEnd.setDisable(false);
         myPlayer.controller.toStart.setDisable(false);
         myPlayer.controller.playSpeed.setText("1.0");
+        loadAlgorithm.setDisable(false);
     }
 
     public void close(ActionEvent actionEvent) {

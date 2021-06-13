@@ -56,11 +56,7 @@ public class PlayerController implements Initializable {
         fc.getExtensionFilters().add(extensionFilter);
         File chosenFile = fc.showOpenDialog(stage);
 
-        if(chosenFile==null){
-            ApplicationStatus.setAppColor(Color.RED);
-            ApplicationStatus.setAppStatusValue("Failed to load resource");
-        }
-        else{
+        if(chosenFile!=null){
             timeSeriesPath.setValue(chosenFile.getAbsolutePath());
         }
     }
