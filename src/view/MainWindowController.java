@@ -53,7 +53,7 @@ public class MainWindowController implements Observer {
     public void loadAlgorithm(){
 		FileChooser fc = new FileChooser();
         fc.setTitle("Load Detection Algorithm");
-        fc.setInitialDirectory(new File("./bin"));
+        fc.setInitialDirectory(new File("./algorithms"));
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
         		"Class Files (*.class)", "*.class");
         fc.getExtensionFilters().add(extensionFilter);
@@ -67,7 +67,6 @@ public class MainWindowController implements Observer {
         else{
             vm.setAlgorithm(chosenFile.getAbsolutePath());
         }
-
     }
 
     public void initialize(ViewModel vm) {

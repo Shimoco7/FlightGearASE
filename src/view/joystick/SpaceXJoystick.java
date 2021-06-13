@@ -213,7 +213,7 @@ public class SpaceXJoystick extends Region {
         double x=maxR*Math.cos(Ang);
         double y=maxR*Math.sin(Ang);
         touchPoint.setCenterX(x+center);
-        touchPoint.setCenterY(y+center);
+        touchPoint.setCenterY(-y+center);
 //        touchPoint.setCenterX(getX()*maxR+center);
 //        touchPoint.setCenterY(-getY()*maxR+center);
         drawBackground();
@@ -752,7 +752,7 @@ public class SpaceXJoystick extends Region {
         }
 
         touchPoint.setFill(Color.BLACK);
-        touchPoint.setRadius(size*0.175);
+        touchPoint.setRadius(size*0.05);
         touchPoint.setStroke(activeColor);
         touchIndicator.setStroke(inactiveColor);
     }

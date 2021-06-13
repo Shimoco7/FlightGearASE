@@ -115,6 +115,10 @@ public class ViewModel extends Observable implements Observer {
         m.setProperties(path);
     }
 
+    public void setAlgorithm(String path){
+        m.setAnomalyDetector(path);
+    }
+
     private void setCorrelations(Properties p) {
         TimeSeries ts = new TimeSeries(p.getRegularFlightCSV());
         for(String feature1 : ts.getFeatures()){
@@ -175,6 +179,16 @@ public class ViewModel extends Observable implements Observer {
                 case "LoadedSuccessfully": {
                     setChanged();
                     notifyObservers("LoadedSuccessfully");
+                    break;
+                }
+                case "FailedToLoadClass": {
+                    setChanged();
+                    notifyObservers("FailedToLoadClass");
+                    break;
+                }
+                case "LoadedClassSuccessfully": {
+                    setChanged();
+                    notifyObservers("LoadedClassSuccessfully");
                     break;
                 }
                 case "SLOWEST":{

@@ -3,7 +3,6 @@ package model;
 import javafx.beans.property.IntegerProperty;
 import other.Properties;
 import ptm1.TimeSeries;
-import ptm1.TimeSeriesAnomalyDetector;
 
 public interface Model {
 
