@@ -11,7 +11,7 @@ public interface Model {
     void setProperties(String path);
     void setTimeStep(IntegerProperty timeStep);
     <V> Properties getProperties();
-    void setAnomalyDetector(TimeSeriesAnomalyDetector ad);
+    //void setAnomalyDetector(TimeSeriesAnomalyDetector ad);
     void play();
     void pause();
     void stop();
@@ -20,4 +20,5 @@ public interface Model {
     void fastForward();
     void slowForward();
     String uploadCsv(String nv);
+    void setAnomalyDetector(String path);
 }

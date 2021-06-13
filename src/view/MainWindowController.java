@@ -49,6 +49,26 @@ public class MainWindowController implements Observer {
         }
         myDisplay.controller.leftGraph.setTitle("aileron");
     }
+    
+    public void loadAlgorithm(){
+		FileChooser fc = new FileChooser();
+        fc.setTitle("Load Detection Algorithm");
+        fc.setInitialDirectory(new File("./bin"));
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
+        		"Class Files (*.class)", "*.class");
+        fc.getExtensionFilters().add(extensionFilter);
+        File chosenFile = fc.showOpenDialog(stage);
+
+        if(chosenFile==null){
+            ApplicationStatus.setAppColor(Color.RED);
+            ApplicationStatus.setAppStatusValue("Failed to load algorithm");
+            ApplicationStatus.pausePlayFromStart();
+        }
+        else{
+            vm.setAlgorithm(chosenFile.getAbsolutePath());
+        }
+
+    }
 
     public void initialize(ViewModel vm) {
         this.vm = vm;
@@ -190,6 +210,16 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("One or more data values is out of feature's legal range");
                     ApplicationStatus.pausePlayFromStart();
                     setButtonsDisabled();
+                    break;
+                }
+                case "LoadedClassSuccessfully":{
+                    ApplicationStatus.setAppColor(Color.GREEN);
+                    ApplicationStatus.setAppStatusValue("class-File has been loaded successfully");
+                    break;
+                }
+                case "FailedToLoadClass":{
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("Failed to load the class file");
                     break;
                 }
             }
