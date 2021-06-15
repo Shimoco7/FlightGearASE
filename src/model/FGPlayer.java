@@ -32,4 +32,15 @@ public class FGPlayer {
             out.flush();
         }
     }
+
+    public void close() {
+        if(fg!=null){
+            try {
+                fg.close();
+            } catch (IOException e) { }
+        }
+        if(out!=null){
+            out.close();
+        }
+    }
 }

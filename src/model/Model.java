@@ -20,4 +20,5 @@ public interface Model {
     void slowForward();
     String uploadCsv(String nv);
     void setAnomalyDetector(String path);
+    void close();
 }

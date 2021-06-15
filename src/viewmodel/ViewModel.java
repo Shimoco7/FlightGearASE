@@ -61,7 +61,7 @@ public class ViewModel extends Observable implements Observer {
                 displayVariables.get("altitude").set(row.get(appProp.getMap().get("altitude").getIndex()));
                 displayVariables.get("heading").set(-(row.get(appProp.getMap().get("heading").getIndex())));
                 displayVariables.get("pitch").set(row.get(appProp.getMap().get("pitch").getIndex()));
-                displayVariables.get("roll").set(row.get(appProp.getMap().get("roll").getIndex()));
+                displayVariables.get("roll").set(-(row.get(appProp.getMap().get("roll").getIndex())));
                 displayVariables.get("yaw").set(row.get(appProp.getMap().get("yaw").getIndex()));
                 displayVariables.get("airspeed").set(row.get(appProp.getMap().get("airspeed").getIndex()));
                 displayVariables.get("longitude").set(row.get(appProp.getMap().get("longitude").getIndex()));
@@ -220,4 +220,7 @@ public class ViewModel extends Observable implements Observer {
         }
     }
 
+    public void close() {
+        m.close();
+    }
 }

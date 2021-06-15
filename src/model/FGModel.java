@@ -158,6 +158,14 @@ public class FGModel extends Observable implements Model{
 	}
 
     @Override
+    public void close() {
+        if(t!=null){
+            t.cancel();
+            fgp.close();
+        }
+    }
+
+    @Override
     public void play() {
         if(t==null){
             t= new Timer();
