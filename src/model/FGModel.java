@@ -84,6 +84,9 @@ public class FGModel extends Observable implements Model{
     @Override
     public void setTimeStep(IntegerProperty timeStep) {
         this.timeStep = timeStep;
+        timeStep.addListener((o,ov,nv)->{
+            fgp.send(ts.getRow(nv.intValue()));
+        });
     }
 
     @Override
