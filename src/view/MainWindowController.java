@@ -23,14 +23,14 @@ import java.util.Observer;
 
 public class MainWindowController implements Observer {
 
-    ViewModel vm;
-    Stage stage;
-    @FXML Player myPlayer;
-    @FXML Joystick myJoystick;
-    @FXML Label appStatus;
-    @FXML Clocks myClocks;
-    @FXML Display myDisplay;
-    @FXML MenuItem loadAlgorithm;
+    private ViewModel vm;
+    private Stage stage;
+    private @FXML Player myPlayer;
+    private @FXML Joystick myJoystick;
+    private @FXML Label appStatus;
+    private @FXML Clocks myClocks;
+    private @FXML Display myDisplay;
+    private @FXML MenuItem loadAlgorithm;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -63,7 +63,7 @@ public class MainWindowController implements Observer {
     public void initialize(ViewModel vm) {
         this.vm = vm;
         loadAlgorithm.setDisable(true);
-        appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusStringProperty());
+        appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusProp());
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
         ApplicationStatus.setPauseDuration(15);
         ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
@@ -119,11 +119,10 @@ public class MainWindowController implements Observer {
             }
         });
 
+        stage.setOnCloseRequest(e->vm.close());
+
     }
 
-    public Stage getStage() {
-        return stage;
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -250,6 +249,7 @@ public class MainWindowController implements Observer {
     }
 
     public void close(ActionEvent actionEvent) {
+        vm.close();
         stage.close();
     }
 }
