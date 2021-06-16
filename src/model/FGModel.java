@@ -16,13 +16,12 @@ public class FGModel extends Observable implements Model{
 
     Properties appProperties;
     IntegerProperty timeStep;
-    TimeSeries ts;
-    TimeSeries test = new TimeSeries("./resources/anomaly_flight.csv");
+    TimeSeries ts,regFlight;
     FGPlayer fgp;
     Timer t;
+    TimeSeriesAnomalyDetector anomalyDetector;
     int hertzRate;
     playSpeed ps;
-    Runnable algorithmPainter;
 
     public FGModel() {
         setProperties("./resources/properties.xml");
@@ -48,23 +47,27 @@ public class FGModel extends Observable implements Model{
            e.printStackTrace();
             setChanged();
 			notifyObservers("FileNotFound");
+            regFlight = null;
         }
         try {
             Properties tempProperties =(Properties) d.readObject();
             if(!tempProperties.isValidProperties()){
                 setChanged();
                 notifyObservers("IllegalValues");
+                regFlight = null;
             }
             else{
                 appProperties = tempProperties;
                 setChanged();
 				notifyObservers("LoadedSuccessfully");
                 notifyObservers(appProperties);
+                regFlight = new TimeSeries(appProperties.getRegularFlightCSV());
             }
         }
         catch(Exception e){
             setChanged();
             notifyObservers("XMLFormatDamaged");
+            regFlight = null;
         }
         d.close();
 
@@ -100,12 +103,9 @@ public class FGModel extends Observable implements Model{
 		Object detectAlgo = null;
 		String className;
 		File file = new File(path);
-        setChanged();
         if (file == null) {
+            setChanged();
             notifyObservers("FailedToLoadClass");
-		}
-		else {
-            notifyObservers("LoadedClassSuccessfully");
 		}
 
 		// load class directory
@@ -138,23 +138,25 @@ public class FGModel extends Observable implements Model{
 		// create an Algorithms instance
 		ArrayList<AnomalyReport> arr = new ArrayList<>();
 		if (detectAlgo instanceof LineRegressionAnomalyDetector) {
-			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(ts);
-			 arr = (ArrayList<AnomalyReport>)((LineRegressionAnomalyDetector) detectAlgo).detect(test);
+		    anomalyDetector = (LineRegressionAnomalyDetector) detectAlgo;
+			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(regFlight);
+			 arr = (ArrayList<AnomalyReport>)((LineRegressionAnomalyDetector) detectAlgo).detect(ts);
 		}
 
 		else if (detectAlgo instanceof HybridAnomalyDetector) {
-			((HybridAnomalyDetector) detectAlgo).learnNormal(ts);
-			 arr = (ArrayList<AnomalyReport>)((HybridAnomalyDetector) detectAlgo).detect(test);
+            anomalyDetector = (HybridAnomalyDetector) detectAlgo;
+			((HybridAnomalyDetector) detectAlgo).learnNormal(regFlight);
+			 arr = (ArrayList<AnomalyReport>)((HybridAnomalyDetector) detectAlgo).detect(ts);
 		}
 
 		else if (detectAlgo instanceof ZscoreAnomalyDetector) {
-			((ZscoreAnomalyDetector) detectAlgo).learnNormal(ts);
-			 arr = (ArrayList<AnomalyReport>)((ZscoreAnomalyDetector) detectAlgo).detect(test);
+            anomalyDetector = (ZscoreAnomalyDetector) detectAlgo;
+			((ZscoreAnomalyDetector) detectAlgo).learnNormal(regFlight);
+			 arr = (ArrayList<AnomalyReport>)((ZscoreAnomalyDetector) detectAlgo).detect(ts);
 		}
-		
-        for(AnomalyReport a : arr){
-            System.out.println(a.description +" "+  a.timeStep);
-        }
+
+        setChanged();
+        notifyObservers("LoadedClassSuccessfully");
 	}
 
     @Override
@@ -163,6 +165,11 @@ public class FGModel extends Observable implements Model{
             t.cancel();
             fgp.close();
         }
+    }
+
+    @Override
+    public Painter getPainter() {
+        return anomalyDetector.getPainter();
     }
 
     @Override

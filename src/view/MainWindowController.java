@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import ptm1.Painter;
 import view.clocks.Clocks;
 import view.display.Display;
 import view.joystick.Joystick;
@@ -25,6 +26,7 @@ public class MainWindowController implements Observer {
 
     private ViewModel vm;
     private Stage stage;
+    private Painter painter;
     private @FXML Player myPlayer;
     private @FXML Joystick myJoystick;
     private @FXML Label appStatus;
@@ -204,7 +206,8 @@ public class MainWindowController implements Observer {
                 }
                 case "LoadedClassSuccessfully":{
                     ApplicationStatus.setAppColor(Color.GREEN);
-                    ApplicationStatus.setAppStatusValue("class-File has been loaded successfully");
+                    ApplicationStatus.setAppStatusValue("Class-File has been loaded successfully");
+                    painter = vm.getPainter();
                     break;
                 }
                 case "FailedToLoadClass":{

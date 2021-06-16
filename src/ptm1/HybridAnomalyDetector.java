@@ -10,11 +10,13 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	LinkedHashMap<String, Float> zMap; // for Zscore
 	LinkedHashMap<String, Circle> wMap; // for Welzl
 	float[][] vals;
+	private final Painter painter;
 
 	public HybridAnomalyDetector() {
 		corFeatures = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
+		painter = new HybridPainter();
 	}
 
 	@Override
@@ -131,8 +133,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	}
 
 	@Override
-	public void paint(int timeStep, String selectedFeature) {
-
+	public Painter getPainter() {
+		return painter;
 	}
 
 	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) { // The function returns an array of points by

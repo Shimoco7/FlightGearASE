@@ -6,8 +6,11 @@ import java.util.List;
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     ArrayList<Float> zArr;
+    private final Painter painter;
+
     public ZscoreAnomalyDetector() {
         zArr = new ArrayList<>();
+        painter = new ZscorePainter();
     }
 
     @Override
@@ -62,9 +65,10 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     }
 
     @Override
-    public void paint(int timeStep, String selectedFeature) {
-
+    public Painter getPainter() {
+        return painter;
     }
+
 
     public float zScore(float val,float avg, float stdev){
         if(stdev==0) return 0;

@@ -8,6 +8,7 @@ import model.FGModel;
 import model.Model;
 import other.Calculate;
 import other.Properties;
+import ptm1.Painter;
 import ptm1.StatLib;
 import ptm1.TimeSeries;
 
@@ -220,7 +221,11 @@ public class ViewModel extends Observable implements Observer {
         }
     }
 
+    public Painter getPainter() {
+        return m.getPainter();
+    }
     public void close() {
         m.close();
     }
+
 }

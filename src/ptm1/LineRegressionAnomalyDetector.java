@@ -7,10 +7,12 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
 
     ArrayList<CorrelatedFeatures> corFeatures;
     float corlThreshold;
+    private final Painter painter;
 
     public LineRegressionAnomalyDetector() {
         corFeatures = new ArrayList<CorrelatedFeatures>();
         corlThreshold = (float)0.9;
+        painter = new LineRegPainter();
     }
 
     @Override
@@ -85,9 +87,10 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
     }
 
     @Override
-    public void paint(int timeStep, String selectedFeature) {
-
+    public Painter getPainter() {
+        return painter;
     }
+
 
     public List<CorrelatedFeatures> getNormalModel(){
         return corFeatures;
