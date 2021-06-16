@@ -22,6 +22,7 @@ public class FGModel extends Observable implements Model{
     Timer t;
     int hertzRate;
     playSpeed ps;
+    Runnable algorithmPainter;
 
     public FGModel() {
         setProperties("./resources/properties.xml");
@@ -154,7 +155,6 @@ public class FGModel extends Observable implements Model{
         for(AnomalyReport a : arr){
             System.out.println(a.description +" "+  a.timeStep);
         }
-
 	}
 
     @Override

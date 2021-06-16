@@ -130,6 +130,11 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return ar;
 	}
 
+	@Override
+	public void paint(int timeStep, String selectedFeature) {
+
+	}
+
 	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) { // The function returns an array of points by
 																		// getting 2 ArrayLists of Floats
 		Point[] ps = new Point[x.size()];

@@ -6,7 +6,6 @@ import java.util.List;
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     ArrayList<Float> zArr;
-
     public ZscoreAnomalyDetector() {
         zArr = new ArrayList<>();
     }
@@ -60,6 +59,11 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
             }
         }
         return detections;
+    }
+
+    @Override
+    public void paint(int timeStep, String selectedFeature) {
+
     }
 
     public float zScore(float val,float avg, float stdev){

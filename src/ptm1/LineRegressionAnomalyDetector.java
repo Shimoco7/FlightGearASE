@@ -84,6 +84,11 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
         return ar;
     }
 
+    @Override
+    public void paint(int timeStep, String selectedFeature) {
+
+    }
+
     public List<CorrelatedFeatures> getNormalModel(){
         return corFeatures;
     }
