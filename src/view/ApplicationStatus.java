@@ -17,7 +17,7 @@ public final class ApplicationStatus {
     public static void setPauseOnFinished(EventHandler<ActionEvent> e){ pause.setOnFinished(e); }
     public static void pausePlayFromStart(){ pause.playFromStart(); }
     public static void setAppStatusValue(String status){ appStatus.textProperty().set(status);}
-    public static StringProperty getAppStatusStringProperty(){return appStatus.textProperty();}
+    public static StringProperty getAppStatusProp(){return appStatus.textProperty();}
     public static Label getAppStatus(){return appStatus;}
     public static void setAppColor(Color color){
         appStatus.setTextFill(color);
