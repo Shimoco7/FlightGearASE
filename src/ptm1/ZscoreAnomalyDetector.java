@@ -18,10 +18,10 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     @Override
     public void learnNormal(TimeSeries ts) {
         this.normalTs =ts;
-        ArrayList<String> featuresNames = ts.getFeatures();
+        ArrayList<String> featuresNames = this.normalTs.getFeatures();
 
         for(int i=0;i<featuresNames.size();i++){
-            ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
+            ArrayList<Float> ftCol = this.normalTs.getFeatureData(featuresNames.get(i));
             float maxTh=0,currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
@@ -44,12 +44,12 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     @Override
     public List<AnomalyReport> detect(TimeSeries ts) {
         this.anomalyTs=ts;
-        ArrayList<AnomalyReport> detections = new ArrayList<>();
-        ArrayList<String> featuresNames = ts.getFeatures();
+        this.anomalyReports = new ArrayList<>();
+        ArrayList<String> featuresNames = this.anomalyTs.getFeatures();
 
         for(int i=0;i<featuresNames.size();i++){
-            ArrayList<Float> ftCol = ts.getFeatureData(featuresNames.get(i));
-            float maxTh=0,currAvg,currStd,currZscore;
+            ArrayList<Float> ftCol = this.anomalyTs.getFeatureData(featuresNames.get(i));
+            float currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
                 float[] arr = new float[j];
@@ -61,12 +61,11 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 currStd = (float) Math.sqrt(StatLib.var(arr));
                 currZscore = zScore(ftCol.get(j),currAvg,currStd);
                 if(currZscore>zArr.get(i)){
-                    detections.add(new AnomalyReport(featuresNames.get(i),j+1));
+                	this.anomalyReports.add(new AnomalyReport(featuresNames.get(i),j+1));
                 }
             }
         }
-        this.anomalyReports = detections;
-        return detections;
+        return this.anomalyReports;
     }
 
     @Override

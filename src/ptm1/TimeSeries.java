@@ -100,15 +100,25 @@ public class TimeSeries {
             }
     }
 
-    private class Correlation{
+    public class Correlation{
         private String corFeature;
-        private double corVal;
+        private float corVal;
 
 
         //Constructor//
-        public Correlation(String corFeature, double corVal) {
+        private Correlation(String corFeature, float corVal) {
             this.corFeature=corFeature;
             this.corVal = corVal;
         }
+        
+        public float getCorVal() {
+            return this.corVal;
+        }
+        
+        public String getcorFeature() {
+            return this.corFeature;
+        }
+        
+        
     }
 }

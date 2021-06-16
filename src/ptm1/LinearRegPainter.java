@@ -4,7 +4,7 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
 
-public class LineRegPainter implements Painter{
+public class LinearRegPainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     ArrayList<AnomalyReport> anomalyReports;
 

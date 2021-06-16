@@ -137,10 +137,10 @@ public class FGModel extends Observable implements Model{
 		}
 		// create an Algorithms instance
 		ArrayList<AnomalyReport> arr = new ArrayList<>();
-		if (detectAlgo instanceof LineRegressionAnomalyDetector) {
-		    anomalyDetector = (LineRegressionAnomalyDetector) detectAlgo;
-			((LineRegressionAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			 arr = (ArrayList<AnomalyReport>)((LineRegressionAnomalyDetector) detectAlgo).detect(ts);
+		if (detectAlgo instanceof LinearRegressionAnomalyDetector) {
+		    anomalyDetector = (LinearRegressionAnomalyDetector) detectAlgo;
+			((LinearRegressionAnomalyDetector) detectAlgo).learnNormal(regFlight);
+			 arr = (ArrayList<AnomalyReport>)((LinearRegressionAnomalyDetector) detectAlgo).detect(ts);
 		}
 
 		else if (detectAlgo instanceof HybridAnomalyDetector) {

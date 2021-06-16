@@ -9,9 +9,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	ArrayList<CorrelatedFeatures> corFeatures; // for Linear Regression
 	LinkedHashMap<String, Float> zMap; // for Zscore
 	LinkedHashMap<String, Circle> wMap; // for Welzl
-	TimeSeries normalTs,anomalyTs;
+	TimeSeries normalTs, anomalyTs;
 	ArrayList<AnomalyReport> anomalyReports;
-	float[][] vals;
 	private final Painter painter;
 
 	public HybridAnomalyDetector() {
@@ -24,70 +23,54 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	@Override
 	// learning offline normal features and data
 	public void learnNormal(TimeSeries ts) {
-		this.normalTs =ts;
-		ArrayList<String> ft = ts.getFeatures(); // learnNormal variables
-		int len = ts.getRowSize();
-		int col2 = 0, col1 = 0, tempIndexSaver = 0;
-		float correlation = 0;
+		this.normalTs = ts;
+		ArrayList<String> ft = this.normalTs.getFeatures(); // learnNormal variables
 
-		vals = new float[ft.size()][len]; // creating matrix from the time series ts
-		for (int i = 0; i < ft.size(); i++) {
-			for (int j = 0; j < ts.getRowSize(); j++) {
-				vals[i][j] = ts.getFeatureData(ft.get(i)).get(j);
-			}
-		}
+		for (String feature : ft) { // using different algorithm by different correlation
+			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
+			String corFeature = this.normalTs.getCorMap().get(feature).getcorFeature();
+			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm learn
+										
 
-		for (col1 = 0; col1 < ft.size(); col1++) { // using different algorithm by different correlation
-			correlation = 0;
-			for (col2 = 0; col1 != col2 && col2 < ft.size(); col2++) {
-				if (Math.abs(StatLib.pearson(vals[col1], vals[col2])) > correlation) {
-					correlation = Math.abs(StatLib.pearson(vals[col1], vals[col2]));
-					tempIndexSaver = col2;
-				}
-			}
-			col2 = tempIndexSaver;
-			if (correlation >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression
-												// Algorithm learn
-				Point ps[] = toPoints(ts.getFeatureData(ft.get(col1)), ts.getFeatureData(ft.get(col2)));
+				Point ps[] = toPoints(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
 				Line lin_reg = StatLib.linear_reg(ps); // Linear Regression of the Correlated-Features
 				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around
-				CorrelatedFeatures c = new CorrelatedFeatures(ft.get(col1), ft.get(col2), correlation, lin_reg,
-						threshold);
+				CorrelatedFeatures c = new CorrelatedFeatures(feature, corFeature, corl, lin_reg, threshold);
 				corFeatures.add(c);
-			} else if (correlation < (float) 0.5) { // The correlation is less then 0.5 -> Zscore Algorithm learn
+			} else if (corl < (float) 0.5) { // The correlation is less then 0.5 -> Zscore Algorithm learn
+
 				float maxTh = 0, currAvg, currStd, currZscore;
-				for (int i = 1; i < vals[col1].length; i++) {
+				for (int i = 1; i < this.normalTs.getFeatureData(feature).size(); i++) {
 					float[] arr = new float[i];
 
 					for (int j = 0; j < i; j++) {
-						arr[j] = vals[col1][j];
+						arr[j] = this.normalTs.getFeatureData(feature).get(j);
 					}
 					currAvg = StatLib.avg(arr);
 					currStd = (float) Math.sqrt(StatLib.var(arr));
-					currZscore = zScore(vals[col1][i], currAvg, currStd);
+					currZscore = zScore(this.normalTs.getFeatureData(feature).get(i), currAvg, currStd);
 					maxTh = Math.max(currZscore, maxTh);
 				}
-				zMap.put(ft.get(col1), maxTh);
+				zMap.put(feature, maxTh);
 			} else { // The correlation is between 0.5 to 0.95 -> Welzl Algorithm learn
-				ArrayList<Point> ps = toPointsArrayList(ts.getFeatureData(ft.get(col1)),
-						ts.getFeatureData(ft.get(col2)));
+				ArrayList<Point> ps = toPointsArrayList(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
 				Circle wCircle = Welzl.makeCircle(ps);
-				wMap.put(ft.get(col1) + "," + ft.get(col2), wCircle);
+				wMap.put(feature + "," + corFeature, wCircle);
 
 			}
 
 		}
+
 	}
 
 	@Override
 
 	public List<AnomalyReport> detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
-		this.anomalyTs=ts;
-		ArrayList<AnomalyReport> ar = new ArrayList<>();
-
+		this.anomalyTs = ts;
+		anomalyReports = new ArrayList<>();
 		for (CorrelatedFeatures c : corFeatures) { // Linear Regression Algorithm detect
-			ArrayList<Float> x = ts.getFeatureData(c.feature1);
-			ArrayList<Float> y = ts.getFeatureData(c.feature2);
+			ArrayList<Float> x = this.anomalyTs.getFeatureData(c.feature1);
+			ArrayList<Float> y = this.anomalyTs.getFeatureData(c.feature2);
 			for (int i = 0; i < x.size(); i++) {
 				// For each point of the correlated features, if the point deviation
 				// from the line-regression exceeds the threshold it indicates an anomaly
@@ -95,7 +78,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 					String d = c.feature1;
 					// Time-steps in any given time series start from 1, thus k will be send to a
 					// new Anomaly-Report as k+1
-					ar.add(new AnomalyReport(d, (i + 1)));
+					this.anomalyReports.add(new AnomalyReport(d, (i + 1)));
 				}
 			}
 		}
@@ -103,7 +86,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		ArrayList<String> zFeaturesNames = new ArrayList<String>(zMap.keySet()); // Zscore Algorithm detect
 
 		for (int i = 0; i < zMap.size(); i++) {
-			ArrayList<Float> ftCol = ts.getFeatureData(zFeaturesNames.get(i));
+			ArrayList<Float> ftCol = this.anomalyTs.getFeatureData(zFeaturesNames.get(i));
 			float currAvg, currStd, currZscore;
 
 			for (int j = 1; j < ftCol.size(); j++) {
@@ -117,30 +100,29 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
 				if (currZscore > zMap.get(zFeaturesNames.get(i))) { // if the current Zscore is higher then Zscore from
 																	// the learnNormal
-					ar.add(new AnomalyReport(zFeaturesNames.get(i), j + 1)); // ??
+					this.anomalyReports.add(new AnomalyReport(zFeaturesNames.get(i), j + 1)); // ??
 				}
 			}
 		}
 		for (String s : wMap.keySet()) { // Welzl Algorithm detect
 			String[] features = s.split(",");
-			ArrayList<Float> col1Arr = ts.getFeatureData(features[0]);
-			ArrayList<Float> col2Arr = ts.getFeatureData(features[1]);
+			ArrayList<Float> col1Arr = this.anomalyTs.getFeatureData(features[0]);
+			ArrayList<Float> col2Arr = this.anomalyTs.getFeatureData(features[1]);
 			ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 			// Circle wCircle = wMEC.welzl(ps);
 			for (int j = 0; j < ps.size(); j++) {
 				if (!wMap.get(s).isContained(ps.get(j))) // Checks if the point is contained in the Circle from the
-														// learnNormal
-					ar.add(new AnomalyReport(features[0], j + 1)); // ??
+															// learnNormal
+					this.anomalyReports.add(new AnomalyReport(features[0], j + 1)); // ??
 			}
 		}
-		this.anomalyReports = ar;
-		return ar;
+		return this.anomalyReports;
 	}
 
 	@Override
 	public Painter getPainter() {
-		if(normalTs!=null&&anomalyTs!=null&&anomalyReports!=null)
-			painter.setAll(normalTs,anomalyTs,anomalyReports);
+		if (normalTs != null && anomalyTs != null && anomalyReports != null)
+			painter.setAll(normalTs, anomalyTs, anomalyReports);
 		return painter;
 	}
 
