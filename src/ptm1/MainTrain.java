@@ -28,6 +28,8 @@ public class MainTrain {
         // SimpleAnomalyDetector s = new SimpleAnomalyDetector();
         HybridAnomalyDetector h = new HybridAnomalyDetector();
         TimeSeries train = new TimeSeries("./resources/reg_flight.csv");
+        System.out.println(train.getCorMap());
+
         TimeSeries test = new TimeSeries("./resources/anomaly_flight.csv");
 //        z.learnNormal(train);
 //        arr = (ArrayList<AnomalyReport>) z.detect(test);
