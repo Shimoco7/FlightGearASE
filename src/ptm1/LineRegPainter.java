@@ -1,13 +1,16 @@
 package ptm1;
 
+import javafx.scene.canvas.Canvas;
+
 import java.util.ArrayList;
 
 public class LineRegPainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     ArrayList<AnomalyReport> anomalyReports;
 
+
     @Override
-    public void paint(int timeStep, String selectedFeature) {
+    public void paint(Canvas canvas, int timeStep, String selectedFeature) {
 
     }
 

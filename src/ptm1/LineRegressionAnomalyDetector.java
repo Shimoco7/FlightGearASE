@@ -7,6 +7,8 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
 
     ArrayList<CorrelatedFeatures> corFeatures;
     float corlThreshold;
+    TimeSeries normalTs,anomalyTs;
+    ArrayList<AnomalyReport> anomalyReports;
     private final Painter painter;
 
     public LineRegressionAnomalyDetector() {
@@ -18,6 +20,7 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
     @Override
     //learning offline normal features and data
     public void learnNormal(TimeSeries ts) {
+        this.normalTs =ts;
         ArrayList<String> ft=ts.getFeatures();
         int len=ts.getRowSize();
 
@@ -68,6 +71,7 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
     @Override
     //Online detection of Anomalies during Time-Series input
     public List<AnomalyReport> detect(TimeSeries ts) {
+        this.anomalyTs =ts;
         ArrayList<AnomalyReport> ar=new ArrayList<>();
 
         for(CorrelatedFeatures c : corFeatures) {
@@ -83,11 +87,14 @@ public class LineRegressionAnomalyDetector implements TimeSeriesAnomalyDetector 
                 }
             }
         }
+        this.anomalyReports = ar;
         return ar;
     }
 
     @Override
     public Painter getPainter() {
+        if(normalTs!=null&&anomalyTs!=null&&anomalyReports!=null)
+            painter.setAll(normalTs,anomalyTs,anomalyReports);
         return painter;
     }
 

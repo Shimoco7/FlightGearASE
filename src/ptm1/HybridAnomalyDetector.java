@@ -9,6 +9,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	ArrayList<CorrelatedFeatures> corFeatures; // for Linear Regression
 	LinkedHashMap<String, Float> zMap; // for Zscore
 	LinkedHashMap<String, Circle> wMap; // for Welzl
+	TimeSeries normalTs,anomalyTs;
+	ArrayList<AnomalyReport> anomalyReports;
 	float[][] vals;
 	private final Painter painter;
 
@@ -22,6 +24,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	@Override
 	// learning offline normal features and data
 	public void learnNormal(TimeSeries ts) {
+		this.normalTs =ts;
 		ArrayList<String> ft = ts.getFeatures(); // learnNormal variables
 		int len = ts.getRowSize();
 		int col2 = 0, col1 = 0, tempIndexSaver = 0;
@@ -79,6 +82,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	@Override
 
 	public List<AnomalyReport> detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
+		this.anomalyTs=ts;
 		ArrayList<AnomalyReport> ar = new ArrayList<>();
 
 		for (CorrelatedFeatures c : corFeatures) { // Linear Regression Algorithm detect
@@ -129,11 +133,14 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 					ar.add(new AnomalyReport(features[0], j + 1)); // ??
 			}
 		}
+		this.anomalyReports = ar;
 		return ar;
 	}
 
 	@Override
 	public Painter getPainter() {
+		if(normalTs!=null&&anomalyTs!=null&&anomalyReports!=null)
+			painter.setAll(normalTs,anomalyTs,anomalyReports);
 		return painter;
 	}
 

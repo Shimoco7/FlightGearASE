@@ -16,8 +16,8 @@ public class TimeSeries {
     private int dataRowSize;
 
     public TimeSeries(String csvFileName) {
-        features = new ArrayList<String>();
-        tsMap = new HashMap<String, ArrayList<Float>>();
+        features = new ArrayList<>();
+        tsMap = new HashMap<>();
 
 
         try {
@@ -95,12 +95,9 @@ public class TimeSeries {
             }
             if (maxCorlFeature.equals(""))
                  corMap.put(feature1, new Correlation(feature1, 0));
-
             else
                   corMap.put(feature1, new Correlation(maxCorlFeature, maxCorl));
-
             }
-
     }
 
     private class Correlation{
@@ -113,7 +110,5 @@ public class TimeSeries {
             this.corFeature=corFeature;
             this.corVal = corVal;
         }
-
-
-        }
+    }
 }

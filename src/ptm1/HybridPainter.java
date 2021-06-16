@@ -1,5 +1,7 @@
 package ptm1;
 
+import javafx.scene.canvas.Canvas;
+
 import java.util.ArrayList;
 
 public class HybridPainter implements Painter{
@@ -7,7 +9,7 @@ public class HybridPainter implements Painter{
     ArrayList<AnomalyReport> anomalyReports;
 
     @Override
-    public void paint(int timeStep, String selectedFeature) {
+    public void paint(Canvas canvas, int timeStep, String selectedFeature) {
 
     }
 

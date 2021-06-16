@@ -3,6 +3,7 @@ package view.display;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -18,7 +19,7 @@ public class DisplayController implements Initializable {
 
     public @FXML ListView list;
     public @FXML LineChart leftGraph,rightGraph;
-    public @FXML ScatterChart mainGraph;
+    public @FXML Canvas canvas;
     XYChart.Series leftSeries,rightSeries;
 
 
@@ -30,11 +31,6 @@ public class DisplayController implements Initializable {
         rightSeries = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
-
-//        list.getSelectionModel().selectedItemProperty().addListener(e->{
-//            leftGraph.getData().clear();
-//        });
-
     }
 
     public void display(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem) {

@@ -6,6 +6,8 @@ import java.util.List;
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     ArrayList<Float> zArr;
+    TimeSeries normalTs,anomalyTs;
+    ArrayList<AnomalyReport> anomalyReports;
     private final Painter painter;
 
     public ZscoreAnomalyDetector() {
@@ -15,6 +17,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     @Override
     public void learnNormal(TimeSeries ts) {
+        this.normalTs =ts;
         ArrayList<String> featuresNames = ts.getFeatures();
 
         for(int i=0;i<featuresNames.size();i++){
@@ -40,6 +43,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     @Override
     public List<AnomalyReport> detect(TimeSeries ts) {
+        this.anomalyTs=ts;
         ArrayList<AnomalyReport> detections = new ArrayList<>();
         ArrayList<String> featuresNames = ts.getFeatures();
 
@@ -61,11 +65,14 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 }
             }
         }
+        this.anomalyReports = detections;
         return detections;
     }
 
     @Override
     public Painter getPainter() {
+        if(normalTs!=null&&anomalyTs!=null&&anomalyReports!=null)
+            painter.setAll(normalTs,anomalyTs,anomalyReports);
         return painter;
     }
 

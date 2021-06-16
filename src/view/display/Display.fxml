@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -23,7 +23,7 @@
                   <Insets />
                </opaqueInsets>
                <children>
-                  <SplitPane dividerPositions="0.48128898128898134" layoutX="102.0" layoutY="88.0" orientation="VERTICAL" prefHeight="406.4" prefWidth="386.4" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                  <SplitPane dividerPositions="0.5" layoutX="102.0" layoutY="88.0" orientation="VERTICAL" prefHeight="406.4" prefWidth="386.4" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="135.0" prefWidth="365.0">
                            <children>
@@ -59,14 +59,7 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <ScatterChart fx:id="mainGraph" animated="false" layoutX="-12.0" layoutY="16.0" legendVisible="false" prefHeight="230.0" prefWidth="377.0" AnchorPane.bottomAnchor="-16.0" AnchorPane.leftAnchor="-12.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </ScatterChart>
+                              <Canvas fx:id="canvas" height="200.0" layoutY="-2.0" width="365.0" />
                            </children>
                         </AnchorPane>
                     </items>
