@@ -7,10 +7,11 @@ import javafx.scene.chart.*;
 import other.Calculate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ZscorePainter implements Painter{
     TimeSeries normalTs,anomalyTs;
-    ArrayList<AnomalyReport> anomalyReports;
+    HashMap<String, HashSet<Integer>> anomalyReports;
     HashMap<String,ArrayList<Float>> zArrAnomalyMap;
     HashMap<String,Float> thresholdMap;
     XYChart.Series normalSeries;
@@ -70,10 +71,10 @@ public class ZscorePainter implements Painter{
     }
 
     @Override
-    public void setAll(TimeSeries normalTs, TimeSeries anomalyTs, ArrayList<AnomalyReport> ar) {
+    public void setAll(TimeSeries normalTs, TimeSeries anomalyTs, HashMap<String, HashSet<Integer>> anomalies) {
         this.normalTs = normalTs;
         this.anomalyTs = anomalyTs;
-        this.anomalyReports = ar;
+        this.anomalyReports = anomalies;
     }
 
 

@@ -1,12 +1,12 @@
 package ptm1;
 
 import javafx.scene.chart.LineChart;
-
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class LinearRegPainter implements Painter{
     TimeSeries normalTs,anomalyTs;
-    ArrayList<AnomalyReport> anomalyReports;
+    HashMap<String, HashSet<Integer>> anomalyReports;
 
 
     @Override
@@ -15,10 +15,10 @@ public class LinearRegPainter implements Painter{
     }
 
     @Override
-    public void setAll(TimeSeries normalTs, TimeSeries anomalyTs, ArrayList<AnomalyReport> ar) {
+    public void setAll(TimeSeries normalTs, TimeSeries anomalyTs, HashMap<String, HashSet<Integer>> anomalies) {
         this.normalTs = normalTs;
         this.anomalyTs = anomalyTs;
-        this.anomalyReports = ar;
+        this.anomalyReports = anomalies;
     }
 
 }

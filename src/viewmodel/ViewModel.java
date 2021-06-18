@@ -120,6 +120,7 @@ public class ViewModel extends Observable implements Observer {
         m.setAnomalyDetector(path);
     }
 
+    //TODO: remove and use method corCalc from regFlight
     private void setCorrelations(Properties p) {
         TimeSeries ts = new TimeSeries(p.getRegularFlightCSV());
         for(String feature1 : ts.getFeatures()){

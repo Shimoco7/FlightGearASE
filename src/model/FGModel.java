@@ -136,23 +136,22 @@ public class FGModel extends Observable implements Model{
 			e.printStackTrace();
 		}
 		// create an Algorithms instance
-		ArrayList<AnomalyReport> arr = new ArrayList<>();
 		if (detectAlgo instanceof LinearRegressionAnomalyDetector) {
 		    anomalyDetector = (LinearRegressionAnomalyDetector) detectAlgo;
 			((LinearRegressionAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			 arr = (ArrayList<AnomalyReport>)((LinearRegressionAnomalyDetector) detectAlgo).detect(ts);
+			((LinearRegressionAnomalyDetector) detectAlgo).detect(ts);
 		}
 
 		else if (detectAlgo instanceof HybridAnomalyDetector) {
             anomalyDetector = (HybridAnomalyDetector) detectAlgo;
 			((HybridAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			 arr = (ArrayList<AnomalyReport>)((HybridAnomalyDetector) detectAlgo).detect(ts);
+			((HybridAnomalyDetector) detectAlgo).detect(ts);
 		}
 
 		else if (detectAlgo instanceof ZscoreAnomalyDetector) {
             anomalyDetector = (ZscoreAnomalyDetector) detectAlgo;
 			((ZscoreAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			 arr = (ArrayList<AnomalyReport>)((ZscoreAnomalyDetector) detectAlgo).detect(ts);
+			((ZscoreAnomalyDetector) detectAlgo).detect(ts);
 		}
 
         setChanged();

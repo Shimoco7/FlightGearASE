@@ -2,13 +2,14 @@ package ptm1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
     ArrayList<Float> zArr;
     TimeSeries normalTs,anomalyTs;
-    ArrayList<AnomalyReport> anomalyReports;
+    HashMap<String, HashSet<Integer>> anomalyReports;
     HashMap<String,Float> thresholdMap;
     HashMap<String,ArrayList<Float>> zArrAnomaly;
 
