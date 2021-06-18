@@ -3,9 +3,7 @@ package view.display;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ListView;
 import other.Calculate;
@@ -18,8 +16,7 @@ import java.util.ResourceBundle;
 public class DisplayController implements Initializable {
 
     public @FXML ListView list;
-    public @FXML LineChart leftGraph,rightGraph;
-    public @FXML Canvas canvas;
+    public @FXML LineChart leftGraph,rightGraph, mainGraph;
     XYChart.Series leftSeries,rightSeries;
 
 
@@ -31,6 +28,10 @@ public class DisplayController implements Initializable {
         rightSeries = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
+        mainGraph.setAnimated(false);
+        leftGraph.setCreateSymbols(false);
+        rightGraph.setCreateSymbols(false);
+        mainGraph.setCreateSymbols(false);
     }
 
     public void display(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem) {
@@ -53,12 +54,12 @@ public class DisplayController implements Initializable {
         return Calculate.getTimeString(timeInSeconds);
     }
 
-    public void updateDisplay(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem,int ov,int nv) {
+    public void updateDisplay(ObservableList<Float> leftListItem, ObservableList<Float> rightListItem, int ov) {
         if(list.getSelectionModel().getSelectedItem()!=null){
             int j = ov;
-            for(int i=0;i<leftListItem.size();i++){
-                leftSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j++),leftListItem.get(i)));
-                rightSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j++),rightListItem.get(i)));
+            for(int i=0;i<leftListItem.size();i++,j++){
+                leftSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j),leftListItem.get(i)));
+                rightSeries.getData().add(new XYChart.Data<>(getTimeByIndex(j),rightListItem.get(i)));
             }
         }
     }

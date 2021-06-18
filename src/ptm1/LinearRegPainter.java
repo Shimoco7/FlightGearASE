@@ -1,6 +1,6 @@
 package ptm1;
 
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.LineChart;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ public class LinearRegPainter implements Painter{
 
 
     @Override
-    public void paint(XYChart chart, int timeStep, String selectedFeature) {
+    public void paint(LineChart chart, int timeStep, String selectedFeature) {
 
     }
 
@@ -20,4 +20,5 @@ public class LinearRegPainter implements Painter{
         this.anomalyTs = anomalyTs;
         this.anomalyReports = ar;
     }
+
 }

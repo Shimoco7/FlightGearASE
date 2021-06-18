@@ -97,18 +97,22 @@ public class MainWindowController implements Observer {
 
     private void registerListeners(){
         vm.timeStep.addListener((o,ov,nv)->{
+            int timeStep= vm.timeStep.get();
             if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null) {
                 String selectedFeature = myDisplay.controller.list.getSelectionModel().getSelectedItem().toString();
                 ObservableList<Float> leftListItem,rightListItem;
                 if(nv.intValue()<=ov.intValue()){
-                    leftListItem= vm.getListItem(selectedFeature,0,vm.timeStep.get());
-                    rightListItem = vm.getCorrelatedListItem(selectedFeature,0,vm.timeStep.get());
+                    leftListItem= vm.getListItem(selectedFeature,0,timeStep);
+                    rightListItem = vm.getCorrelatedListItem(selectedFeature,0,timeStep);
                     Platform.runLater(()->myDisplay.controller.display(leftListItem,rightListItem));
                 }
                 else {
                     leftListItem= vm.getListItem(selectedFeature, ov.intValue(), nv.intValue());
                     rightListItem = vm.getCorrelatedListItem(selectedFeature,ov.intValue(), nv.intValue());
-                    Platform.runLater(() -> myDisplay.controller.updateDisplay(leftListItem,rightListItem, ov.intValue(), nv.intValue()));
+                    Platform.runLater(() -> myDisplay.controller.updateDisplay(leftListItem,rightListItem, ov.intValue()));
+                }
+                if(painter!=null){
+                    Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph,timeStep,selectedFeature));
                 }
             }
         });
