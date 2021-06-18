@@ -10,7 +10,7 @@ public class LinearRegPainter implements Painter{
 
 
     @Override
-    public void paint(LineChart chart, int timeStep, String selectedFeature) {
+    public void paint(LineChart chart,int oldTimeStep, int timeStep, String selectedFeature) {
 
     }
 

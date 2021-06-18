@@ -1,6 +1,7 @@
 package ptm1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
@@ -8,11 +9,16 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     ArrayList<Float> zArr;
     TimeSeries normalTs,anomalyTs;
     ArrayList<AnomalyReport> anomalyReports;
-    private final Painter painter;
+    HashMap<String,Float> thresholdMap;
+    HashMap<String,ArrayList<Float>> zArrAnomaly;
+
+    private final ZscorePainter painter;
 
     public ZscoreAnomalyDetector() {
         zArr = new ArrayList<>();
         painter = new ZscorePainter();
+        thresholdMap = new HashMap<>();
+        zArrAnomaly = new HashMap<>();
     }
 
     @Override
@@ -22,6 +28,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = this.normalTs.getFeatureData(featuresNames.get(i));
+            String curr= featuresNames.get(i);
             float maxTh=0,currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
@@ -33,12 +40,14 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 currAvg = StatLib.avg(arr);
                 currStd = (float) Math.sqrt(StatLib.var(arr));
                 currZscore = zScore(ftCol.get(j),currAvg,currStd);
+
                 maxTh = Math.max(currZscore, maxTh);
             }
 
             zArr.add(maxTh);
+            thresholdMap.put(curr,maxTh);
         }
-
+        painter.thresholdMap = this.thresholdMap;
     }
 
     @Override
@@ -49,6 +58,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = this.anomalyTs.getFeatureData(featuresNames.get(i));
+            String curr= featuresNames.get(i);
             float currAvg,currStd,currZscore;
 
             for(int j=1;j<ftCol.size();j++){
@@ -60,11 +70,16 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 currAvg = StatLib.avg(arr);
                 currStd = (float) Math.sqrt(StatLib.var(arr));
                 currZscore = zScore(ftCol.get(j),currAvg,currStd);
+                if (!zArrAnomaly.containsKey(curr)) {
+                    zArrAnomaly.put(curr, new ArrayList<>());
+                }
+                zArrAnomaly.get(curr).add(currZscore);
                 if(currZscore>zArr.get(i)){
                 	this.anomalyReports.add(new AnomalyReport(featuresNames.get(i),j+1));
                 }
             }
         }
+        painter.zArrAnomalyMap = zArrAnomaly;
         return this.anomalyReports;
     }
 

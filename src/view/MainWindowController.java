@@ -96,6 +96,7 @@ public class MainWindowController implements Observer {
     }
 
     private void registerListeners(){
+        //Time-Step Listener
         vm.timeStep.addListener((o,ov,nv)->{
             int timeStep= vm.timeStep.get();
             if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null) {
@@ -112,16 +113,18 @@ public class MainWindowController implements Observer {
                     Platform.runLater(() -> myDisplay.controller.updateDisplay(leftListItem,rightListItem, ov.intValue()));
                 }
                 if(painter!=null){
-                    Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph,timeStep,selectedFeature));
+                    Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph, ov.intValue(), nv.intValue(), selectedFeature));
                 }
             }
         });
 
+        //ListItem Listener
         myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
             if(nv!=null) {
                 ObservableList<Float> leftListItem = vm.getListItem(nv.toString(), 0, vm.timeStep.get());
                 ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
                 Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
+                Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph,0,vm.timeStep.get(),nv.toString()));
             }
         });
 
