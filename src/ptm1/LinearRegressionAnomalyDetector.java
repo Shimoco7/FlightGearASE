@@ -1,6 +1,8 @@
 package ptm1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetector {
@@ -8,8 +10,8 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	ArrayList<CorrelatedFeatures> corFeatures;
 	float corlThreshold;
 	TimeSeries normalTs, anomalyTs;
-	ArrayList<AnomalyReport> anomalyReports;
-	private final Painter painter;
+	HashMap<String, HashSet<Integer>> anomalyReports;
+	private final LinearRegPainter painter;
 
 	public LinearRegressionAnomalyDetector() {
 		corFeatures = new ArrayList<CorrelatedFeatures>();
@@ -63,9 +65,10 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 
 	@Override
 	// Online detection of Anomalies during Time-Series input
-	public List<AnomalyReport> detect(TimeSeries ts) {
+	public void detect(TimeSeries ts) {
 		this.anomalyTs = ts;
-		this.anomalyReports = new ArrayList<>();
+		this.anomalyReports = new HashMap<>();
+		this.anomalyReports.keySet().addAll(this.anomalyTs.getFeatures());
 
 		for (CorrelatedFeatures c : corFeatures) {
 			ArrayList<Float> x = this.anomalyTs.getFeatureData(c.feature1);
@@ -76,12 +79,15 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 				if (Math.abs(y.get(i) - c.lin_reg.f(x.get(i))) > c.threshold) {
 					String d = c.feature1;
 					// Time-steps in any given time series start from 1, thus k will be send to a
-					// new Anomaly-Report as k+1
-					this.anomalyReports.add(new AnomalyReport(d, (i + 1)));
+					// new Anomaly-Report as i
+
+					if (this.anomalyReports.get(d) == null)
+						this.anomalyReports.put(d, new HashSet<>());
+					this.anomalyReports.get(d).add(i);
 				}
 			}
 		}
-		return this.anomalyReports;
+		painter.anomalyReports = this.anomalyReports;
 	}
 
 	@Override

@@ -52,10 +52,11 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     }
 
     @Override
-    public List<AnomalyReport> detect(TimeSeries ts) {
+    public void detect(TimeSeries ts) {
         this.anomalyTs=ts;
-        this.anomalyReports = new ArrayList<>();
+        this.anomalyReports = new HashMap<>();
         ArrayList<String> featuresNames = this.anomalyTs.getFeatures();
+        this.anomalyReports.keySet().addAll(featuresNames);
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = this.anomalyTs.getFeatureData(featuresNames.get(i));
@@ -76,12 +77,14 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 }
                 zArrAnomaly.get(curr).add(currZscore);
                 if(currZscore>zArr.get(i)){
-                	this.anomalyReports.add(new AnomalyReport(featuresNames.get(i),j+1));
+                	if(this.anomalyReports.get(featuresNames.get(i)) == null)
+                		this.anomalyReports.put(featuresNames.get(i), new HashSet<>());
+                	this.anomalyReports.get(featuresNames.get(i)).add(j);
                 }
             }
         }
-        painter.zArrAnomalyMap = zArrAnomaly;
-        return this.anomalyReports;
+        painter.zArrAnomalyMap = this.zArrAnomaly;
+        painter.anomalyReports = this.anomalyReports;
     }
 
     @Override

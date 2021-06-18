@@ -1,6 +1,8 @@
 package ptm1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,8 +12,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	LinkedHashMap<String, Float> zMap; // for Zscore
 	LinkedHashMap<String, Circle> wMap; // for Welzl
 	TimeSeries normalTs, anomalyTs;
-	ArrayList<AnomalyReport> anomalyReports;
-	private final Painter painter;
+	HashMap<String, HashSet<Integer>> anomalyReports;
+	private final HybridPainter painter;
 
 	public HybridAnomalyDetector() {
 		corFeatures = new ArrayList<>();
@@ -29,8 +31,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		for (String feature : ft) { // using different algorithm by different correlation
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
 			String corFeature = this.normalTs.getCorMap().get(feature).getcorFeature();
-			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm learn
-										
+			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm
+										// learn
 
 				Point ps[] = toPoints(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
 				Line lin_reg = StatLib.linear_reg(ps); // Linear Regression of the Correlated-Features
@@ -53,7 +55,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				}
 				zMap.put(feature, maxTh);
 			} else { // The correlation is between 0.5 to 0.95 -> Welzl Algorithm learn
-				ArrayList<Point> ps = toPointsArrayList(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
+				ArrayList<Point> ps = toPointsArrayList(this.normalTs.getFeatureData(feature),
+						this.normalTs.getFeatureData(corFeature));
 				Circle wCircle = Welzl.makeCircle(ps);
 				wMap.put(feature + "," + corFeature, wCircle);
 
@@ -65,9 +68,11 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
 
-	public List<AnomalyReport> detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
+	public void detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
 		this.anomalyTs = ts;
-		anomalyReports = new ArrayList<>();
+		anomalyReports = new HashMap<>();
+		anomalyReports.keySet().addAll(this.anomalyTs.getFeatures());
+
 		for (CorrelatedFeatures c : corFeatures) { // Linear Regression Algorithm detect
 			ArrayList<Float> x = this.anomalyTs.getFeatureData(c.feature1);
 			ArrayList<Float> y = this.anomalyTs.getFeatureData(c.feature2);
@@ -78,7 +83,11 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 					String d = c.feature1;
 					// Time-steps in any given time series start from 1, thus k will be send to a
 					// new Anomaly-Report as k+1
-					this.anomalyReports.add(new AnomalyReport(d, (i + 1)));
+
+					if (this.anomalyReports.get(d) == null)
+						this.anomalyReports.put(d, new HashSet<>());
+					this.anomalyReports.get(d).add(i);
+
 				}
 			}
 		}
@@ -99,8 +108,9 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currStd = (float) Math.sqrt(StatLib.var(arr));
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
 				if (currZscore > zMap.get(zFeaturesNames.get(i))) { // if the current Zscore is higher then Zscore from
-																	// the learnNormal
-					this.anomalyReports.add(new AnomalyReport(zFeaturesNames.get(i), j + 1)); // ??
+					if (this.anomalyReports.get(zFeaturesNames.get(i)) == null)
+						this.anomalyReports.put(zFeaturesNames.get(i), new HashSet<>());
+					this.anomalyReports.get(zFeaturesNames.get(i)).add(j); // the learnNormal// ??
 				}
 			}
 		}
@@ -112,11 +122,12 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			// Circle wCircle = wMEC.welzl(ps);
 			for (int j = 0; j < ps.size(); j++) {
 				if (!wMap.get(s).isContained(ps.get(j))) // Checks if the point is contained in the Circle from the
-															// learnNormal
-					this.anomalyReports.add(new AnomalyReport(features[0], j + 1)); // ??
+					if (this.anomalyReports.get(features[0]) == null)
+						this.anomalyReports.put(features[0], new HashSet<>());
+					this.anomalyReports.get(features[0]).add(j);							// learnNormal
 			}
 		}
-		return this.anomalyReports;
+		painter.anomalyReports = this.anomalyReports;
 	}
 
 	@Override
