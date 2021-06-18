@@ -125,10 +125,14 @@ public class MainWindowController implements Observer {
         //ListItem Listener
         myDisplay.controller.list.getSelectionModel().selectedItemProperty().addListener((o,ov,nv)->{
             if(nv!=null) {
+                myDisplay.controller.leftGraph.setTitle(nv.toString());
+                myDisplay.controller.rightGraph.setTitle(vm.getCorrelatedFeature(nv.toString()));
                 ObservableList<Float> leftListItem = vm.getListItem(nv.toString(), 0, vm.timeStep.get());
                 ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
                 Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
-                Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph,0,vm.timeStep.get(),nv.toString()));
+                if(painter!=null) {
+                    Platform.runLater(() -> painter.paint(myDisplay.controller.mainGraph, 0, vm.timeStep.get(), nv.toString()));
+                }
             }
         });
 
@@ -180,13 +184,13 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     assert myDisplay.controller != null;
-                    myDisplay.controller.list.getItems().setAll(vm.getTimeSeries().getFeatures());
+                    myDisplay.controller.list.getItems().setAll(vm.getAnomalyTimeSeries().getFeatures());
                     vm.onStop.run();
                     setButtonsEnabled();
 
                     assert myPlayer.controller != null;
                     myPlayer.controller.slider.setMin(0);
-                    myPlayer.controller.slider.setMax(vm.getTimeSeries().getRowSize()-1);
+                    myPlayer.controller.slider.setMax(vm.getAnomalyTimeSeries().getRowSize()-1);
                     myPlayer.controller.slider.setBlockIncrement(1);
                     myPlayer.controller.slider.setMajorTickUnit(1);
                     myPlayer.controller.slider.setMinorTickCount(0);
@@ -246,6 +250,10 @@ public class MainWindowController implements Observer {
         assert myDisplay.controller != null;
         myDisplay.controller.list.getItems().clear();
         loadAlgorithm.setDisable(true);
+        myDisplay.controller.leftGraph.setTitle("Feature");
+        myDisplay.controller.rightGraph.setTitle("Correlated Feature");
+        myDisplay.controller.leftGraph.setStyle("-fx-font-size: 12px");
+        myDisplay.controller.rightGraph.setStyle("-fx-font-size: 12px");
     }
 
     private void setButtonsEnabled(){
@@ -260,6 +268,8 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toStart.setDisable(false);
         myPlayer.controller.playSpeed.setText("1.0");
         loadAlgorithm.setDisable(false);
+        myDisplay.controller.leftGraph.setStyle("-fx-font-size: 8px");
+        myDisplay.controller.rightGraph.setStyle("-fx-font-size: 8px");
     }
 
     public void close(ActionEvent actionEvent) {

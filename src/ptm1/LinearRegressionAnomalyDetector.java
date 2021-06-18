@@ -27,7 +27,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 
 		for (String feature : ft) {
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
-			String corFeature = this.normalTs.getCorMap().get(feature).getcorFeature();
+			String corFeature = this.normalTs.getCorMap().get(feature).getCorFeature();
 
 			if (corl > corlThreshold) { // Strong Correlation between the
 										// features

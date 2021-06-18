@@ -9,21 +9,16 @@ import model.Model;
 import other.Calculate;
 import other.Properties;
 import ptm1.Painter;
-import ptm1.StatLib;
 import ptm1.TimeSeries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class ViewModel extends Observable implements Observer {
 
     Model m;
-    TimeSeries timeSeries;
+    TimeSeries anomalyTimeSeries,normalTimeSeries;
     Properties appProp;
     private HashMap<String, DoubleProperty> displayVariables;
-    private HashMap<String,String> featuresCorrelations;
     public IntegerProperty timeStep;
     public StringProperty csvPath,playSpeed, flightTime;
     public final Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
@@ -32,28 +27,28 @@ public class ViewModel extends Observable implements Observer {
     public ViewModel(Model m) {
         this.m = m;
         displayVariables = new HashMap<>();
-        featuresCorrelations= new HashMap<>();
         csvPath= new SimpleStringProperty();
         timeStep = new SimpleIntegerProperty();
         playSpeed = new SimpleStringProperty();
         flightTime = new SimpleStringProperty("00:00:00");
         m.setTimeStep(this.timeStep);
         appProp = m.getProperties();
+        normalTimeSeries = new TimeSeries(appProp.getRegularFlightCSV());
+        m.setRegularTimeSeries(normalTimeSeries);
         initDisplayVariables();
 
         csvPath.addListener((o,ov,nv)->{
             String res = this.m.uploadCsv(nv);
             if (res.equals("LoadedCSVSuccessfully")) {
-                timeSeries = new TimeSeries(nv);
-                this.m.setTimeSeries(timeSeries);
-                setCorrelations(appProp);
+                anomalyTimeSeries = new TimeSeries(nv);
+                this.m.setAnomalyTimeSeries(anomalyTimeSeries);
             }
             setChanged();
             notifyObservers(res);
         });
 
         timeStep.addListener((o,ov,nv)->{
-            ArrayList<Float> row = timeSeries.getRow((Integer) nv);
+            ArrayList<Float> row = anomalyTimeSeries.getRow((Integer) nv);
             Platform.runLater(() -> {
                 displayVariables.get("aileron").set(row.get(appProp.getMap().get("aileron").getIndex()));
                 displayVariables.get("elevators").set(row.get(appProp.getMap().get("elevators").getIndex()));
@@ -82,14 +77,18 @@ public class ViewModel extends Observable implements Observer {
 
     }
     public ObservableList<Float> getListItem(String feature, int oldVal,int newVal){
-        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(feature).subList(oldVal,newVal));
+        ObservableList<Float> listItem = FXCollections.observableArrayList(anomalyTimeSeries.getFeatureData(feature).subList(oldVal,newVal));
         return listItem;
     }
 
     public ObservableList<Float> getCorrelatedListItem(String selectedFeature, int oldVal, int newVal) {
-        String corlFeature = featuresCorrelations.get(selectedFeature);
-        ObservableList<Float> listItem = FXCollections.observableArrayList(timeSeries.getFeatureData(corlFeature).subList(oldVal,newVal));
+        String corlFeature = getCorrelatedFeature(selectedFeature);
+        ObservableList<Float> listItem = FXCollections.observableArrayList(anomalyTimeSeries.getFeatureData(corlFeature).subList(oldVal,newVal));
         return listItem;
+    }
+
+    public String getCorrelatedFeature(String feature){
+         return normalTimeSeries.getCorMap().get(feature).getCorFeature();
     }
 
     public String updateFlightTime() {
@@ -120,43 +119,9 @@ public class ViewModel extends Observable implements Observer {
         m.setAnomalyDetector(path);
     }
 
-    //TODO: remove and use method corCalc from regFlight
-    private void setCorrelations(Properties p) {
-        TimeSeries ts = new TimeSeries(p.getRegularFlightCSV());
-        for(String feature1 : ts.getFeatures()){
-            String maxCorlFeature="";
-            float maxCorl=0;
-            for(String feature2: ts.getFeatures()){
-                if(!feature1.equals(feature2)){
-                    ArrayList<Float> f1 = ts.getFeatureData(feature1);
-                    ArrayList<Float> f2 = ts.getFeatureData(feature2);
-
-                    float[] f1Arr = new float[f1.size()];
-                    float[] f2Arr = new float[f2.size()];
-                    for(int i=0;i<f1.size();i++){
-                        f1Arr[i] = f1.get(i);
-                        f2Arr[i] = f2.get(i);
-                    }
-                    float correlation = StatLib.pearson(f1Arr,f2Arr);
-                    if(Math.abs(correlation)>maxCorl){
-                        maxCorl = Math.abs(correlation);
-                        maxCorlFeature = feature2;
-                    }
-                }
-            }
-            if(maxCorlFeature.equals("")){
-                featuresCorrelations.put(feature1,feature1);
-            }
-            else {
-                featuresCorrelations.put(feature1, maxCorlFeature);
-            }
-        }
+    public TimeSeries getAnomalyTimeSeries() {
+        return anomalyTimeSeries;
     }
-
-    public TimeSeries getTimeSeries() {
-        return timeSeries;
-    }
-    public HashMap<String, String> getFeaturesCorrelations() { return featuresCorrelations; }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -217,8 +182,11 @@ public class ViewModel extends Observable implements Observer {
 
             if(arg.getClass().equals(Properties.class)){
                 appProp = (Properties) arg;
+                normalTimeSeries = new TimeSeries(appProp.getRegularFlightCSV());
+                m.setRegularTimeSeries(normalTimeSeries);
                 initDisplayVariables();
             }
+
         }
     }
 

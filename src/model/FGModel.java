@@ -16,7 +16,7 @@ public class FGModel extends Observable implements Model{
 
     Properties appProperties;
     IntegerProperty timeStep;
-    TimeSeries ts,regFlight;
+    TimeSeries anomalyFlight,regFlight;
     FGPlayer fgp;
     Timer t;
     TimeSeriesAnomalyDetector anomalyDetector;
@@ -30,10 +30,14 @@ public class FGModel extends Observable implements Model{
         ps = playSpeed.NORMAL;
     }
 
+    @Override
+    public void setRegularTimeSeries(TimeSeries ts) {
+        this.regFlight = ts;
+    }
 
     @Override
-    public void setTimeSeries(TimeSeries ts) {
-        this.ts = ts;
+    public void setAnomalyTimeSeries(TimeSeries ts) {
+        this.anomalyFlight = ts;
     }
 
     @Override
@@ -61,7 +65,6 @@ public class FGModel extends Observable implements Model{
                 setChanged();
 				notifyObservers("LoadedSuccessfully");
                 notifyObservers(appProperties);
-                regFlight = new TimeSeries(appProperties.getRegularFlightCSV());
             }
         }
         catch(Exception e){
@@ -89,7 +92,7 @@ public class FGModel extends Observable implements Model{
     public void setTimeStep(IntegerProperty timeStep) {
         this.timeStep = timeStep;
         timeStep.addListener((o,ov,nv)->{
-            fgp.send(ts.getRow(nv.intValue()));
+            fgp.send(anomalyFlight.getRow(nv.intValue()));
         });
     }
 
@@ -139,19 +142,19 @@ public class FGModel extends Observable implements Model{
 		if (detectAlgo instanceof LinearRegressionAnomalyDetector) {
 		    anomalyDetector = (LinearRegressionAnomalyDetector) detectAlgo;
 			((LinearRegressionAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			((LinearRegressionAnomalyDetector) detectAlgo).detect(ts);
+			((LinearRegressionAnomalyDetector) detectAlgo).detect(anomalyFlight);
 		}
 
 		else if (detectAlgo instanceof HybridAnomalyDetector) {
             anomalyDetector = (HybridAnomalyDetector) detectAlgo;
 			((HybridAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			((HybridAnomalyDetector) detectAlgo).detect(ts);
+			((HybridAnomalyDetector) detectAlgo).detect(anomalyFlight);
 		}
 
 		else if (detectAlgo instanceof ZscoreAnomalyDetector) {
             anomalyDetector = (ZscoreAnomalyDetector) detectAlgo;
 			((ZscoreAnomalyDetector) detectAlgo).learnNormal(regFlight);
-			((ZscoreAnomalyDetector) detectAlgo).detect(ts);
+			((ZscoreAnomalyDetector) detectAlgo).detect(anomalyFlight);
 		}
 
         setChanged();
@@ -179,10 +182,10 @@ public class FGModel extends Observable implements Model{
             t.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    if(timeStep.get()<ts.getRowSize()-1) {
+                    if(timeStep.get()< anomalyFlight.getRowSize()-1) {
                         timeStep.set(timeStep.get() + 1);
                     }
-                    else if(timeStep.get()==ts.getRowSize()-1){
+                    else if(timeStep.get()== anomalyFlight.getRowSize()-1){
                         t.cancel();
                         t=null;
                     }
@@ -203,7 +206,7 @@ public class FGModel extends Observable implements Model{
            t.cancel();
            t=null;
        }
-       timeStep.set(ts.getRowSize()-1);
+       timeStep.set(anomalyFlight.getRowSize()-1);
     }
 
     @Override

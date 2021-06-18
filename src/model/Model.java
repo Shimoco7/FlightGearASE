@@ -7,7 +7,8 @@ import ptm1.TimeSeries;
 
 public interface Model {
 
-    void setTimeSeries(TimeSeries ts);
+    void setRegularTimeSeries(TimeSeries ts);
+    void setAnomalyTimeSeries(TimeSeries ts);
     void setProperties(String path);
     void setTimeStep(IntegerProperty timeStep);
     <V> Properties getProperties();

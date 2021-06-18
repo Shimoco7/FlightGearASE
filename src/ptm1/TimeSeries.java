@@ -115,7 +115,7 @@ public class TimeSeries {
             return this.corVal;
         }
         
-        public String getcorFeature() {
+        public String getCorFeature() {
             return this.corFeature;
         }
         

@@ -30,7 +30,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 		for (String feature : ft) { // using different algorithm by different correlation
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
-			String corFeature = this.normalTs.getCorMap().get(feature).getcorFeature();
+			String corFeature = this.normalTs.getCorMap().get(feature).getCorFeature();
 			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm
 										// learn
 
