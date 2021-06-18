@@ -10,6 +10,7 @@ public class ZscorePainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     ArrayList<AnomalyReport> anomalyReports;
     XYChart.Series normalSeries;
+    XYChart.Series anomalySeries;
     final CategoryAxis xAxis;
     final NumberAxis yAxis;
 
@@ -26,9 +27,11 @@ public class ZscorePainter implements Painter{
             ArrayList<Float> normalPoints = normalTs.getFeatureData(selectedFeature);
             int len = normalPoints.size();
             for(int i=0;i<len;i++){
-                normalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i),normalPoints.get(i)));
+                normalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),normalPoints.get(i)));
             }
             chart.getData().add(normalSeries);
+            Node node =chart.lookup(".chart-series-line");
+            node.setStyle("-fx-stroke: grey");
         }
     }
 
