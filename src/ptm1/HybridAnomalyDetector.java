@@ -128,6 +128,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;
+		System.out.println(anomalyReports.keySet().size());
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -18,10 +19,10 @@ public final class ApplicationStatus {
     public static void pausePlayFromStart(){ pause.playFromStart(); }
     public static void setAppStatusValue(String status){ appStatus.textProperty().set(status);}
     public static StringProperty getAppStatusProp(){return appStatus.textProperty();}
+    public static StringProperty getAppStyleProp(){return appStatus.styleProperty();}
     public static Label getAppStatus(){return appStatus;}
-    public static void setAppColor(Color color){
-        appStatus.setTextFill(color);
-    }
+    public static void setAppColor(Color color){ appStatus.setTextFill(color); }
+    public static void setAppFillColor(String color){ appStatus.setStyle("-fx-background-color: "+color); }
 
 
 }

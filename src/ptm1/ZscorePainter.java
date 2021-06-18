@@ -1,10 +1,14 @@
 package ptm1;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
+import javafx.scene.paint.Color;
 import other.Calculate;
+import view.ApplicationStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,6 +51,19 @@ public class ZscorePainter implements Painter{
                 for (int i = 0; i < len; i++, j++) {
                     anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(j / 10), points.get(i)));
                 }
+
+                checkAnomaly(timeStep, selectedFeature);
+            }
+        }
+    }
+
+    private void checkAnomaly(int timeStep, String selectedFeature) {
+        if(anomalyReports.containsKey(selectedFeature)){
+            if(anomalyReports.get(selectedFeature).contains(timeStep)){
+                ApplicationStatus.setAppColor(Color.BLACK);
+                ApplicationStatus.setAppFillColor("red");
+                ApplicationStatus.setAppStatusValue("Anomaly has been detected in "+selectedFeature+" feature, at "+ Calculate.getTimeString(timeStep/10));
+                ApplicationStatus.pausePlayFromStart();
             }
         }
     }
@@ -68,6 +85,8 @@ public class ZscorePainter implements Painter{
             anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),points.get(i)));
         }
         chart.getData().add(anomalySeries);
+
+        checkAnomaly(timeStep, selectedFeature);
     }
 
     @Override

@@ -87,6 +87,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;
+		System.out.println(anomalyReports.keySet().size());
 	}
 
 	@Override

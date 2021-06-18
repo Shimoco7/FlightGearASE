@@ -84,6 +84,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
         }
         painter.zArrAnomalyMap = this.zArrAnomaly;
         painter.anomalyReports = this.anomalyReports;
+        System.out.println(anomalyReports.keySet().size());
     }
 
     @Override

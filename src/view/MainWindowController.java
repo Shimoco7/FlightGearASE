@@ -67,8 +67,12 @@ public class MainWindowController implements Observer {
         loadAlgorithm.setDisable(true);
         appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusProp());
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
+        appStatus.styleProperty().bindBidirectional(ApplicationStatus.getAppStyleProp());
         ApplicationStatus.setPauseDuration(15);
-        ApplicationStatus.setPauseOnFinished(event->{ appStatus.setText(""); });
+        ApplicationStatus.setPauseOnFinished(event-> {
+            appStatus.setText("");
+            appStatus.setStyle("");
+        });
         myPlayer.controller.onPlay = vm.onPlay;
         myPlayer.controller.onStop = vm.onStop;
         myPlayer.controller.onPause = vm.onPause;
