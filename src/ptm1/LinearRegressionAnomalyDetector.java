@@ -68,7 +68,6 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	public void detect(TimeSeries ts) {
 		this.anomalyTs = ts;
 		this.anomalyReports = new HashMap<>();
-		this.anomalyReports.keySet().addAll(this.anomalyTs.getFeatures());
 
 		for (CorrelatedFeatures c : corFeatures) {
 			ArrayList<Float> x = this.anomalyTs.getFeatureData(c.feature1);
@@ -81,7 +80,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 					// Time-steps in any given time series start from 1, thus k will be send to a
 					// new Anomaly-Report as i
 
-					if (this.anomalyReports.get(d) == null)
+					if (!this.anomalyReports.containsKey(d))
 						this.anomalyReports.put(d, new HashSet<>());
 					this.anomalyReports.get(d).add(i);
 				}

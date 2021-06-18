@@ -71,7 +71,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	public void detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
 		this.anomalyTs = ts;
 		anomalyReports = new HashMap<>();
-		anomalyReports.keySet().addAll(this.anomalyTs.getFeatures());
 
 		for (CorrelatedFeatures c : corFeatures) { // Linear Regression Algorithm detect
 			ArrayList<Float> x = this.anomalyTs.getFeatureData(c.feature1);
@@ -84,7 +83,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 					// Time-steps in any given time series start from 1, thus k will be send to a
 					// new Anomaly-Report as k+1
 
-					if (this.anomalyReports.get(d) == null)
+					if (!this.anomalyReports.containsKey(d))
 						this.anomalyReports.put(d, new HashSet<>());
 					this.anomalyReports.get(d).add(i);
 
@@ -108,7 +107,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currStd = (float) Math.sqrt(StatLib.var(arr));
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
 				if (currZscore > zMap.get(zFeaturesNames.get(i))) { // if the current Zscore is higher then Zscore from
-					if (this.anomalyReports.get(zFeaturesNames.get(i)) == null)
+					if (!this.anomalyReports.containsKey(zFeaturesNames.get(i)))
 						this.anomalyReports.put(zFeaturesNames.get(i), new HashSet<>());
 					this.anomalyReports.get(zFeaturesNames.get(i)).add(j); // the learnNormal// ??
 				}
@@ -121,10 +120,11 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 			// Circle wCircle = wMEC.welzl(ps);
 			for (int j = 0; j < ps.size(); j++) {
-				if (!wMap.get(s).isContained(ps.get(j))) // Checks if the point is contained in the Circle from the
-					if (this.anomalyReports.get(features[0]) == null)
+				if (!wMap.get(s).isContained(ps.get(j))) { // Checks if the point is contained in the Circle from the
+					if (!this.anomalyReports.containsKey(features[0]))
 						this.anomalyReports.put(features[0], new HashSet<>());
-					this.anomalyReports.get(features[0]).add(j);							// learnNormal
+					this.anomalyReports.get(features[0]).add(j); // learnNormal
+				}
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;

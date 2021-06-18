@@ -56,7 +56,6 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
         this.anomalyTs=ts;
         this.anomalyReports = new HashMap<>();
         ArrayList<String> featuresNames = this.anomalyTs.getFeatures();
-        this.anomalyReports.keySet().addAll(featuresNames);
 
         for(int i=0;i<featuresNames.size();i++){
             ArrayList<Float> ftCol = this.anomalyTs.getFeatureData(featuresNames.get(i));
@@ -77,7 +76,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
                 }
                 zArrAnomaly.get(curr).add(currZscore);
                 if(currZscore>zArr.get(i)){
-                	if(this.anomalyReports.get(featuresNames.get(i)) == null)
+                	if(!this.anomalyReports.containsKey(featuresNames.get(i)))
                 		this.anomalyReports.put(featuresNames.get(i), new HashSet<>());
                 	this.anomalyReports.get(featuresNames.get(i)).add(j);
                 }
