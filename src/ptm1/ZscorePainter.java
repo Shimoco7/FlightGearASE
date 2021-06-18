@@ -1,17 +1,26 @@
 package ptm1;
 
-import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.XYChart;
+import other.Calculate;
 
 import java.util.ArrayList;
 
 public class ZscorePainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     ArrayList<AnomalyReport> anomalyReports;
+    XYChart.Series normalSeries;
 
+    public ZscorePainter() {
+        normalSeries = new XYChart.Series();
+    }
 
     @Override
-    public void paint(Canvas canvas, int timeStep, String selectedFeature) {
-
+    public void paint(XYChart chart, int timeStep, String selectedFeature) {
+        ArrayList<Float> normalPoints = normalTs.getFeatureData(selectedFeature);
+        int len = normalPoints.size();
+        for(int i=0;i<len;i++){
+            normalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i),normalPoints.get(i)));
+        }
     }
 
     @Override
