@@ -68,7 +68,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
 
-	public void detect(TimeSeries ts) { // Online detection of Anomalies during Time-Series input
+	public void detect(TimeSeries ts) { // offline detection of Anomalies during Time-Series input
 		this.anomalyTs = ts;
 		anomalyReports = new HashMap<>();
 
@@ -128,7 +128,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;
-		System.out.println(anomalyReports.keySet().size());
 	}
 
 	@Override
