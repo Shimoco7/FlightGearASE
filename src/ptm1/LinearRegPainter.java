@@ -13,6 +13,7 @@ import other.Calculate;
 import view.ApplicationStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -34,6 +35,7 @@ public class LinearRegPainter implements Painter{
        anomalySeries = new XYChart.Series();
        lineSeries = new XYChart.Series();
        myChart = new LineChart(xAxis,yAxis);
+       myChart.setAnimated(false);
        currFeature = "";
     }
 
@@ -68,14 +70,10 @@ public class LinearRegPainter implements Painter{
         }
 
         if(!currFeature.equals(selectedFeature)){
+            myChart.getData().clear();
             normalSeries.getData().clear();
             anomalySeries.getData().clear();
             lineSeries.getData().clear();
-            myChart.getData().clear();
-            lineSeries.getData().add(new XYChart.Data<>(0,line.f(0)));
-            Float max = getMaxElement(normalTs.getFeatureData(selectedFeature));
-            lineSeries.getData().add(new XYChart.Data<>(max,line.f(max)));
-            myChart.getData().add(lineSeries);
             
             ArrayList<Float> xValues = normalTs.getFeatureData(selectedFeature);
             ArrayList<Float> yValues = normalTs.getFeatureData(correlatedFeature);
@@ -84,53 +82,51 @@ public class LinearRegPainter implements Painter{
                 normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
             }
             myChart.getData().add(normalSeries);
+
+            ObservableList<Float> pointsX,pointsY;
+            if(timeStep>30){
+                pointsX = FXCollections.observableArrayList(anomalyTs.getFeatureData(selectedFeature).subList(timeStep-30,timeStep));
+                pointsY = FXCollections.observableArrayList(anomalyTs.getFeatureData(correlatedFeature).subList(timeStep-30,timeStep));
+
+            }
+            else{
+                pointsX = FXCollections.observableArrayList(anomalyTs.getFeatureData(selectedFeature).subList(0,timeStep));
+                pointsY = FXCollections.observableArrayList(anomalyTs.getFeatureData(correlatedFeature).subList(0,timeStep));
+            }
+            len=pointsX.size();
+            for(int i=0;i<len;i++){
+                anomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
+            }
+            myChart.getData().add(anomalySeries);
+
+            Float max = Collections.max(normalTs.getFeatureData(selectedFeature));
+            Float min = Collections.min(normalTs.getFeatureData(selectedFeature));
+            lineSeries.getData().add(new XYChart.Data<>(min,line.f(min)));
+            lineSeries.getData().add(new XYChart.Data<>(max,line.f(max)));
+            myChart.getData().add(lineSeries);
+
             Node node =myChart.lookup(".series0.chart-series-line");
-            node.setStyle("-fx-stroke: grey;");
+            node.setStyle("-fx-stroke: transparent;");
 
             Node node1 =myChart.lookup(".series1.chart-series-line");
             node1.setStyle("-fx-stroke: transparent;");
 
+            Node node2=myChart.lookup(".series2.chart-series-line");
+            node2.setStyle("-fx-stroke: grey;");
+
             currFeature = selectedFeature;
         }
+
         else{
             if(timeStep<=oldTimeStep){
-                
+
             }
-            
+
             else{
-                
+
             }
         }
 
-
-//        if(!currFeature.equals(selectedFeature)){
-//            updateGraph(chart, timeStep, selectedFeature);
-//            currFeature = selectedFeature;
-//        }
-//        else{
-//            if(timeStep<=oldTimeStep){
-//                updateGraph(chart, timeStep, selectedFeature);
-//            }
-//            else {
-//                ObservableList<Float> points = FXCollections.observableArrayList(zArrAnomalyMap.get(selectedFeature).subList(oldTimeStep, timeStep));
-//                int len = points.size();
-//                int j = oldTimeStep;
-//                for (int i = 0; i < len; i++, j++) {
-//                    anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(j / 10), points.get(i)));
-//                }
-//                checkAnomaly(timeStep, selectedFeature);
-//            }
-//        }
-    }
-
-    private Float getMaxElement(ArrayList<Float> featureData) {
-        Float max = featureData.get(0);
-        for(int i=1;i<featureData.size();i++){
-            if(featureData.get(i)>max){
-                max = featureData.get(i);
-            }
-        }
-        return max;
     }
 
 
@@ -139,27 +135,6 @@ public class LinearRegPainter implements Painter{
         this.normalTs = normalTs;
         this.anomalyTs = anomalyTs;
         this.anomalyReports = anomalies;
-    }
-
-    private void updateGraph(LineChart chart, int timeStep, String selectedFeature) {
-//        normalSeries.getData().clear();
-//        anomalySeries.getData().clear();
-//        chart.getData().clear();
-//        Float threshold = thresholdMap.get(selectedFeature);
-//        int len = normalTs.getRowSize();
-//        for(int i=0;i<len;i++){
-//            normalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),threshold));
-//        }
-//        chart.getData().add(normalSeries);
-//        Node node =chart.lookup(".chart-series-line");
-//        node.setStyle("-fx-stroke: grey");
-//        ObservableList<Float> points =  FXCollections.observableArrayList(zArrAnomalyMap.get(selectedFeature).subList(0,timeStep));
-//        for(int i=0;i<timeStep;i++){
-//            anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),points.get(i)));
-//        }
-//        chart.getData().add(anomalySeries);
-//
-//        checkAnomaly(timeStep, selectedFeature);
     }
 
 }
