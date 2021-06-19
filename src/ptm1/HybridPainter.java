@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 public class HybridPainter implements Painter{
-    //HashMap<String,ArrayList<Float>> zArrAnomalyMap
-    //HashMap<String,Float> thresholdMap = ZMAP
-    //ArrayList<CorrelatedFeatures> corFeatures;
-    //LinkedHashMap<String, Float> zMap; // for Zscore
-    //LinkedHashMap<String, Circle> wMap; // for Welzl
+    HashMap<String,ArrayList<Float>> zArrAnomaly;
+    ArrayList<CorrelatedFeatures> corFeatures;
+    HashMap<String, Float> zMap;
+    HashMap<String, Circle> wMap;
     TimeSeries normalTs,anomalyTs;
     HashMap<String, HashSet<Integer>> anomalyReports;
+    HashMap<String, Float> featureToCurl;
 
     @Override
     public void paint(StackPane stackPane, int oldTimeStep, int timeStep, String selectedFeature) {

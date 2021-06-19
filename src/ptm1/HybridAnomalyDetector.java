@@ -13,6 +13,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	LinkedHashMap<String, Circle> wMap; // for Welzl
 	TimeSeries normalTs, anomalyTs;
 	HashMap<String, HashSet<Integer>> anomalyReports;
+	HashMap<String,ArrayList<Float>> zArrAnomaly;
+	HashMap<String, Float> featureToCurl;
 	private final HybridPainter painter;
 
 	public HybridAnomalyDetector() {
@@ -31,6 +33,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		for (String feature : ft) { // using different algorithm by different correlation
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
 			String corFeature = this.normalTs.getCorMap().get(feature).getCorFeature();
+			featureToCurl.put(feature, corl);
 			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm
 										// learn
 
@@ -106,6 +109,10 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				currAvg = StatLib.avg(arr);
 				currStd = (float) Math.sqrt(StatLib.var(arr));
 				currZscore = zScore(ftCol.get(j), currAvg, currStd);
+				 if (!zArrAnomaly.containsKey(zFeaturesNames.get(i))) {
+	                    zArrAnomaly.put(zFeaturesNames.get(i), new ArrayList<>());
+	                }
+	                zArrAnomaly.get(zFeaturesNames.get(i)).add(currZscore);
 				if (currZscore > zMap.get(zFeaturesNames.get(i))) { // if the current Zscore is higher then Zscore from
 					if (!this.anomalyReports.containsKey(zFeaturesNames.get(i)))
 						this.anomalyReports.put(zFeaturesNames.get(i), new HashSet<>());
@@ -128,6 +135,10 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;
+		painter.zArrAnomaly = this.zArrAnomaly;
+		painter.zMap = this.zMap;
+		painter.wMap = this.wMap;
+		painter.featureToCurl= this.featureToCurl;
 	}
 
 	@Override
