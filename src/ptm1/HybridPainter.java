@@ -1,6 +1,8 @@
 package ptm1;
 
 import javafx.scene.chart.LineChart;
+import javafx.scene.layout.StackPane;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +12,7 @@ public class HybridPainter implements Painter{
     HashMap<String, HashSet<Integer>> anomalyReports;
 
     @Override
-    public void paint(LineChart chart,int oldTimeStep, int timeStep, String selectedFeature) {
+    public void paint(StackPane stackPane, int oldTimeStep, int timeStep, String selectedFeature) {
 
     }
 

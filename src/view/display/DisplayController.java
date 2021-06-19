@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.StackPane;
 import other.Calculate;
 
 
@@ -16,7 +17,8 @@ import java.util.ResourceBundle;
 public class DisplayController implements Initializable {
 
     public @FXML ListView list;
-    public @FXML LineChart leftGraph,rightGraph, mainGraph;
+    public @FXML LineChart leftGraph,rightGraph;
+    public @FXML StackPane stackPane;
     XYChart.Series leftSeries,rightSeries;
 
 
@@ -28,10 +30,10 @@ public class DisplayController implements Initializable {
         rightSeries = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
-        mainGraph.setAnimated(false);
+        //mainGraph.setAnimated(false);
         leftGraph.setCreateSymbols(false);
         rightGraph.setCreateSymbols(false);
-        mainGraph.setCreateSymbols(false);
+        //mainGraph.setCreateSymbols(false);
     }
 
     public void display(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem) {

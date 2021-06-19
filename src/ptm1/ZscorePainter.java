@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import other.Calculate;
 import view.ApplicationStatus;
@@ -14,10 +15,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class ZscorePainter implements Painter{
+    LineChart myChart;
     TimeSeries normalTs,anomalyTs;
     HashMap<String, HashSet<Integer>> anomalyReports;
     HashMap<String,ArrayList<Float>> zArrAnomalyMap;
     HashMap<String,Float> thresholdMap;
+    boolean init;
     XYChart.Series normalSeries;
     XYChart.Series anomalySeries;
     String currFeature;
@@ -25,24 +28,32 @@ public class ZscorePainter implements Painter{
     final NumberAxis yAxis;
 
     public ZscorePainter() {
-        xAxis = new CategoryAxis();
-        yAxis = new NumberAxis();
         currFeature="";
         normalSeries = new XYChart.Series();
         anomalySeries = new XYChart.Series();
+        xAxis = new CategoryAxis();
+        yAxis = new NumberAxis();
+        myChart = new LineChart(xAxis,yAxis);
+        myChart.setAnimated(false);
+        myChart.setCreateSymbols(false);
     }
 
     @Override
-    public void paint(LineChart chart,int oldTimeStep, int timeStep, String selectedFeature) {
-        chart.setLegendVisible(false);
-
+    public void paint(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
+        myChart.setLegendVisible(false);
+        if(!init){
+            pane.getChildren().remove(0,pane.getChildren().size());
+            myChart.getData().clear();
+            pane.getChildren().add(myChart);
+            init=true;
+        }
         if(!currFeature.equals(selectedFeature)){
-            updateGraph(chart, timeStep, selectedFeature);
+            updateGraph(myChart, timeStep, selectedFeature);
             currFeature = selectedFeature;
         }
         else{
             if(timeStep<=oldTimeStep){
-                updateGraph(chart, timeStep, selectedFeature);
+                updateGraph(myChart, timeStep, selectedFeature);
             }
             else {
                 ObservableList<Float> points = FXCollections.observableArrayList(zArrAnomalyMap.get(selectedFeature).subList(oldTimeStep, timeStep));
@@ -51,7 +62,6 @@ public class ZscorePainter implements Painter{
                 for (int i = 0; i < len; i++, j++) {
                     anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(j / 10), points.get(i)));
                 }
-
                 checkAnomaly(timeStep, selectedFeature);
             }
         }

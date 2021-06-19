@@ -106,6 +106,7 @@ public class MainWindowController implements Observer {
             if(myDisplay.controller.list.getSelectionModel().getSelectedItem()!=null) {
                 String selectedFeature = myDisplay.controller.list.getSelectionModel().getSelectedItem().toString();
                 ObservableList<Float> leftListItem,rightListItem;
+                //new Time-Step <= old Time-Step
                 if(nv.intValue()<=ov.intValue()){
                     leftListItem= vm.getListItem(selectedFeature,0,timeStep);
                     rightListItem = vm.getCorrelatedListItem(selectedFeature,0,timeStep);
@@ -117,7 +118,7 @@ public class MainWindowController implements Observer {
                     Platform.runLater(() -> myDisplay.controller.updateDisplay(leftListItem,rightListItem, ov.intValue()));
                 }
                 if(painter!=null){
-                    Platform.runLater(()->painter.paint(myDisplay.controller.mainGraph, ov.intValue(), nv.intValue(), selectedFeature));
+                    Platform.runLater(()->painter.paint(myDisplay.controller.stackPane, ov.intValue(), nv.intValue(), selectedFeature));
                 }
             }
         });
@@ -131,7 +132,7 @@ public class MainWindowController implements Observer {
                 ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
                 Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
                 if(painter!=null) {
-                    Platform.runLater(() -> painter.paint(myDisplay.controller.mainGraph, 0, vm.timeStep.get(), nv.toString()));
+                    Platform.runLater(() -> painter.paint(myDisplay.controller.stackPane, 0, vm.timeStep.get(), nv.toString()));
                 }
             }
         });
@@ -254,6 +255,8 @@ public class MainWindowController implements Observer {
         myDisplay.controller.rightGraph.setTitle("Correlated Feature");
         myDisplay.controller.leftGraph.setStyle("-fx-font-size: 12px");
         myDisplay.controller.rightGraph.setStyle("-fx-font-size: 12px");
+        ApplicationStatus.setAppFillColor("transparent");
+        ApplicationStatus.setAppStatusValue("");
     }
 
     private void setButtonsEnabled(){
@@ -268,8 +271,8 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toStart.setDisable(false);
         myPlayer.controller.playSpeed.setText("1.0");
         loadAlgorithm.setDisable(false);
-        myDisplay.controller.leftGraph.setStyle("-fx-font-size: 8px");
-        myDisplay.controller.rightGraph.setStyle("-fx-font-size: 8px");
+        myDisplay.controller.leftGraph.setStyle("-fx-font-size: 8.5px");
+        myDisplay.controller.rightGraph.setStyle("-fx-font-size: 8.5px");
     }
 
     public void close(ActionEvent actionEvent) {

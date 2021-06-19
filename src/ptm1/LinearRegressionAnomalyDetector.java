@@ -14,7 +14,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	private final LinearRegPainter painter;
 
 	public LinearRegressionAnomalyDetector() {
-		corFeatures = new ArrayList<CorrelatedFeatures>();
+		corFeatures = new ArrayList<>();
 		corlThreshold = (float) 0.9;
 		painter = new LinearRegPainter();
 	}
@@ -36,13 +36,11 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
 				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around the
 																		// normal area
-
 				CorrelatedFeatures c = new CorrelatedFeatures(feature, corFeature, corl, lin_reg, threshold);
-
 				corFeatures.add(c);
-
 			}
 		}
+		painter.corFeatures = this.corFeatures;
 	}
 
 	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) {
@@ -87,7 +85,6 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 			}
 		}
 		painter.anomalyReports = this.anomalyReports;
-		System.out.println(anomalyReports.keySet().size());
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package ptm1;
 
-import javafx.scene.chart.LineChart;
+import javafx.scene.layout.StackPane;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
 public interface Painter {
-    void paint(LineChart chart,int oldTimeStep, int timeStep, String selectedFeature);
+    void paint(StackPane stackPane, int oldTimeStep, int timeStep, String selectedFeature);
     void setAll(TimeSeries normalTs, TimeSeries anomalyTs, HashMap<String, HashSet<Integer>> anomalies);
 }

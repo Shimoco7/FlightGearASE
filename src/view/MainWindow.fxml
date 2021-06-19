@@ -15,8 +15,8 @@
 <?import view.clocks.Clocks?>
 <?import view.player.Player?>
 <?import view.display.Display?>
-
 <?import view.joystick.Joystick?>
+
 <BorderPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <top>
       <MenuBar prefHeight="26.0" prefWidth="762.0" BorderPane.alignment="CENTER">
@@ -40,7 +40,6 @@
                     <Joystick fx:id="myJoystick" minHeight="0.0" minWidth="0.0" prefHeight="204.0" prefWidth="249.0" />
                </children>
            </AnchorPane>
-          <!--AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="204.0" prefWidth="249.0" /-->
           <AnchorPane maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="160.0">
                <children>
                   <Clocks fx:id="myClocks" prefHeight="200.0" prefWidth="200" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
@@ -73,7 +72,7 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="appStatus" prefHeight="18.0" prefWidth="400.0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+                  <Label fx:id="appStatus" prefHeight="18.0" prefWidth="917.0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
