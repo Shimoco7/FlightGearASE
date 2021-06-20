@@ -151,15 +151,15 @@ public class LinearRegPainter implements Painter{
             lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
         }
         for (int i = 0; i < normalSeries.getData().size(); i++) {
-            XYChart.Data dataPoint = (Data) normalSeries.getData().get(i);
-            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
-            lineSymbol.setStyle("-fx-background-color: #00CED1, #00CED1;-fx-background-radius: 3px;-fx-padding: 3px;");
+            XYChart.Data dataPoint1 = (Data) normalSeries.getData().get(i);
+            Node lineSymbol1 = dataPoint1.getNode().lookup(".chart-line-symbol");
+            lineSymbol1.setStyle("-fx-background-color: #00CED1, #00CED1;-fx-background-radius: 3px;-fx-padding: 3px;");
         }
         
         for (int i = 0; i < lineSeries.getData().size(); i++) {
-            XYChart.Data dataPoint = (Data) lineSeries.getData().get(i);
-            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
-            lineSymbol.setStyle("-fx-background-color: transparent, transparent;");
+            XYChart.Data dataPoint2 = (Data) lineSeries.getData().get(i);
+            Node lineSymbol2 = dataPoint2.getNode().lookup(".chart-line-symbol");
+            lineSymbol2.setStyle("-fx-background-color: transparent, transparent;");
         }
 
         checkAnomaly(timeStep,selectedFeature,correlatedFeature);
