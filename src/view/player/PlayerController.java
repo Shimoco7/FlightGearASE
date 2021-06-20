@@ -1,5 +1,7 @@
 package view.player;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -27,11 +29,13 @@ public class PlayerController implements Initializable {
     Stage stage;
     public StringProperty timeSeriesPath;
     public Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
+    public BooleanProperty isPlayed;
 
 
     public PlayerController() {
         stage = Main.getGuiStage();
         timeSeriesPath = new SimpleStringProperty();
+        isPlayed = new SimpleBooleanProperty(false);
     }
 
     @Override
@@ -63,18 +67,24 @@ public class PlayerController implements Initializable {
 
 
     public void play(){
-        if(onPlay!=null)
+        if(onPlay!=null) {
             onPlay.run();
+            isPlayed.setValue(true);
+        }
     }
 
     public void stop(){
-        if(onStop!=null)
+        if(onStop!=null) {
             onStop.run();
+            isPlayed.setValue(false);
+        }
     }
 
     public void pause(){
-        if(onPause!=null)
+        if(onPause!=null) {
             onPause.run();
+            isPlayed.setValue(false);
+        }
     }
 
     public void fastForward(){
@@ -88,12 +98,16 @@ public class PlayerController implements Initializable {
     }
 
     public void toEnd(){
-        if(onToEnd!=null)
+        if(onToEnd!=null) {
             onToEnd.run();
+            isPlayed.setValue(false);
+        }
     }
 
     public void toStart(){
-        if(onToStart!=null)
+        if(onToStart!=null) {
             onToStart.run();
+            isPlayed.setValue(true);
+        }
     }
 }

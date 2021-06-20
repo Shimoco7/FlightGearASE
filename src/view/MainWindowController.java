@@ -36,6 +36,7 @@ public class MainWindowController implements Observer {
     private @FXML Display myDisplay;
     private @FXML MenuItem loadAlgorithm;
     private String currentFeature;
+    private BooleanProperty isPlayed;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -68,6 +69,7 @@ public class MainWindowController implements Observer {
     public void initialize(ViewModel vm) {
         this.vm = vm;
         currentFeature = "";
+        isPlayed = new SimpleBooleanProperty();
         loadAlgorithm.setDisable(true);
         appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusProp());
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
@@ -90,6 +92,7 @@ public class MainWindowController implements Observer {
         myPlayer.controller.flightTime.textProperty().bind(vm.flightTime);
         myPlayer.controller.slider.valueProperty().bindBidirectional(vm.timeStep);
         myPlayer.controller.playSpeed.textProperty().bindBidirectional(vm.playSpeed);
+        this.isPlayed.bind(myPlayer.controller.isPlayed);
 
         myJoystick.aileron.bindBidirectional(vm.getProperty("aileron"));
         myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
@@ -136,6 +139,15 @@ public class MainWindowController implements Observer {
             if(nv!=null) {
                 myDisplay.controller.leftGraph.setTitle(nv.toString());
                 myDisplay.controller.rightGraph.setTitle(vm.getCorrelatedFeature(nv.toString()));
+                if(!isPlayed.get()){
+                    ObservableList<Float> leftListItem = vm.getListItem(nv.toString(), 0, vm.timeStep.get());
+                    ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
+                    Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
+                    if(painter!=null) {
+                        Platform.runLater(() -> painter.paint(myDisplay.controller.stackPane, 0, vm.timeStep.get(), nv.toString()));
+                    }
+                    currentFeature="";
+                }
             }
         });
 
