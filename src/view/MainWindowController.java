@@ -35,6 +35,7 @@ public class MainWindowController implements Observer {
     private @FXML Clocks myClocks;
     private @FXML Display myDisplay;
     private @FXML MenuItem loadAlgorithm;
+    private String currentFeature;
 
     public void loadProperties(){
         FileChooser fc = new FileChooser();
@@ -66,6 +67,7 @@ public class MainWindowController implements Observer {
 
     public void initialize(ViewModel vm) {
         this.vm = vm;
+        currentFeature = "";
         loadAlgorithm.setDisable(true);
         appStatus.textProperty().bindBidirectional(ApplicationStatus.getAppStatusProp());
         appStatus.textFillProperty().bindBidirectional(ApplicationStatus.getAppStatus().textFillProperty());
@@ -112,7 +114,7 @@ public class MainWindowController implements Observer {
                 String selectedFeature = myDisplay.controller.list.getSelectionModel().getSelectedItem().toString();
                 ObservableList<Float> leftListItem,rightListItem;
                 //new Time-Step <= old Time-Step
-                if(nv.intValue()<=ov.intValue()){
+                if(nv.intValue()<=ov.intValue()||!currentFeature.equals(selectedFeature)){
                     leftListItem= vm.getListItem(selectedFeature,0,timeStep);
                     rightListItem = vm.getCorrelatedListItem(selectedFeature,0,timeStep);
                     Platform.runLater(()->myDisplay.controller.display(leftListItem,rightListItem));
@@ -125,6 +127,7 @@ public class MainWindowController implements Observer {
                 if(painter!=null){
                     Platform.runLater(()->painter.paint(myDisplay.controller.stackPane, ov.intValue(), nv.intValue(), selectedFeature));
                 }
+                currentFeature = selectedFeature;
             }
         });
 
@@ -133,12 +136,6 @@ public class MainWindowController implements Observer {
             if(nv!=null) {
                 myDisplay.controller.leftGraph.setTitle(nv.toString());
                 myDisplay.controller.rightGraph.setTitle(vm.getCorrelatedFeature(nv.toString()));
-                ObservableList<Float> leftListItem = vm.getListItem(nv.toString(), 0, vm.timeStep.get());
-                ObservableList<Float> rightListItem = vm.getCorrelatedListItem(nv.toString(), 0, vm.timeStep.get());
-                Platform.runLater(() -> myDisplay.controller.display(leftListItem,rightListItem));
-                if(painter!=null) {
-                    Platform.runLater(() -> painter.paint(myDisplay.controller.stackPane, 0, vm.timeStep.get(), nv.toString()));
-                }
             }
         });
 
