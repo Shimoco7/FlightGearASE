@@ -63,7 +63,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 				ArrayList<Point> ps = toPointsArrayList(this.normalTs.getFeatureData(feature),
 						this.normalTs.getFeatureData(corFeature));
 				Circle wCircle = Welzl.makeCircle(ps);
-				wMap.put(feature + "," + corFeature, wCircle);
+				wMap.put(feature, wCircle);
 
 			}
 
@@ -123,16 +123,16 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 			}
 		}
 		for (String s : wMap.keySet()) { // Welzl Algorithm detect
-			String[] features = s.split(",");
-			ArrayList<Float> col1Arr = this.anomalyTs.getFeatureData(features[0]);
-			ArrayList<Float> col2Arr = this.anomalyTs.getFeatureData(features[1]);
+			String corFeature = this.normalTs.getCorMap().get(s).getCorFeature();
+			ArrayList<Float> col1Arr = this.anomalyTs.getFeatureData(s);
+			ArrayList<Float> col2Arr = this.anomalyTs.getFeatureData(corFeature);
 			ArrayList<Point> ps = toPointsArrayList(col1Arr, col2Arr);
 			// Circle wCircle = wMEC.welzl(ps);
 			for (int j = 0; j < ps.size(); j++) {
 				if (!wMap.get(s).isContained(ps.get(j))) { // Checks if the point is contained in the Circle from the
-					if (!this.anomalyReports.containsKey(features[0]))
-						this.anomalyReports.put(features[0], new HashSet<>());
-					this.anomalyReports.get(features[0]).add(j); // learnNormal
+					if (!this.anomalyReports.containsKey(s))
+						this.anomalyReports.put(s, new HashSet<>());
+					this.anomalyReports.get(s).add(j); // learnNormal
 				}
 			}
 		}
