@@ -25,9 +25,9 @@ public class HybridPainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     HashMap<String, HashSet<Integer>> anomalyReports;
     HashMap<String, Float> featureToCurl;
-    XYChart.Series normalSeries,anomalySeries, lineSeries;
+    XYChart.Series normalSeries,anomalySeries, lineSeries, zNormalSeries,zAnomalySeries;
     LineChart myChart,myZscoreChart;
-    boolean init,transform;
+    boolean init,transformZ,transformRest;
     final NumberAxis xAxis,yAxis,zYaxis;
     final CategoryAxis zXaxis;
     String currFeature;
@@ -41,6 +41,8 @@ public class HybridPainter implements Painter{
         normalSeries = new XYChart.Series();
         anomalySeries = new XYChart.Series();
         lineSeries = new XYChart.Series();
+        zNormalSeries = new XYChart.Series();
+        zAnomalySeries = new XYChart.Series();
 
         myChart = new LineChart(xAxis,yAxis);
         myChart.setAnimated(false);
@@ -60,6 +62,11 @@ public class HybridPainter implements Painter{
             pane.getChildren().remove(0,pane.getChildren().size());
             myChart.getData().clear();
             myZscoreChart.getData().clear();
+            normalSeries.getData().clear();
+            anomalySeries.getData().clear();
+            lineSeries.getData().clear();
+            zNormalSeries.getData().clear();
+            zAnomalySeries.getData().clear();
             init=true;
         }
 
@@ -71,22 +78,99 @@ public class HybridPainter implements Painter{
         }
 
         else if(correlationDecider<0.5){
+            paintZscore(pane,oldTimeStep,timeStep,selectedFeature);
         }
 
         else{
-
+            paintWelzl(pane,oldTimeStep,timeStep,selectedFeature);
         }
 
     }
 
+    private void paintWelzl(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
+        myChart.getData().clear();
+        normalSeries.getData().clear();
+        anomalySeries.getData().clear();
+        lineSeries.getData().clear();
+    }
+
+    private void paintZscore(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
+        if(!transformZ){
+            if(pane.getChildren().size()>0){
+                pane.getChildren().remove(0,pane.getChildren().size());
+            }
+            myZscoreChart.getData().clear();
+            zNormalSeries.getData().clear();
+            zAnomalySeries.getData().clear();
+            pane.getChildren().add(myZscoreChart);
+            transformZ= true;
+            transformRest=false;
+        }
+
+        if(!currFeature.equals(selectedFeature)){
+            updatezScoreGraph(myZscoreChart, timeStep, selectedFeature);
+            currFeature = selectedFeature;
+        }
+        else{
+            if(timeStep<=oldTimeStep){
+                updatezScoreGraph(myZscoreChart, timeStep, selectedFeature);
+            }
+            else {
+                ObservableList<Float> points = FXCollections.observableArrayList(zArrAnomaly.get(selectedFeature).subList(oldTimeStep, timeStep));
+                int len = points.size();
+                int j = oldTimeStep;
+                for (int i = 0; i < len; i++, j++) {
+                    zAnomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(j / 10), points.get(i)));
+                }
+                checkZscoreAnomaly(timeStep, selectedFeature);
+            }
+        }
+    }
+
+    private void updatezScoreGraph(LineChart myZscoreChart, int timeStep, String selectedFeature) {
+        zNormalSeries.getData().clear();
+        zAnomalySeries.getData().clear();
+        myZscoreChart.getData().clear();
+        Float threshold = zMap.get(selectedFeature);
+        int len = normalTs.getRowSize();
+        for(int i=0;i<len;i++){
+            zNormalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),threshold));
+        }
+        myZscoreChart.getData().add(zNormalSeries);
+        Node node =myZscoreChart.lookup(".chart-series-line");
+        node.setStyle("-fx-stroke: grey");
+        ObservableList<Float> points =  FXCollections.observableArrayList(zArrAnomaly.get(selectedFeature).subList(0,timeStep));
+        for(int i=0;i<timeStep;i++){
+            zAnomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),points.get(i)));
+        }
+        myZscoreChart.getData().add(zAnomalySeries);
+
+        checkZscoreAnomaly(timeStep, selectedFeature);
+    }
+
+    private void checkZscoreAnomaly(int timeStep, String selectedFeature) {
+        if(anomalyReports.containsKey(selectedFeature)){
+            if(anomalyReports.get(selectedFeature).contains(timeStep)){
+                ApplicationStatus.setAppColor(Color.BLACK);
+                ApplicationStatus.setAppFillColor("red");
+                ApplicationStatus.setAppStatusValue("Anomaly has been detected in "+selectedFeature+" feature, at "+ Calculate.getTimeString(timeStep/10));
+                ApplicationStatus.pausePlayFromStart();
+            }
+        }
+    }
+
     private void paintLinearRegression(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        if(!transform){
+        if(!transformRest){
             if(pane.getChildren().size()>0){
                 pane.getChildren().remove(0,pane.getChildren().size());
             }
             myChart.getData().clear();
+            normalSeries.getData().clear();
+            anomalySeries.getData().clear();
+            lineSeries.getData().clear();
             pane.getChildren().add(myChart);
-            transform= true;
+            transformRest= true;
+            transformZ= false;
         }
 
         String correlatedFeature = null;

@@ -47,6 +47,7 @@ public class ZscorePainter implements Painter{
             pane.getChildren().add(myChart);
             init=true;
         }
+
         if(!currFeature.equals(selectedFeature)){
             updateGraph(myChart, timeStep, selectedFeature);
             currFeature = selectedFeature;

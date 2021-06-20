@@ -1,10 +1,6 @@
 package ptm1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 
@@ -64,7 +60,6 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 						this.normalTs.getFeatureData(corFeature));
 				Circle wCircle = Welzl.makeCircle(ps);
 				wMap.put(feature, wCircle);
-
 			}
 
 		}
