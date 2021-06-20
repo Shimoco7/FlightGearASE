@@ -7,6 +7,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import other.Calculate;
@@ -115,7 +116,10 @@ public class HybridPainter implements Painter{
                 if(timeStep==oldTimeStep+1){
                     Float x=anomalyTs.getFeatureData(selectedFeature).get(timeStep);
                     Float y=anomalyTs.getFeatureData(normalTs.getCorMap().get(selectedFeature).getCorFeature()).get(timeStep);
-                    anomalySeries.getData().add(new XYChart.Data<>(x,y));
+                    XYChart.Data dataPoint = new XYChart.Data<>(x,y);
+                    anomalySeries.getData().add(dataPoint);
+                    Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+                    lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
                     if(timeStep>30){
                         anomalySeries.getData().remove(0);
                     }
@@ -152,7 +156,7 @@ public class HybridPainter implements Painter{
         ArrayList<Float> yValues = normalTs.getFeatureData(correlatedFeature);
         int len=xValues.size();
         for(int i=0;i<len;i++){
-            normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
+        	normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
         }
         myChart.getData().add(normalSeries);
 
@@ -170,6 +174,11 @@ public class HybridPainter implements Painter{
             anomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
         }
         myChart.getData().add(anomalySeries);
+        for (int i = 0; i < circleSeries.getData().size(); i++) {
+            XYChart.Data dataPoint = (Data) circleSeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: grey, grey;;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
 
         checkAnomaly(timeStep,selectedFeature,correlatedFeature);
 
@@ -219,13 +228,15 @@ public class HybridPainter implements Painter{
             zNormalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),threshold));
         }
         myZscoreChart.getData().add(zNormalSeries);
-        Node node =myZscoreChart.lookup(".chart-series-line");
+        Node node =myZscoreChart.lookup(".series0.chart-series-line");
         node.setStyle("-fx-stroke: grey");
         ObservableList<Float> points =  FXCollections.observableArrayList(zArrAnomaly.get(selectedFeature).subList(0,timeStep));
         for(int i=0;i<timeStep;i++){
             zAnomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),points.get(i)));
         }
         myZscoreChart.getData().add(zAnomalySeries);
+        Node node2 =myZscoreChart.lookup(".series1.chart-series-line");
+        node2.setStyle("-fx-stroke: red");
 
         checkZscoreAnomaly(timeStep, selectedFeature);
     }
@@ -278,7 +289,10 @@ public class HybridPainter implements Painter{
                 if(timeStep==oldTimeStep+1){
                     Float x=anomalyTs.getFeatureData(selectedFeature).get(timeStep);
                     Float y=anomalyTs.getFeatureData(correlatedFeature).get(timeStep);
-                    anomalySeries.getData().add(new XYChart.Data<>(x,y));
+                    XYChart.Data dataPoint = new XYChart.Data<>(x,y);
+                    anomalySeries.getData().add(dataPoint);
+                    Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+                    lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
                     if(timeStep>30){
                         anomalySeries.getData().remove(0);
                     }
@@ -335,7 +349,22 @@ public class HybridPainter implements Painter{
 
         Node node2=myChart.lookup(".series2.chart-series-line");
         node2.setStyle("-fx-stroke: grey;");
-
+        for (int i = 0; i < anomalySeries.getData().size(); i++) {
+            XYChart.Data dataPoint =  (Data) anomalySeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
+        for (int i = 0; i < normalSeries.getData().size(); i++) {
+            XYChart.Data dataPoint1 = (Data) normalSeries.getData().get(i);
+            Node lineSymbol1 = dataPoint1.getNode().lookup(".chart-line-symbol");
+            lineSymbol1.setStyle("-fx-background-color: #00CED1, #00CED1;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
+        
+        for (int i = 0; i < lineSeries.getData().size(); i++) {
+            XYChart.Data dataPoint2 = (Data) lineSeries.getData().get(i);
+            Node lineSymbol2 = dataPoint2.getNode().lookup(".chart-line-symbol");
+            lineSymbol2.setStyle("-fx-background-color: transparent, transparent;");
+        }
         checkAnomaly(timeStep,selectedFeature,correlatedFeature);
     }
 

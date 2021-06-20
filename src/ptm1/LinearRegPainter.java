@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import other.Calculate;
@@ -83,7 +84,10 @@ public class LinearRegPainter implements Painter{
                 if(timeStep==oldTimeStep+1){
                     Float x=anomalyTs.getFeatureData(selectedFeature).get(timeStep);
                     Float y=anomalyTs.getFeatureData(correlatedFeature).get(timeStep);
-                    anomalySeries.getData().add(new XYChart.Data<>(x,y));
+                    XYChart.Data dataPoint = new XYChart.Data<>(x,y);
+                    anomalySeries.getData().add(dataPoint);
+                    Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+                    lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
                     if(timeStep>30){
                         anomalySeries.getData().remove(0);
                     }
@@ -94,7 +98,6 @@ public class LinearRegPainter implements Painter{
                 }
             }
         }
-
     }
 
     private void updateGraph(int timeStep, String selectedFeature, String correlatedFeature, Line line) {
@@ -141,6 +144,23 @@ public class LinearRegPainter implements Painter{
 
         Node node2=myChart.lookup(".series2.chart-series-line");
         node2.setStyle("-fx-stroke: grey;");
+        
+        for (int i = 0; i < anomalySeries.getData().size(); i++) {
+            XYChart.Data dataPoint =  (Data) anomalySeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
+        for (int i = 0; i < normalSeries.getData().size(); i++) {
+            XYChart.Data dataPoint = (Data) normalSeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: #00CED1, #00CED1;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
+        
+        for (int i = 0; i < lineSeries.getData().size(); i++) {
+            XYChart.Data dataPoint = (Data) lineSeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: transparent, transparent;");
+        }
 
         checkAnomaly(timeStep,selectedFeature,correlatedFeature);
     }

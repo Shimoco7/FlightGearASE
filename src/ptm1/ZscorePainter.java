@@ -89,13 +89,16 @@ public class ZscorePainter implements Painter{
             normalSeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),threshold));
         }
         chart.getData().add(normalSeries);
-        Node node =chart.lookup(".chart-series-line");
+        Node node =chart.lookup(".series0.chart-series-line");
         node.setStyle("-fx-stroke: grey");
         ObservableList<Float> points =  FXCollections.observableArrayList(zArrAnomalyMap.get(selectedFeature).subList(0,timeStep));
         for(int i=0;i<timeStep;i++){
             anomalySeries.getData().add(new XYChart.Data<>(Calculate.getTimeString(i/10),points.get(i)));
         }
         chart.getData().add(anomalySeries);
+        
+        Node node2 =chart.lookup(".series1.chart-series-line");
+        node2.setStyle("-fx-stroke: red");
 
         checkAnomaly(timeStep, selectedFeature);
     }
