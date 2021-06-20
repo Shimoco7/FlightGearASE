@@ -112,7 +112,18 @@ public class HybridPainter implements Painter{
                 updateWelzlGraph(myChart, timeStep, selectedFeature);
             }
             else {
-
+                if(timeStep==oldTimeStep+1){
+                    Float x=anomalyTs.getFeatureData(selectedFeature).get(timeStep);
+                    Float y=anomalyTs.getFeatureData(normalTs.getCorMap().get(selectedFeature).getCorFeature()).get(timeStep);
+                    anomalySeries.getData().add(new XYChart.Data<>(x,y));
+                    if(timeStep>30){
+                        anomalySeries.getData().remove(0);
+                    }
+                    checkAnomaly(timeStep,selectedFeature,normalTs.getCorMap().get(selectedFeature).getCorFeature());
+                }
+                else{
+                    updateWelzlGraph(myChart, timeStep, selectedFeature);
+                }
             }
         }
 
@@ -124,6 +135,7 @@ public class HybridPainter implements Painter{
         circleSeries.getData().clear();
         myChart.getData().clear();
 
+        String correlatedFeature = normalTs.getCorMap().get(selectedFeature).getCorFeature();
         Circle circle = wMap.get(selectedFeature);
         for(int i=0;i<1000;i++){
             double angle = Math.random()*Math.PI*2;
@@ -137,16 +149,32 @@ public class HybridPainter implements Painter{
         node.setStyle("-fx-stroke: transparent;");
 
         ArrayList<Float> xValues = normalTs.getFeatureData(selectedFeature);
-        ArrayList<Float> yValues = normalTs.getFeatureData(normalTs.getCorMap().get(selectedFeature).getCorFeature());
+        ArrayList<Float> yValues = normalTs.getFeatureData(correlatedFeature);
         int len=xValues.size();
         for(int i=0;i<len;i++){
             normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
         }
         myChart.getData().add(normalSeries);
 
+        ObservableList<Float> pointsX,pointsY;
+        if(timeStep>30){
+            pointsX = FXCollections.observableArrayList(anomalyTs.getFeatureData(selectedFeature).subList(timeStep-30,timeStep));
+            pointsY = FXCollections.observableArrayList(anomalyTs.getFeatureData(correlatedFeature).subList(timeStep-30,timeStep));
+        }
+        else{
+            pointsX = FXCollections.observableArrayList(anomalyTs.getFeatureData(selectedFeature).subList(0,timeStep));
+            pointsY = FXCollections.observableArrayList(anomalyTs.getFeatureData(correlatedFeature).subList(0,timeStep));
+        }
+        len=pointsX.size();
+        for(int i=0;i<len;i++){
+            anomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
+        }
+        myChart.getData().add(anomalySeries);
 
+        checkAnomaly(timeStep,selectedFeature,correlatedFeature);
 
     }
+
 
     private void paintZscore(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
         if(!transformZ){
@@ -254,7 +282,7 @@ public class HybridPainter implements Painter{
                     if(timeStep>30){
                         anomalySeries.getData().remove(0);
                     }
-                    checkLinearRegAnomaly(timeStep,selectedFeature,correlatedFeature);
+                    checkAnomaly(timeStep,selectedFeature,correlatedFeature);
                 }
                 else{
                     updateLinearRegGraph(timeStep, selectedFeature, correlatedFeature, line);
@@ -308,10 +336,10 @@ public class HybridPainter implements Painter{
         Node node2=myChart.lookup(".series2.chart-series-line");
         node2.setStyle("-fx-stroke: grey;");
 
-        checkLinearRegAnomaly(timeStep,selectedFeature,correlatedFeature);
+        checkAnomaly(timeStep,selectedFeature,correlatedFeature);
     }
 
-    private void checkLinearRegAnomaly(int timeStep, String selectedFeature, String correlatedFeature) {
+    private void checkAnomaly(int timeStep, String selectedFeature, String correlatedFeature) {
         if(anomalyReports.containsKey(selectedFeature)){
             if(anomalyReports.get(selectedFeature).contains(timeStep)){
                 ApplicationStatus.setAppColor(Color.BLACK);
