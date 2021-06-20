@@ -25,7 +25,7 @@ public class HybridPainter implements Painter{
     TimeSeries normalTs,anomalyTs;
     HashMap<String, HashSet<Integer>> anomalyReports;
     HashMap<String, Float> featureToCurl;
-    XYChart.Series normalSeries,anomalySeries, lineSeries, zNormalSeries,zAnomalySeries;
+    XYChart.Series normalSeries,anomalySeries, lineSeries,circleSeries, zNormalSeries,zAnomalySeries;
     LineChart myChart,myZscoreChart;
     boolean init,transformZ,transformRest;
     final NumberAxis xAxis,yAxis,zYaxis;
@@ -41,6 +41,7 @@ public class HybridPainter implements Painter{
         normalSeries = new XYChart.Series();
         anomalySeries = new XYChart.Series();
         lineSeries = new XYChart.Series();
+        circleSeries = new XYChart.Series();
         zNormalSeries = new XYChart.Series();
         zAnomalySeries = new XYChart.Series();
 
@@ -65,6 +66,7 @@ public class HybridPainter implements Painter{
             normalSeries.getData().clear();
             anomalySeries.getData().clear();
             lineSeries.getData().clear();
+            circleSeries.getData().clear();
             zNormalSeries.getData().clear();
             zAnomalySeries.getData().clear();
             init=true;
@@ -88,10 +90,62 @@ public class HybridPainter implements Painter{
     }
 
     private void paintWelzl(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        myChart.getData().clear();
+        if(!transformRest){
+            if(pane.getChildren().size()>0){
+                pane.getChildren().remove(0,pane.getChildren().size());
+            }
+            myChart.getData().clear();
+            normalSeries.getData().clear();
+            anomalySeries.getData().clear();
+            circleSeries.getData().clear();
+            pane.getChildren().add(myChart);
+            transformRest= true;
+            transformZ= false;
+        }
+
+        if(!currFeature.equals(selectedFeature)){
+            updateWelzlGraph(myChart, timeStep, selectedFeature);
+            currFeature = selectedFeature;
+        }
+        else{
+            if(timeStep<=oldTimeStep){
+                updateWelzlGraph(myChart, timeStep, selectedFeature);
+            }
+            else {
+
+            }
+        }
+
+    }
+
+    private void updateWelzlGraph(LineChart myChart, int timeStep, String selectedFeature) {
         normalSeries.getData().clear();
         anomalySeries.getData().clear();
-        lineSeries.getData().clear();
+        circleSeries.getData().clear();
+        myChart.getData().clear();
+
+        Circle circle = wMap.get(selectedFeature);
+        for(int i=0;i<1000;i++){
+            double angle = Math.random()*Math.PI*2;
+            double x = Math.cos(angle) *circle.getRadius() +circle.getPoint().x;
+            double y = Math.sin(angle) *circle.getRadius()+circle.getPoint().y;
+            circleSeries.getData().add(new XYChart.Data<>(x,y));
+        }
+        myChart.getData().add(circleSeries);
+
+        Node node =myChart.lookup(".series0.chart-series-line");
+        node.setStyle("-fx-stroke: transparent;");
+
+        ArrayList<Float> xValues = normalTs.getFeatureData(selectedFeature);
+        ArrayList<Float> yValues = normalTs.getFeatureData(normalTs.getCorMap().get(selectedFeature).getCorFeature());
+        int len=xValues.size();
+        for(int i=0;i<len;i++){
+            normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
+        }
+        myChart.getData().add(normalSeries);
+
+
+
     }
 
     private void paintZscore(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
