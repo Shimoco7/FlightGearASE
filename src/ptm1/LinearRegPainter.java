@@ -35,12 +35,12 @@ public class LinearRegPainter implements Painter{
        lineSeries = new XYChart.Series();
        myChart = new LineChart(xAxis,yAxis);
        myChart.setAnimated(false);
+       myChart.setLegendVisible(false);
        currFeature = "";
     }
 
     @Override
     public void paint(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        myChart.setLegendVisible(false);
         if(!init){
             pane.getChildren().remove(0,pane.getChildren().size());
             myChart.getData().clear();

@@ -61,13 +61,6 @@ public class PlayerController implements Initializable {
         }
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
     public void play(){
         if(onPlay!=null)

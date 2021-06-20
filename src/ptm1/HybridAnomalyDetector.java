@@ -21,6 +21,8 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		corFeatures = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
+		featureToCurl = new HashMap<>();
+		zArrAnomaly = new HashMap<>();
 		painter = new HybridPainter();
 	}
 
@@ -139,6 +141,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		painter.zMap = this.zMap;
 		painter.wMap = this.wMap;
 		painter.featureToCurl= this.featureToCurl;
+		painter.corFeatures = this.corFeatures;
 	}
 
 	@Override

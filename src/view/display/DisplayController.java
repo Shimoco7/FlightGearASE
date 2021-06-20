@@ -21,7 +21,6 @@ public class DisplayController implements Initializable {
     public @FXML StackPane stackPane;
     XYChart.Series leftSeries,rightSeries;
 
-
     public DisplayController() { }
 
     @Override
@@ -30,10 +29,8 @@ public class DisplayController implements Initializable {
         rightSeries = new XYChart.Series();
         leftGraph.setAnimated(false);
         rightGraph.setAnimated(false);
-        //mainGraph.setAnimated(false);
         leftGraph.setCreateSymbols(false);
         rightGraph.setCreateSymbols(false);
-        //mainGraph.setCreateSymbols(false);
     }
 
     public void display(ObservableList<Float> leftListItem,ObservableList<Float> rightListItem) {

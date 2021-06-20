@@ -1,6 +1,8 @@
 package view;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,6 +75,9 @@ public class MainWindowController implements Observer {
             appStatus.setText("");
             appStatus.setStyle("");
         });
+
+        vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
+
         myPlayer.controller.onPlay = vm.onPlay;
         myPlayer.controller.onStop = vm.onStop;
         myPlayer.controller.onPause = vm.onPause;
@@ -80,15 +85,15 @@ public class MainWindowController implements Observer {
         myPlayer.controller.onSlowForward =vm.onSlowForward;
         myPlayer.controller.onToEnd = vm.onToEnd;
         myPlayer.controller.onToStart = vm.onToStart;
-
         myPlayer.controller.flightTime.textProperty().bind(vm.flightTime);
-        vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
         myPlayer.controller.slider.valueProperty().bindBidirectional(vm.timeStep);
         myPlayer.controller.playSpeed.textProperty().bindBidirectional(vm.playSpeed);
+
         myJoystick.aileron.bindBidirectional(vm.getProperty("aileron"));
         myJoystick.elevator.bindBidirectional(vm.getProperty("elevators"));
         myJoystick.rudder.bind(vm.getProperty("rudder"));
         myJoystick.throttle.bind(vm.getProperty("throttle"));
+
         myClocks.headingDeg.bind(vm.getProperty("heading"));
         myClocks.pitch.bind(vm.getProperty("pitch"));
         myClocks.roll.bind(vm.getProperty("roll"));

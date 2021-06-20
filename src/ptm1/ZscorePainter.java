@@ -36,11 +36,11 @@ public class ZscorePainter implements Painter{
         myChart = new LineChart(xAxis,yAxis);
         myChart.setAnimated(false);
         myChart.setCreateSymbols(false);
+        myChart.setLegendVisible(false);
     }
 
     @Override
     public void paint(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        myChart.setLegendVisible(false);
         if(!init){
             pane.getChildren().remove(0,pane.getChildren().size());
             myChart.getData().clear();
