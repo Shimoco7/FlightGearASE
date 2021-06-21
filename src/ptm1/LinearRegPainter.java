@@ -143,7 +143,7 @@ public class LinearRegPainter implements Painter{
         node1.setStyle("-fx-stroke: transparent;");
 
         Node node2=myChart.lookup(".series2.chart-series-line");
-        node2.setStyle("-fx-stroke: grey;");
+        node2.setStyle("-fx-stroke: #000080;");
         
         for (int i = 0; i < anomalySeries.getData().size(); i++) {
             XYChart.Data dataPoint =  (Data) anomalySeries.getData().get(i);
@@ -153,7 +153,7 @@ public class LinearRegPainter implements Painter{
         for (int i = 0; i < normalSeries.getData().size(); i++) {
             XYChart.Data dataPoint1 = (Data) normalSeries.getData().get(i);
             Node lineSymbol1 = dataPoint1.getNode().lookup(".chart-line-symbol");
-            lineSymbol1.setStyle("-fx-background-color: #00CED1, #00CED1;-fx-background-radius: 3px;-fx-padding: 3px;");
+            lineSymbol1.setStyle("-fx-background-color: grey, grey;-fx-background-radius: 3px;-fx-padding: 3px;");
         }
         
         for (int i = 0; i < lineSeries.getData().size(); i++) {
