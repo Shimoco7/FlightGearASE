@@ -199,13 +199,13 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     assert myDisplay.controller != null;
-                    myDisplay.controller.list.getItems().setAll(vm.getAnomalyTimeSeries().getFeatures());
+                    myDisplay.controller.list.getItems().setAll(vm.getFeatures());
                     vm.onStop.run();
                     setButtonsEnabled();
 
                     assert myPlayer.controller != null;
                     myPlayer.controller.slider.setMin(0);
-                    myPlayer.controller.slider.setMax(vm.getAnomalyTimeSeries().getRowSize()-1);
+                    myPlayer.controller.slider.setMax(vm.getTsSize());
                     myPlayer.controller.slider.setBlockIncrement(1);
                     myPlayer.controller.slider.setMajorTickUnit(1);
                     myPlayer.controller.slider.setMinorTickCount(0);
@@ -289,7 +289,7 @@ public class MainWindowController implements Observer {
         myDisplay.controller.rightGraph.setStyle("-fx-font-size: 8.5px");
     }
 
-    public void close(ActionEvent actionEvent) {
+    public void close() {
         vm.close();
         stage.close();
     }

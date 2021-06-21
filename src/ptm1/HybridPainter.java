@@ -139,6 +139,7 @@ public class HybridPainter implements Painter{
         circleSeries.getData().clear();
         myChart.getData().clear();
 
+
         String correlatedFeature = normalTs.getCorMap().get(selectedFeature).getCorFeature();
         Circle circle = wMap.get(selectedFeature);
         for(int i=0;i<1000;i++){
@@ -174,6 +175,7 @@ public class HybridPainter implements Painter{
             anomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
         }
         myChart.getData().add(anomalySeries);
+
         for (int i = 0; i < circleSeries.getData().size(); i++) {
             XYChart.Data dataPoint = (Data) circleSeries.getData().get(i);
             Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");

@@ -119,8 +119,12 @@ public class ViewModel extends Observable implements Observer {
         m.setAnomalyDetector(path);
     }
 
-    public TimeSeries getAnomalyTimeSeries() {
-        return anomalyTimeSeries;
+    public ArrayList<String> getFeatures() {
+        return anomalyTimeSeries.getFeatures();
+    }
+
+    public int getTsSize(){
+        return anomalyTimeSeries.getRowSize()-1;
     }
 
     @Override
