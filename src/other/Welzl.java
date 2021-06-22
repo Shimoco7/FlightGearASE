@@ -1,4 +1,4 @@
-package model;
+package other;
 
 /*
  * Smallest enclosing circle - Library (Java)

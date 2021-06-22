@@ -28,10 +28,10 @@ public class HybridPainter implements Painter{
     HashMap<String, Circle> wMap;
     TimeSeries normalTs,anomalyTs;
     HashMap<String, HashSet<Integer>> anomalyReports;
-    HashMap<String, Float> featureToCurl;
-    XYChart.Series normalSeries,anomalySeries, lineSeries,circleSeries, zNormalSeries,zAnomalySeries;
-    LineChart myChart,myZscoreChart;
-    boolean init,transformZ,transformRest;
+    HashMap<String, Float> featureToCorl;
+    XYChart.Series normalSeries,anomalySeries, lineSeries,circleSeries, zNormalSeries,zAnomalySeries,wNormalSeries,wAnomalySeries;
+    LineChart myChart,myZscoreChart,myWelzlChart;
+    boolean init,transformZ,transformL,transformW;
     final NumberAxis xAxis,yAxis,zYaxis;
     final CategoryAxis zXaxis;
     String currFeature;
@@ -76,7 +76,7 @@ public class HybridPainter implements Painter{
             init=true;
         }
 
-        float correlationDecider = featureToCurl.get(selectedFeature);
+        float correlationDecider = featureToCorl.get(selectedFeature);
 
         //Linear-Regression Painter
         if(correlationDecider>0.95){
@@ -94,7 +94,7 @@ public class HybridPainter implements Painter{
     }
 
     private void paintWelzl(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        if(!transformRest){
+        if(!transformW){
             if(pane.getChildren().size()>0){
                 pane.getChildren().remove(0,pane.getChildren().size());
             }
@@ -103,8 +103,9 @@ public class HybridPainter implements Painter{
             anomalySeries.getData().clear();
             circleSeries.getData().clear();
             pane.getChildren().add(myChart);
-            transformRest= true;
+            transformW= true;
             transformZ= false;
+            transformL= false;
         }
 
         if(!currFeature.equals(selectedFeature)){
@@ -200,16 +201,17 @@ public class HybridPainter implements Painter{
             zAnomalySeries.getData().clear();
             pane.getChildren().add(myZscoreChart);
             transformZ= true;
-            transformRest=false;
+            transformL=false;
+            transformW= false;
         }
 
         if(!currFeature.equals(selectedFeature)){
-            updatezScoreGraph(myZscoreChart, timeStep, selectedFeature);
+            updateZscoreGraph(myZscoreChart, timeStep, selectedFeature);
             currFeature = selectedFeature;
         }
         else{
             if(timeStep<=oldTimeStep){
-                updatezScoreGraph(myZscoreChart, timeStep, selectedFeature);
+                updateZscoreGraph(myZscoreChart, timeStep, selectedFeature);
             }
             else {
                 ObservableList<Float> points = FXCollections.observableArrayList(zArrAnomaly.get(selectedFeature).subList(oldTimeStep, timeStep));
@@ -223,7 +225,7 @@ public class HybridPainter implements Painter{
         }
     }
 
-    private void updatezScoreGraph(LineChart myZscoreChart, int timeStep, String selectedFeature) {
+    private void updateZscoreGraph(LineChart myZscoreChart, int timeStep, String selectedFeature) {
         zNormalSeries.getData().clear();
         zAnomalySeries.getData().clear();
         myZscoreChart.getData().clear();
@@ -258,7 +260,7 @@ public class HybridPainter implements Painter{
     }
 
     private void paintLinearRegression(StackPane pane, int oldTimeStep, int timeStep, String selectedFeature) {
-        if(!transformRest){
+        if(!transformL){
             if(pane.getChildren().size()>0){
                 pane.getChildren().remove(0,pane.getChildren().size());
             }
@@ -267,8 +269,9 @@ public class HybridPainter implements Painter{
             anomalySeries.getData().clear();
             lineSeries.getData().clear();
             pane.getChildren().add(myChart);
-            transformRest= true;
+            transformL= true;
             transformZ= false;
+            transformW= false;
         }
 
         String correlatedFeature = null;
@@ -276,7 +279,7 @@ public class HybridPainter implements Painter{
         for(CorrelatedFeatures c : corFeatures){
             if(c.feature1.equals(selectedFeature)){
                 correlatedFeature=c.feature2;
-                line = c.lin_reg;
+                line = c.lineReg;
             }
         }
 

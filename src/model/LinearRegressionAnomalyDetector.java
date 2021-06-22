@@ -38,7 +38,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 										// features
 
 				Point ps[] = toPoints(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
-				Line lin_reg = StatLib.linear_reg(ps); // Line Regression of the Correlated-Features
+				Line lin_reg = StatLib.linearReg(ps); // Line Regression of the Correlated-Features
 				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around the
 																		// normal area
 				CorrelatedFeatures c = new CorrelatedFeatures(feature, corFeature, corl, lin_reg, threshold);
@@ -78,7 +78,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 			for (int i = 0; i < x.size(); i++) {
 				// For each point of the correlated features, if the point deviation
 				// from the line-regression exceeds the threshold it indicates an anomaly
-				if (Math.abs(y.get(i) - c.lin_reg.f(x.get(i))) > c.threshold) {
+				if (Math.abs(y.get(i) - c.lineReg.f(x.get(i))) > c.threshold) {
 					String d = c.feature1;
 					// Time-steps in any given time series start from 1, thus k will be send to a
 					// new Anomaly-Report as i

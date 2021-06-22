@@ -56,7 +56,7 @@ public class LinearRegPainter implements Painter{
         for(CorrelatedFeatures c : corFeatures){
             if(c.feature1.equals(selectedFeature)){
                 correlatedFeature=c.feature2;
-                line = c.lin_reg;
+                line = c.lineReg;
                 flag = true;
             }
         }
