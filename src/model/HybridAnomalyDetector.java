@@ -12,14 +12,14 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 	TimeSeries normalTs, anomalyTs;
 	HashMap<String, HashSet<Integer>> anomalyReports;
 	HashMap<String,ArrayList<Float>> zArrAnomaly;
-	HashMap<String, Float> featureToCurl;
+	HashMap<String, Float> featureToCorl;
 	private final HybridPainter painter;
 
 	public HybridAnomalyDetector() {
 		corFeatures = new ArrayList<>();
 		zMap = new LinkedHashMap<>();
 		wMap = new LinkedHashMap<>();
-		featureToCurl = new HashMap<>();
+		featureToCorl = new HashMap<>();
 		zArrAnomaly = new HashMap<>();
 		painter = new HybridPainter();
 	}
@@ -33,7 +33,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		for (String feature : ft) { // using different algorithm by different correlation
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
 			String corFeature = this.normalTs.getCorMap().get(feature).getCorFeature();
-			featureToCurl.put(feature, corl);
+			featureToCorl.put(feature, corl);
 			if (corl >= (float) 0.95) { // The correlation is higher or equal to 0.95 -> Linear Regression Algorithm
 										// learn
 
@@ -137,7 +137,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		painter.zArrAnomaly = this.zArrAnomaly;
 		painter.zMap = this.zMap;
 		painter.wMap = this.wMap;
-		painter.featureToCurl= this.featureToCurl;
+		painter.featureToCurl= this.featureToCorl;
 		painter.corFeatures = this.corFeatures;
 	}
 
@@ -177,7 +177,7 @@ public class HybridAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return max;
 	}
 
-	public float zScore(float val, float avg, float stdev) { // ZScore calculation
+	private float zScore(float val, float avg, float stdev) { // ZScore calculation
 		if (stdev == 0)
 			return 0;
 		return (Math.abs(val - avg) / stdev);

@@ -95,7 +95,7 @@ public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
     }
 
 
-    public float zScore(float val,float avg, float stdev){
+    private float zScore(float val,float avg, float stdev){
         if(stdev==0) return 0;
         return (Math.abs(val-avg) / stdev);
     }

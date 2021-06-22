@@ -56,7 +56,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	}
 
 	// Maximum deviation of each point of the Correlation from the Line-regression
-	private float findThreshold(Point ps[], Line rl) {
+	private float findThreshold(Point[] ps, Line rl) {
 		float max = 0;
 		for (int i = 0; i < ps.length; i++) {
 			float d = Math.abs(ps[i].y - rl.f(ps[i].x));

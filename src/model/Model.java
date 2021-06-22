@@ -17,7 +17,7 @@ public interface Model {
     void skipToEnd();
     void fastForward();
     void slowForward();
-    String uploadCsv(String nv);
+    String uploadCsv(String path);
     void setAnomalyDetector(String path);
     void close();
     Painter getPainter();
