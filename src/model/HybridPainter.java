@@ -123,12 +123,12 @@ public class HybridPainter implements Painter{
         }
 
         if(!currFeature.equals(selectedFeature)){
-            updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
+            updateWelzlGraph(timeStep, selectedFeature);
             currFeature = selectedFeature;
         }
         else{
             if(timeStep<=oldTimeStep){
-                updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
+                updateWelzlGraph(timeStep, selectedFeature);
             }
             else {
                 if(timeStep==oldTimeStep+1){
@@ -144,14 +144,14 @@ public class HybridPainter implements Painter{
                     checkAnomaly(timeStep,selectedFeature,normalTs.getCorMap().get(selectedFeature).getCorFeature());
                 }
                 else{
-                    updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
+                    updateWelzlGraph(timeStep, selectedFeature);
                 }
             }
         }
 
     }
 
-    private void updateWelzlGraph(LineChart myChart, int timeStep, String selectedFeature) {
+    private void updateWelzlGraph(int timeStep, String selectedFeature) {
         wNormalSeries.getData().clear();
         wAnomalySeries.getData().clear();
         circleSeries.getData().clear();
@@ -167,9 +167,6 @@ public class HybridPainter implements Painter{
             circleSeries.getData().add(new XYChart.Data<>(x,y));
         }
         myWelzlChart.getData().add(circleSeries);
-
-        Node node =myChart.lookup(".series0.chart-series-line");
-        node.setStyle("-fx-stroke: transparent;");
 
         ArrayList<Float> xValues = normalTs.getFeatureData(selectedFeature);
         ArrayList<Float> yValues = normalTs.getFeatureData(correlatedFeature);
@@ -193,6 +190,27 @@ public class HybridPainter implements Painter{
             wAnomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
         }
         myWelzlChart.getData().add(wAnomalySeries);
+
+        Node node =myWelzlChart.lookup(".series0.chart-series-line"); //Circle-Series
+        node.setStyle("-fx-stroke: transparent;");
+
+        Node node1 =myWelzlChart.lookup(".series1.chart-series-line"); //Normal-Series
+        node1.setStyle("-fx-stroke: transparent;");
+
+        Node node2 =myWelzlChart.lookup(".series2.chart-series-line"); //Anomaly-Series
+        node2.setStyle("-fx-stroke: transparent;");
+
+        for (int i = 0; i < wAnomalySeries.getData().size(); i++) {
+            XYChart.Data dataPoint = (Data) wAnomalySeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
+
+        for (int i = 0; i < wNormalSeries.getData().size(); i++) {
+            XYChart.Data dataPoint = (Data) wNormalSeries.getData().get(i);
+            Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
+            lineSymbol.setStyle("-fx-background-color: grey, grey;-fx-background-radius: 3px;-fx-padding: 3px;");
+        }
 
         for (int i = 0; i < circleSeries.getData().size(); i++) {
             XYChart.Data dataPoint = (Data) circleSeries.getData().get(i);
@@ -220,12 +238,12 @@ public class HybridPainter implements Painter{
         }
 
         if(!currFeature.equals(selectedFeature)){
-            updateZscoreGraph(myZscoreChart, timeStep, selectedFeature);
+            updateZscoreGraph(timeStep, selectedFeature);
             currFeature = selectedFeature;
         }
         else{
             if(timeStep<=oldTimeStep){
-                updateZscoreGraph(myZscoreChart, timeStep, selectedFeature);
+                updateZscoreGraph(timeStep, selectedFeature);
             }
             else {
                 ObservableList<Float> points = FXCollections.observableArrayList(zArrAnomaly.get(selectedFeature).subList(oldTimeStep, timeStep));
@@ -239,7 +257,7 @@ public class HybridPainter implements Painter{
         }
     }
 
-    private void updateZscoreGraph(LineChart myZscoreChart, int timeStep, String selectedFeature) {
+    private void updateZscoreGraph(int timeStep, String selectedFeature) {
         zNormalSeries.getData().clear();
         zAnomalySeries.getData().clear();
         myZscoreChart.getData().clear();
