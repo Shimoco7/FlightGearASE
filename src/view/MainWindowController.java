@@ -164,32 +164,33 @@ public class MainWindowController implements Observer {
         if(o.getClass().equals(ViewModel.class)){
             switch (arg.toString()) {
                 case "FileNotFound": {
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("File not found");
                     ApplicationStatus.pausePlayFromStart();
                     break;
                 }
                 case "IllegalValues": {
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Data is missing or invalid");
                     ApplicationStatus.pausePlayFromStart();
-                    setButtonsDisabled();
                     break;
                 }
                 case "XMLFormatDamaged": {
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("XML Format is damaged");
                     ApplicationStatus.pausePlayFromStart();
-                    setButtonsDisabled();
                     vm.csvPath.set("");
                     break;
                 }
 
                 case "LoadedSuccessfully":{
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("Properties resource has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
-                    setButtonsDisabled();
                     vm.csvPath.set("");
                     break;
                 }
@@ -209,28 +210,35 @@ public class MainWindowController implements Observer {
                     myPlayer.controller.slider.setMajorTickUnit(1);
                     myPlayer.controller.slider.setMinorTickCount(0);
                     myPlayer.controller.slider.setSnapToTicks(true);
-                    myPlayer.controller.slider.valueProperty().addListener(e-> System.out.println(this.myPlayer.controller.slider.valueProperty().get()));
                     break;
                 }
                 case "missingProperties":{
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
-                    setButtonsDisabled();
                     break;
                 }
                 case "incorrectFormat": {
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
-                    setButtonsDisabled();
                     break;
                 }
                 case "dataOutOfRange":{
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("One or more data values is out of feature's legal range");
                     ApplicationStatus.pausePlayFromStart();
+                    break;
+                }
+
+                case "doubleFeature":{
                     setButtonsDisabled();
+                    ApplicationStatus.setAppColor(Color.RED);
+                    ApplicationStatus.setAppStatusValue("CSV-File cannot contain columns with the same name");
+                    ApplicationStatus.pausePlayFromStart();
                     break;
                 }
                 case "LoadedClassSuccessfully":{

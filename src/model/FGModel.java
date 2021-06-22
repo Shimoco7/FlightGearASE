@@ -315,7 +315,15 @@ public class FGModel extends Observable implements Model{
 
         String line = scanner.nextLine();
         String[] features= line.split(",");
+
+        //This set checks whether the csv has 2-columns or more with the same name
+        HashSet<String> tempSet = new HashSet<>();
+
         for(String feature: features){
+            if(tempSet.contains(feature)){
+                return "doubleFeature";
+            }
+            tempSet.add(feature);
             if(set.contains(feature)){
                 set.remove(feature);
             }
