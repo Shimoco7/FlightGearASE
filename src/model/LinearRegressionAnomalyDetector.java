@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetector {
-
+	
 	ArrayList<CorrelatedFeatures> corFeatures;
 	float corlThreshold;
 	TimeSeries normalTs, anomalyTs;
@@ -33,21 +33,21 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 		for (String feature : ft) {
 			float corl = this.normalTs.getCorMap().get(feature).getCorVal();
 			String corFeature = this.normalTs.getCorMap().get(feature).getCorFeature();
-
-			if (corl > corlThreshold) { // Strong Correlation between the
-										// features
+			// Strong Correlation between the features
+			if (corl > corlThreshold) { 
 
 				Point ps[] = toPoints(this.normalTs.getFeatureData(feature), this.normalTs.getFeatureData(corFeature));
-				Line lin_reg = StatLib.linearReg(ps); // Line Regression of the Correlated-Features
-				float threshold = findThreshold(ps, lin_reg) * 1.1f; // 10% increase to cover normal points around the
-																		// normal area
+				Line lin_reg = StatLib.linearReg(ps);
+				 // 10% increase to cover normal points around the normal area
+				float threshold = findThreshold(ps, lin_reg) * 1.1f;
+																		
 				CorrelatedFeatures c = new CorrelatedFeatures(feature, corFeature, corl, lin_reg, threshold);
 				corFeatures.add(c);
 			}
 		}
 		painter.corFeatures = this.corFeatures;
 	}
-
+	// The function returns an array of points with x,y values
 	private Point[] toPoints(ArrayList<Float> x, ArrayList<Float> y) {
 		Point[] ps = new Point[x.size()];
 		for (int i = 0; i < ps.length; i++)
@@ -67,7 +67,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	}
 
 	@Override
-	// Online detection of Anomalies during Time-Series input
+	// offline detection of Anomalies during Time-Series input
 	public void detect(TimeSeries ts) {
 		this.anomalyTs = ts;
 		this.anomalyReports = new HashMap<>();
@@ -77,11 +77,9 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 			ArrayList<Float> y = this.anomalyTs.getFeatureData(c.feature2);
 			for (int i = 0; i < x.size(); i++) {
 				// For each point of the correlated features, if the point deviation
-				// from the line-regression exceeds the threshold it indicates an anomaly
+				// from the line-regression exceeds the threshold it is an anomaly
 				if (Math.abs(y.get(i) - c.lineReg.f(x.get(i))) > c.threshold) {
 					String d = c.feature1;
-					// Time-steps in any given time series start from 1, thus k will be send to a
-					// new Anomaly-Report as i
 
 					if (!this.anomalyReports.containsKey(d))
 						this.anomalyReports.put(d, new HashSet<>());
@@ -91,7 +89,7 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 		}
 		painter.anomalyReports = this.anomalyReports;
 	}
-
+	// The function returns the LinearRegression painter of LinearRegression algorithm
 	@Override
 	public Painter getPainter() {
 		if (normalTs != null && anomalyTs != null && anomalyReports != null)
@@ -102,11 +100,11 @@ public class LinearRegressionAnomalyDetector implements TimeSeriesAnomalyDetecto
 	public List<CorrelatedFeatures> getNormalModel() {
 		return corFeatures;
 	}
-
+	 //returns the correlation threshold
 	public float getCorlThreshold() {
 		return corlThreshold;
 	}
-
+	//sets the correlation threshold
 	public void setCorlThreshold(float corlThreshold) {
 		this.corlThreshold = corlThreshold;
 	}
