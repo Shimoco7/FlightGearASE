@@ -32,7 +32,7 @@ public class HybridPainter implements Painter{
     XYChart.Series normalSeries,anomalySeries, lineSeries,circleSeries, zNormalSeries,zAnomalySeries,wNormalSeries,wAnomalySeries;
     LineChart myChart,myZscoreChart,myWelzlChart;
     boolean init,transformZ,transformL,transformW;
-    final NumberAxis xAxis,yAxis,zYaxis;
+    final NumberAxis xAxis,yAxis,zYaxis,wXaxis,wYaxis;
     final CategoryAxis zXaxis;
     String currFeature;
 
@@ -41,13 +41,20 @@ public class HybridPainter implements Painter{
         yAxis = new NumberAxis();
         zYaxis = new NumberAxis();
         zXaxis = new CategoryAxis();
+        wXaxis = new NumberAxis();
+        wYaxis = new NumberAxis();
 
         normalSeries = new XYChart.Series();
         anomalySeries = new XYChart.Series();
         lineSeries = new XYChart.Series();
+
         circleSeries = new XYChart.Series();
+        wNormalSeries = new XYChart.Series();
+        wAnomalySeries = new XYChart.Series();
+
         zNormalSeries = new XYChart.Series();
         zAnomalySeries = new XYChart.Series();
+
 
         myChart = new LineChart(xAxis,yAxis);
         myChart.setAnimated(false);
@@ -58,6 +65,10 @@ public class HybridPainter implements Painter{
         myZscoreChart.setCreateSymbols(false);
         myZscoreChart.setLegendVisible(false);
 
+        myWelzlChart = new LineChart(wXaxis,wYaxis);
+        myWelzlChart.setAnimated(false);
+        myWelzlChart.setLegendVisible(false);
+
         currFeature = "";
     }
 
@@ -67,12 +78,15 @@ public class HybridPainter implements Painter{
             pane.getChildren().remove(0,pane.getChildren().size());
             myChart.getData().clear();
             myZscoreChart.getData().clear();
+            myWelzlChart.getData().clear();
             normalSeries.getData().clear();
             anomalySeries.getData().clear();
             lineSeries.getData().clear();
             circleSeries.getData().clear();
             zNormalSeries.getData().clear();
             zAnomalySeries.getData().clear();
+            wNormalSeries.getData().clear();
+            wAnomalySeries.getData().clear();
             init=true;
         }
 
@@ -98,39 +112,39 @@ public class HybridPainter implements Painter{
             if(pane.getChildren().size()>0){
                 pane.getChildren().remove(0,pane.getChildren().size());
             }
-            myChart.getData().clear();
-            normalSeries.getData().clear();
-            anomalySeries.getData().clear();
+            myWelzlChart.getData().clear();
+            wNormalSeries.getData().clear();
+            wAnomalySeries.getData().clear();
             circleSeries.getData().clear();
-            pane.getChildren().add(myChart);
+            pane.getChildren().add(myWelzlChart);
             transformW= true;
             transformZ= false;
             transformL= false;
         }
 
         if(!currFeature.equals(selectedFeature)){
-            updateWelzlGraph(myChart, timeStep, selectedFeature);
+            updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
             currFeature = selectedFeature;
         }
         else{
             if(timeStep<=oldTimeStep){
-                updateWelzlGraph(myChart, timeStep, selectedFeature);
+                updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
             }
             else {
                 if(timeStep==oldTimeStep+1){
                     Float x=anomalyTs.getFeatureData(selectedFeature).get(timeStep);
                     Float y=anomalyTs.getFeatureData(normalTs.getCorMap().get(selectedFeature).getCorFeature()).get(timeStep);
                     XYChart.Data dataPoint = new XYChart.Data<>(x,y);
-                    anomalySeries.getData().add(dataPoint);
+                    wAnomalySeries.getData().add(dataPoint);
                     Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
                     lineSymbol.setStyle("-fx-background-color: red, red;-fx-background-radius: 3px;-fx-padding: 3px;");
                     if(timeStep>30){
-                        anomalySeries.getData().remove(0);
+                        wAnomalySeries.getData().remove(0);
                     }
                     checkAnomaly(timeStep,selectedFeature,normalTs.getCorMap().get(selectedFeature).getCorFeature());
                 }
                 else{
-                    updateWelzlGraph(myChart, timeStep, selectedFeature);
+                    updateWelzlGraph(myWelzlChart, timeStep, selectedFeature);
                 }
             }
         }
@@ -138,10 +152,10 @@ public class HybridPainter implements Painter{
     }
 
     private void updateWelzlGraph(LineChart myChart, int timeStep, String selectedFeature) {
-        normalSeries.getData().clear();
-        anomalySeries.getData().clear();
+        wNormalSeries.getData().clear();
+        wAnomalySeries.getData().clear();
         circleSeries.getData().clear();
-        myChart.getData().clear();
+        myWelzlChart.getData().clear();
 
 
         String correlatedFeature = normalTs.getCorMap().get(selectedFeature).getCorFeature();
@@ -152,7 +166,7 @@ public class HybridPainter implements Painter{
             double y = Math.sin(angle) *circle.getRadius()+circle.getPoint().y;
             circleSeries.getData().add(new XYChart.Data<>(x,y));
         }
-        myChart.getData().add(circleSeries);
+        myWelzlChart.getData().add(circleSeries);
 
         Node node =myChart.lookup(".series0.chart-series-line");
         node.setStyle("-fx-stroke: transparent;");
@@ -161,9 +175,9 @@ public class HybridPainter implements Painter{
         ArrayList<Float> yValues = normalTs.getFeatureData(correlatedFeature);
         int len=xValues.size();
         for(int i=0;i<len;i++){
-        	normalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
+            wNormalSeries.getData().add(new XYChart.Data<>(xValues.get(i),yValues.get(i)));
         }
-        myChart.getData().add(normalSeries);
+        myWelzlChart.getData().add(wNormalSeries);
 
         ObservableList<Float> pointsX,pointsY;
         if(timeStep>30){
@@ -176,9 +190,9 @@ public class HybridPainter implements Painter{
         }
         len=pointsX.size();
         for(int i=0;i<len;i++){
-            anomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
+            wAnomalySeries.getData().add(new XYChart.Data<>(pointsX.get(i),pointsY.get(i)));
         }
-        myChart.getData().add(anomalySeries);
+        myWelzlChart.getData().add(wAnomalySeries);
 
         for (int i = 0; i < circleSeries.getData().size(); i++) {
             XYChart.Data dataPoint = (Data) circleSeries.getData().get(i);
@@ -349,14 +363,15 @@ public class HybridPainter implements Painter{
         lineSeries.getData().add(new XYChart.Data<>(max,line.f(max)));
         myChart.getData().add(lineSeries);
 
-        Node node =myChart.lookup(".series0.chart-series-line");
+        Node node =myChart.lookup(".series0.chart-series-line"); //Normal-Series
         node.setStyle("-fx-stroke: transparent;");
 
-        Node node1 =myChart.lookup(".series1.chart-series-line");
+        Node node1 =myChart.lookup(".series1.chart-series-line"); //Anomaly-Series
         node1.setStyle("-fx-stroke: transparent;");
 
-        Node node2=myChart.lookup(".series2.chart-series-line");
+        Node node2=myChart.lookup(".series2.chart-series-line"); //Line-Series
         node2.setStyle("-fx-stroke: #000080;");
+
         for (int i = 0; i < anomalySeries.getData().size(); i++) {
             XYChart.Data dataPoint =  (Data) anomalySeries.getData().get(i);
             Node lineSymbol = dataPoint.getNode().lookup(".chart-line-symbol");
