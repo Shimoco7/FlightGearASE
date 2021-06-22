@@ -28,7 +28,6 @@
                 <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help" />
         </menus>
       </MenuBar>
    </top>
