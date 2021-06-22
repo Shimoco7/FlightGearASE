@@ -1,4 +1,4 @@
-package ptm1;
+package other;
 
 public class Point {
 	public final float x, y;

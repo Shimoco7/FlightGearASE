@@ -8,8 +8,8 @@ import model.FGModel;
 import model.Model;
 import other.Calculate;
 import other.Properties;
-import ptm1.Painter;
-import ptm1.TimeSeries;
+import model.Painter;
+import model.TimeSeries;
 
 import java.util.*;
 

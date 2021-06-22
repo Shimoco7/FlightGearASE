@@ -1,6 +1,4 @@
-package ptm1;
-
-import java.util.List;
+package model;
 
 public interface TimeSeriesAnomalyDetector {
     void learnNormal(TimeSeries ts);

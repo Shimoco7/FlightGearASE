@@ -1,4 +1,4 @@
-package ptm1;
+package model;
 
 import javafx.scene.layout.StackPane;
 

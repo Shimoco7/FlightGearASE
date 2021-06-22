@@ -1,4 +1,6 @@
-package ptm1;
+package model;
+
+import other.StatLib;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

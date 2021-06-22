@@ -1,4 +1,6 @@
-package ptm1;
+package model;
+
+import other.*;
 
 import java.util.*;
 

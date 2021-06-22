@@ -1,4 +1,9 @@
-package ptm1;
+package model;
+
+import other.CorrelatedFeatures;
+import other.Line;
+import other.Point;
+import other.StatLib;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package ptm1;
+package other;
 
 public class AnomalyReport {
     public final String description;

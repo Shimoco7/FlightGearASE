@@ -2,8 +2,6 @@ package model;
 
 import javafx.beans.property.IntegerProperty;
 import other.Properties;
-import ptm1.Painter;
-import ptm1.TimeSeries;
 
 public interface Model {
 

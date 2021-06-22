@@ -1,9 +1,10 @@
-package ptm1;
+package model;
+
+import other.StatLib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 public class ZscoreAnomalyDetector implements TimeSeriesAnomalyDetector {
 

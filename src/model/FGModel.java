@@ -1,7 +1,6 @@
 package model;
 
 import javafx.beans.property.IntegerProperty;
-import ptm1.*;
 import other.Properties;
 
 import java.beans.XMLDecoder;
@@ -112,7 +111,7 @@ public class FGModel extends Observable implements Model{
 		}
 
 		// load class directory
-        className = "ptm1" + "." + file.getName().substring(0,file.getName().indexOf("."));
+        className = "model" + "." + file.getName().substring(0,file.getName().indexOf("."));
 		URL[] url = new URL[1];
 		// change this path to your local one
 		try {

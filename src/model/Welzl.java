@@ -1,4 +1,4 @@
-package ptm1;
+package model;
 
 /*
  * Smallest enclosing circle - Library (Java)
@@ -20,6 +20,9 @@ package ptm1;
  * along with this program (see COPYING.txt and COPYING.LESSER.txt).
  * If not, see <http://www.gnu.org/licenses/>.
  */
+
+import other.Circle;
+import other.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;

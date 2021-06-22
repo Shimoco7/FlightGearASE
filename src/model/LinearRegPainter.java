@@ -1,4 +1,4 @@
-package ptm1;
+package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +10,8 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import other.Calculate;
+import other.CorrelatedFeatures;
+import other.Line;
 import view.ApplicationStatus;
 
 import java.util.ArrayList;

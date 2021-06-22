@@ -16,7 +16,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/play.png" />
+                  <Image url="@../../style/play.png" />
                </image>
             </ImageView>
          </graphic>
@@ -25,7 +25,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/pause.png" />
+                  <Image url="@../../style/pause.png" />
                </image>
             </ImageView>
          </graphic>
@@ -34,7 +34,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/back.png" />
+                  <Image url="@../../style/back.png" />
                </image>
             </ImageView>
          </graphic>
@@ -43,7 +43,7 @@
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/back2.png" />
+                  <Image url="@../../style/back2.png" />
                </image>
             </ImageView>
          </graphic></Button>
@@ -51,7 +51,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/stop.png" />
+                  <Image url="@../../style/stop.png" />
                </image>
             </ImageView>
          </graphic>
@@ -60,7 +60,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/for.png" />
+                  <Image url="@../../style/for.png" />
                </image>
             </ImageView>
          </graphic>
@@ -69,7 +69,7 @@
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../Symbols/for2.png" />
+                  <Image url="@../../style/for2.png" />
                </image>
             </ImageView>
          </graphic>
