@@ -77,6 +77,7 @@ public class MainWindowController implements Observer {
         ApplicationStatus.setPauseOnFinished(event-> {
             appStatus.setText("");
             appStatus.setStyle("");
+            ApplicationStatus.setAppFillColor("transparent");
         });
 
         vm.csvPath.bindBidirectional(myPlayer.controller.timeSeriesPath);
@@ -165,6 +166,7 @@ public class MainWindowController implements Observer {
             switch (arg.toString()) {
                 case "FileNotFound": {
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("File not found");
                     ApplicationStatus.pausePlayFromStart();
@@ -173,6 +175,7 @@ public class MainWindowController implements Observer {
                 }
                 case "IllegalValues": {
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Data is missing or invalid");
                     ApplicationStatus.pausePlayFromStart();
@@ -181,6 +184,7 @@ public class MainWindowController implements Observer {
                 }
                 case "XMLFormatDamaged": {
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("XML Format is damaged");
                     ApplicationStatus.pausePlayFromStart();
@@ -190,6 +194,7 @@ public class MainWindowController implements Observer {
 
                 case "LoadedSuccessfully":{
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("Properties resource has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
@@ -215,6 +220,7 @@ public class MainWindowController implements Observer {
                 }
                 case "missingProperties":{
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
@@ -223,6 +229,7 @@ public class MainWindowController implements Observer {
                 }
                 case "incorrectFormat": {
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
@@ -231,6 +238,7 @@ public class MainWindowController implements Observer {
                 }
                 case "dataOutOfRange":{
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("One or more data values is out of feature's legal range");
                     ApplicationStatus.pausePlayFromStart();
@@ -240,6 +248,7 @@ public class MainWindowController implements Observer {
 
                 case "doubleFeature":{
                     setButtonsDisabled();
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File cannot contain columns with the same name");
                     ApplicationStatus.pausePlayFromStart();
@@ -247,14 +256,18 @@ public class MainWindowController implements Observer {
                     break;
                 }
                 case "LoadedClassSuccessfully":{
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("Class-File has been loaded successfully");
+                    ApplicationStatus.pausePlayFromStart();
                     painter = vm.getPainter();
                     break;
                 }
                 case "FailedToLoadClass":{
+                    ApplicationStatus.setAppFillColor("transparent");
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Failed to load the class file");
+                    ApplicationStatus.pausePlayFromStart();
                     break;
                 }
             }

@@ -127,15 +127,18 @@ public class FGModel extends Observable implements Model{
 			try {
 				detectAlgo = c.newInstance();
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                setChanged();
+                notifyObservers("FailedToLoadClass");
+                return;
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                setChanged();
+                notifyObservers("FailedToLoadClass");
+                return;
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            setChanged();
+            notifyObservers("FailedToLoadClass");
+            return;
 		}
 		// create an Algorithms instance
 		if (detectAlgo instanceof LinearRegressionAnomalyDetector) {
