@@ -1,7 +1,7 @@
 # FlightGearASE
 A JavaFX Flight Gear Anomaly Detection Project.  
   
-The main focus of this project is to learn data from a regular flight and then detect anomalies during the flight, to analyze them and to provide a view perspective for the client
+The main focus of this project is to learn data from a regular flight and then detect anomalies during the new flight, to analyze the them and to provide a view perspective for the client
 
 # Overview
 
