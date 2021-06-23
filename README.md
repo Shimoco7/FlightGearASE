@@ -5,6 +5,6 @@ The main focus of this project is to learn data from a regular flight and then d
 
 # Overview
 
-![FlightGearFirstImage](https://github.com/Shimoco7/FlightGearASE/blob/master/resources/AppImage.PNG)
+![FlightGearFirstImage](https://github.com/Shimoco7/FlightGearASE/blob/master/resources/justApp.jpg)
 
-![FlightGearFirstImage](https://github.com/Shimoco7/FlightGearASE/blob/master/resources/combinedPic.JPG)
+![FlightGearFirstImage](https://github.com/Shimoco7/FlightGearASE/blob/master/resources/combined.png)
