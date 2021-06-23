@@ -10,11 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import view.Main;
-import view.ApplicationStatus;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +23,7 @@ public class PlayerController implements Initializable {
     @FXML public TextField playSpeed;
     @FXML public Label flightTime;
     @FXML public Slider slider;
-    @FXML public Button play,stop,pause,fastForward, slowForward,toEnd,toStart;
+    @FXML public Button play,stop,pause,fastForward, slowForward,toEnd,toStart,openButton;
     Stage stage;
     public StringProperty timeSeriesPath;
     public Runnable onPlay,onStop,onPause,onFastForward, onSlowForward,onToStart,onToEnd;
@@ -70,6 +68,7 @@ public class PlayerController implements Initializable {
         if(onPlay!=null) {
             onPlay.run();
             isPlayed.setValue(true);
+            openButton.setDisable(true);
         }
     }
 
@@ -77,6 +76,7 @@ public class PlayerController implements Initializable {
         if(onStop!=null) {
             onStop.run();
             isPlayed.setValue(false);
+            openButton.setDisable(false);
         }
     }
 
@@ -84,6 +84,7 @@ public class PlayerController implements Initializable {
         if(onPause!=null) {
             onPause.run();
             isPlayed.setValue(false);
+            openButton.setDisable(false);
         }
     }
 
@@ -101,6 +102,7 @@ public class PlayerController implements Initializable {
         if(onToEnd!=null) {
             onToEnd.run();
             isPlayed.setValue(false);
+            openButton.setDisable(false);
         }
     }
 
@@ -108,6 +110,7 @@ public class PlayerController implements Initializable {
         if(onToStart!=null) {
             onToStart.run();
             isPlayed.setValue(true);
+            openButton.setDisable(true);
         }
     }
 }

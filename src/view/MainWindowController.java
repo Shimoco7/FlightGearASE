@@ -168,6 +168,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("File not found");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "IllegalValues": {
@@ -175,6 +176,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Data is missing or invalid");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "XMLFormatDamaged": {
@@ -195,14 +197,13 @@ public class MainWindowController implements Observer {
                     break;
                 }
                 case "LoadedCSVSuccessfully":{
+                    setButtonsDisabled();
                     ApplicationStatus.setAppColor(Color.GREEN);
                     ApplicationStatus.setAppStatusValue("CSV-File has been loaded successfully");
                     ApplicationStatus.pausePlayFromStart();
                     assert myDisplay.controller != null;
                     myDisplay.controller.list.getItems().setAll(vm.getFeatures());
-                    vm.onStop.run();
                     setButtonsEnabled();
-
                     assert myPlayer.controller != null;
                     myPlayer.controller.slider.setMin(0);
                     myPlayer.controller.slider.setMax(vm.getTsSize());
@@ -217,6 +218,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File is missing properties");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "incorrectFormat": {
@@ -224,6 +226,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("Incorrect CSV-File format");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "dataOutOfRange":{
@@ -231,6 +234,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("One or more data values is out of feature's legal range");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
 
@@ -239,6 +243,7 @@ public class MainWindowController implements Observer {
                     ApplicationStatus.setAppColor(Color.RED);
                     ApplicationStatus.setAppStatusValue("CSV-File cannot contain columns with the same name");
                     ApplicationStatus.pausePlayFromStart();
+                    vm.csvPath.set("");
                     break;
                 }
                 case "LoadedClassSuccessfully":{
@@ -257,6 +262,10 @@ public class MainWindowController implements Observer {
     }
 
     private void setButtonsDisabled(){
+        vm.onStop.run();
+        myPlayer.controller.slider.valueProperty().setValue(0);
+        loadAlgorithm.setDisable(true);
+
         assert myPlayer.controller != null;
         myPlayer.controller.slider.setDisable(true);
         myPlayer.controller.play.setDisable(true);
@@ -267,15 +276,20 @@ public class MainWindowController implements Observer {
         myPlayer.controller.toEnd.setDisable(true);
         myPlayer.controller.toStart.setDisable(true);
         myPlayer.controller.playSpeed.clear();
-        myPlayer.controller.slider.valueProperty().set(0);
         vm.flightTime.set("00:00:00");
+
         assert myDisplay.controller != null;
         myDisplay.controller.list.getItems().clear();
-        loadAlgorithm.setDisable(true);
+        myDisplay.controller.leftGraph.getData().clear();
+        myDisplay.controller.rightGraph.getData().clear();
         myDisplay.controller.leftGraph.setTitle("Feature");
         myDisplay.controller.rightGraph.setTitle("Correlated Feature");
         myDisplay.controller.leftGraph.setStyle("-fx-font-size: 12px");
         myDisplay.controller.rightGraph.setStyle("-fx-font-size: 12px");
+        if(myDisplay.controller.stackPane.getChildren().size()>0){
+            myDisplay.controller.stackPane.getChildren().remove(0,myDisplay.controller.stackPane.getChildren().size());
+        }
+
         ApplicationStatus.setAppFillColor("transparent");
         ApplicationStatus.setAppStatusValue("");
     }

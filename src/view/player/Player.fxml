@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="78.0" prefWidth="587.0" style="-fx-border-color: #000000; -fx-border-radius: 9,8,5,4;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.player.PlayerController">
    <children>
-      <Button id="ipad-grey" layoutX="14.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openCSV" prefHeight="30.0" prefWidth="74.0" stylesheets="@player.css" text="Open" textAlignment="CENTER" />
+      <Button fx:id="openButton" id="ipad-grey" layoutX="14.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openCSV" prefHeight="30.0" prefWidth="74.0" stylesheets="@player.css" text="Open" textAlignment="CENTER" />
       <Button fx:id="play" layoutX="182.0" layoutY="13.0" mnemonicParsing="false" onAction="#play" styleClass="Symbols" stylesheets="@player.css" textFill="WHITE">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
