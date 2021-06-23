@@ -37,6 +37,7 @@ public class TimeSeries {
                 }
             }
             dataRowSize=tsMap.get(features.get(0)).size();
+            this.corCalc();
 
             in.close();
         }catch(IOException e) {}
@@ -68,7 +69,8 @@ public class TimeSeries {
     //Correlation //
 
     public Map<String, Correlation> getCorMap() {
-        if (this.corMap==null) this.corCalc();
+        if (this.corMap==null)
+            this.corCalc();
         return corMap;
     }
 
